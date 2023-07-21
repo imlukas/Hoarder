@@ -1,0 +1,10 @@
+# days, months, weeks, years, hours. Example: 1 days, 1 weeks, 1 months, 1 years, 1 hours (Needs to be plural)
+event-duration: 10 minutes
+
+random-material: true # If material should be randomly choosen; Refer to fixed-material for a fixed material.
+fixed-material:  # If random-material is false, this material will be used.
+  STICK: 0.2
+material-blacklist:
+  STONE: 0.1 # MATERIAL: PRICE
+  GRASS: 0.1
+  DIRT: 0.1

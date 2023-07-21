@@ -1,0 +1,4 @@
+prize-1: # Defines the actions that will be executed when the prize is won.
+  - GIVE_CUSTOM:enchanted-stick 1
+  - MESSAGE:&aYou got an enchanted stick!
+  - ECONOMY:10000

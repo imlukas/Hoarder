@@ -1,0 +1,10 @@
+# Items that will be used on prizes.yml
+enchanted-stick:
+  name: '&aEnchanted Stick'
+  lore:
+    - '&7This stick is enchanted with'
+    - '&7the power of the gods.'
+  material: STICK
+  enchantments:
+    DAMAGE_ALL: 1
+    DURABILITY: 1
