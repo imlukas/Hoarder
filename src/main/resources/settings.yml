@@ -3,8 +3,9 @@ event-duration: 10 minutes
 
 random-material: true # If material should be randomly choosen; Refer to fixed-material for a fixed material.
 fixed-material:  # If random-material is false, this material will be used.
-  STICK: 0.2
-material-blacklist:
+  material: STONE
+  value: 0.2
+material-whitelist:
   STONE: 0.1 # MATERIAL: PRICE
   GRASS: 0.1
   DIRT: 0.1

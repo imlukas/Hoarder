@@ -5,6 +5,7 @@ import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.event.storage.EventSettingsHandler;
 import dev.imlukas.hoarderplugin.items.handler.CustomItemHandler;
 import dev.imlukas.hoarderplugin.items.registry.CustomItemRegistry;
+import dev.imlukas.hoarderplugin.prize.actions.registry.ActionRegistry;
 import dev.imlukas.hoarderplugin.prize.registry.PrizeRegistry;
 import dev.imlukas.hoarderplugin.prize.storage.PrizeHandler;
 import dev.imlukas.hoarderplugin.utils.command.impl.CommandManager;
@@ -23,6 +24,8 @@ public final class HoarderPlugin extends JavaPlugin {
     private EventRegistry eventRegistry;
     private EventSettingsHandler eventSettingsHandler;
 
+    private ActionRegistry actionRegistry;
+
     private CustomItemRegistry customItemRegistry;
     private CustomItemHandler customItemHandler;
 
@@ -39,6 +42,8 @@ public final class HoarderPlugin extends JavaPlugin {
         eventRegistry.registerEvent("hoarder", HoarderEvent::new);
 
         eventSettingsHandler = new EventSettingsHandler(this);
+
+        actionRegistry = new ActionRegistry(this);
 
         customItemRegistry = new CustomItemRegistry();
         customItemHandler = new CustomItemHandler(this);

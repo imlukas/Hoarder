@@ -15,6 +15,7 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+
 }
 
 dependencies {
@@ -22,7 +23,6 @@ dependencies {
     compileOnly "org.projectlombok:lombok:1.18.20"
     annotationProcessor "org.projectlombok:lombok:1.18.20"
     compileOnly "com.mojang:authlib:1.6.25"
-
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 }
 

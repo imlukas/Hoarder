@@ -13,6 +13,10 @@ public class TextUtils {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
+    public static String enumToText(Enum<?> enumToText) {
+        return capitalize(enumToText.toString().replace("_", " "));
+    }
+
     public static String capitalize(String toCapitalize) {
         return toCapitalize.substring(0, 1).toUpperCase() + toCapitalize.substring(1);
     }

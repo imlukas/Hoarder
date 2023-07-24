@@ -8,7 +8,7 @@ import java.util.LinkedList;
 public class EventPrize {
 
     private final String identifier;
-    private final LinkedList<PrizeAction> actions;
+    private final LinkedList<PrizeAction> actions; // Use linked list to guarantee that actions are run in order
 
     public EventPrize(String identifier, LinkedList<PrizeAction> actions) {
         this.identifier = identifier;

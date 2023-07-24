@@ -1,29 +1,45 @@
 package dev.imlukas.hoarderplugin.prize.actions.registry;
 
+import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.prize.actions.PrizeAction;
-import dev.imlukas.hoarderplugin.prize.actions.impl.*;
+import dev.imlukas.hoarderplugin.prize.actions.impl.CommandAction;
+import dev.imlukas.hoarderplugin.prize.actions.impl.EconomyAction;
+import dev.imlukas.hoarderplugin.prize.actions.impl.GiveAction;
+import dev.imlukas.hoarderplugin.prize.actions.impl.MessageAction;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class ActionRegistry {
 
-    private static final Map<String, Function<String, PrizeAction>> ACTION_MAP = Map.of(
+    private static final Map<String, BiFunction<HoarderPlugin, String, PrizeAction>> ACTION_MAP = Map.of(
             "MESSAGE", MessageAction::new,
-            "COMMAND", CommandAction::new,
             "GIVE", GiveAction::new,
-            "GIVE_CUSTOM", GiveCustomAction::new,
-            "ECONOMY", EconomyAction::new);
+            "ECONOMY", EconomyAction::new,
+            "COMMAND", (ignored, input) -> new CommandAction(input));
 
+    private final HoarderPlugin plugin;
 
-    public static PrizeAction getAction(String action) {
+    public ActionRegistry(HoarderPlugin plugin) {
+        this.plugin = plugin;
+    }
 
-        Function<String, PrizeAction> function = ACTION_MAP.get(action.substring(0, action.indexOf(":")));
+    public PrizeAction getAction(String action) {
+
+        BiFunction<HoarderPlugin, String, PrizeAction> function = ACTION_MAP.get(action.substring(0, action.indexOf(":")));
 
         if (function == null) {
             throw new IllegalArgumentException("Unknown action: " + action);
         }
 
-        return function.apply(action.substring(action.indexOf(":") + 1));
+        return function.apply(plugin, action.substring(action.indexOf(":") + 1));
+    }
+
+    public List<PrizeAction> getActions(List<String> actionsStrings) {
+        List<PrizeAction> actions = new ArrayList<>();
+        actionsStrings.forEach(action -> actions.add(getAction(action)));
+        return actions;
     }
 }
