@@ -1,5 +1,7 @@
 package dev.imlukas.hoarderplugin;
 
+import dev.imlukas.hoarderplugin.command.HoarderCommand;
+import dev.imlukas.hoarderplugin.command.HoarderForceStartCommand;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.event.storage.EventSettingsHandler;
@@ -8,6 +10,7 @@ import dev.imlukas.hoarderplugin.items.registry.CustomItemRegistry;
 import dev.imlukas.hoarderplugin.prize.actions.registry.ActionRegistry;
 import dev.imlukas.hoarderplugin.prize.registry.PrizeRegistry;
 import dev.imlukas.hoarderplugin.prize.storage.PrizeHandler;
+import dev.imlukas.hoarderplugin.utils.command.SimpleCommand;
 import dev.imlukas.hoarderplugin.utils.command.impl.CommandManager;
 import dev.imlukas.hoarderplugin.utils.menu.registry.MenuRegistry;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
@@ -50,10 +53,18 @@ public final class HoarderPlugin extends JavaPlugin {
 
         prizeRegistry = new PrizeRegistry();
         prizeHandler = new PrizeHandler(this);
+
+        registerCommand(new HoarderCommand(this));
+        registerCommand(new HoarderForceStartCommand(this));
+
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public void registerCommand(SimpleCommand command) {
+        commandManager.register(command);
     }
 }

@@ -1,6 +1,10 @@
 package dev.imlukas.hoarderplugin.utils.menu.element;
 
 import dev.imlukas.hoarderplugin.utils.menu.base.BaseMenu;
+import dev.imlukas.hoarderplugin.utils.text.Placeholder;
+import org.bukkit.entity.Player;
+
+import java.util.Collection;
 
 public abstract class Renderable {
 
@@ -19,6 +23,8 @@ public abstract class Renderable {
         this.active = active;
         forceUpdate();
     }
+
+    public abstract void setItemPlaceholders(Collection<Placeholder<Player>> placeholders);
 
     public abstract void forceUpdate();
 

@@ -1,4 +1,4 @@
-package dev.imlukas.cratesplugin.utils.collection;
+package dev.imlukas.hoarderplugin.utils.collection;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;

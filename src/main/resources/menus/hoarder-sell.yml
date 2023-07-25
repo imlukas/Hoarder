@@ -1,0 +1,31 @@
+title: "&7Hoarder &8| &eSell"
+
+layout:
+  - "b b b b b b b b b"
+  - "b . . . . . . . b"
+  - "b . . . . . . . b"
+  - "b . . . . . . . b"
+  - "b b b a s c b b b"
+
+items:
+  b:
+    type: BLACK_STAINED_GLASS_PANE
+    name: " "
+  active:
+    type: PAPER
+    name: "&e%TEMPLATE_NAME%"
+    lore:
+      - "&7This is the active item for this event"
+      - "&7Sell the max of this item to win!"
+      - "&7Price: &f%price%"
+      - "&7Sold: &f%amountSold%"
+  c:
+    type: BARRIER
+    name: "&cClose"
+    lore:
+      - "&7Close this menu"
+  s:
+    type: EMERALD
+    name: "&aSell"
+    lore:
+      - "&7Click to sell the item(s)"

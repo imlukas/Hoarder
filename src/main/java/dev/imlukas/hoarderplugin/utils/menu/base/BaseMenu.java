@@ -54,9 +54,11 @@ public class BaseMenu implements InventoryHolder {
     }
 
     public void setItemPlaceholders(Collection<Placeholder<Player>> placeholders) {
-        for (MenuElement element : elements.values()) {
-            element.setItemPlaceholders(placeholders);
+        for (Renderable renderable : renderables) {
+            renderable.setItemPlaceholders(placeholders);
         }
+
+        elements.values().forEach(element -> element.setItemPlaceholders(placeholders));
     }
 
     public Player getPlayer() {

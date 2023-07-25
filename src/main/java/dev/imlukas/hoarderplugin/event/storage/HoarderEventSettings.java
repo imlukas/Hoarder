@@ -1,6 +1,6 @@
 package dev.imlukas.hoarderplugin.event.storage;
 
-import dev.imlukas.cratesplugin.utils.collection.ListUtils;
+import dev.imlukas.hoarderplugin.utils.collection.ListUtils;
 import dev.imlukas.hoarderplugin.event.data.item.HoarderItem;
 
 import java.util.ArrayList;

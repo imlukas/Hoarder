@@ -1,28 +1,65 @@
 package dev.imlukas.hoarderplugin.utils.menu.template;
 
+import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.utils.concurrency.MainThreadExecutor;
 import dev.imlukas.hoarderplugin.utils.menu.base.ConfigurableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicator;
+import dev.imlukas.hoarderplugin.utils.menu.registry.MenuRegistry;
+import dev.imlukas.hoarderplugin.utils.menu.registry.meta.HiddenMenuTracker;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public interface Menu {
+import java.util.UUID;
+import java.util.function.Consumer;
+
+public abstract class Menu {
+
+    private final HoarderPlugin plugin;
+    private final MenuRegistry menuRegistry;
+    private final HiddenMenuTracker hiddenMenuTracker;
+    private final UUID viewerId;
+
+    public Menu(HoarderPlugin plugin, Player viewer) {
+        this.plugin = plugin;
+        this.menuRegistry = plugin.getMenuRegistry();
+        this.hiddenMenuTracker = plugin.getMenuRegistry().getHiddenMenuTracker();
+        this.viewerId = viewer.getUniqueId();
+    }
 
     /**
      * Handles creation of the menu, definition of variables and static button creation.
      */
-    void setup();
-    Player getViewer();
+    public abstract void setup();
 
-    String getIdentifier();
+    public abstract String getIdentifier();
 
-    ConfigurableMenu getMenu();
+    public abstract ConfigurableMenu getMenu();
 
-    default ConfigurationApplicator getApplicator() {
+    public ConfigurationApplicator getApplicator() {
         return getMenu().getApplicator();
     }
 
-    default void close() {
+    public UUID getViewerId() {
+        return viewerId;
+    }
+
+    public Player getViewer() {
+        return Bukkit.getPlayer(viewerId);
+    }
+
+    public HoarderPlugin getPlugin() {
+        return plugin;
+    }
+
+    public void holdForInput(Consumer<String> action) {
+        hiddenMenuTracker.holdForInput(getMenu(), action);
+    }
+
+    public ConfigurableMenu createMenu() {
+        return (ConfigurableMenu) menuRegistry.create(getIdentifier(), getViewer());
+    }
+
+    public void close() {
         Player viewer = getViewer();
 
         if (viewer.getOpenInventory().getTopInventory().equals(getMenu().getInventory())) {
@@ -34,7 +71,7 @@ public interface Menu {
         }
     }
 
-    default void open() {
+    public void open() {
         getMenu().open();
     }
 }

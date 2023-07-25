@@ -1,14 +1,19 @@
+messages:
+  command:
+    no-event: "&7There's currently no active event!"
 
-prize:
-  claim: "ʏᴏᴜ ᴄʟᴀɪᴍᴇᴅ ʏᴏᴜʀ ᴘʀɪᴢᴇ! &7(%remainingPrizes% sᴛɪʟʟ ʟᴇғᴛ ᴛᴏ ᴄʟᴀɪᴍ)"
-  inv-full: "ɴᴏ ʀᴏᴏᴍ ʟᴇғᴛ ɪɴ ʏᴏᴜʀ ɪɴᴠᴇɴᴛᴏʀʏ! ᴛʀʏ ᴀɢᴀɪɴ ᴏɴᴄᴇ ʏᴏᴜ ʜᴀᴠᴇ ᴀ sʟᴏᴛ ғʀᴇᴇ."
-  no-claim: "ʏᴏᴜ ʜᴀᴠᴇ ɴᴏ ᴘʀɪᴢᴇs ʟᴇғᴛ ᴛᴏ ᴄʟᴀɪᴍ!"
-  no-prizes: "ᴛʜᴇʀᴇ ᴀʀᴇ ɴᴏ ᴘʀɪᴢᴇs ᴀᴠᴀɪʟᴀʙʟᴇ ᴀᴛ ᴛʜɪs ᴛɪᴍᴇ, ᴄᴏɴᴛᴀᴄᴛ sᴇʀᴠᴇʀ sᴛᴀғғ."
-  available: "ᴛʜᴇ ʜᴏᴀʀᴅᴇʀ ʜᴀs ᴘʀɪᴢᴇs ᴡᴀɪᴛɪɴɢ ғᴏʀ ʏᴏᴜ! (/ʜᴏᴀʀᴅᴇʀ ᴄʟᴀɪᴍ)"
-sold:
-  fail: "ʏᴏᴜ ʜᴀᴠᴇ ɴᴏᴛʜɪɴɢ ᴛᴏ sᴇʟʟ!"
-  success: "ʏᴏᴜ sᴏʟᴅ %amountSold% ɪᴛᴇᴍs ғᴏʀ $%soldTotal%!"
-hoarder:
-  starting: "The hoarder is starting in %time%!"
-  start: "The hoarder has started!"
-  end: "The hoarder has ended! (/hoarder claim)"
+  prize:
+    claim: "ʏᴏᴜ ᴄʟᴀɪᴍᴇᴅ ʏᴏᴜʀ ᴘʀɪᴢᴇ! &7(%remainingPrizes% sᴛɪʟʟ ʟᴇғᴛ ᴛᴏ ᴄʟᴀɪᴍ)"
+    inv-full: "ɴᴏ ʀᴏᴏᴍ ʟᴇғᴛ ɪɴ ʏᴏᴜʀ ɪɴᴠᴇɴᴛᴏʀʏ! ᴛʀʏ ᴀɢᴀɪɴ ᴏɴᴄᴇ ʏᴏᴜ ʜᴀᴠᴇ ᴀ sʟᴏᴛ ғʀᴇᴇ."
+    no-claim: "ʏᴏᴜ ʜᴀᴠᴇ ɴᴏ ᴘʀɪᴢᴇs ʟᴇғᴛ ᴛᴏ ᴄʟᴀɪᴍ!"
+    no-prizes: "ᴛʜᴇʀᴇ ᴀʀᴇ ɴᴏ ᴘʀɪᴢᴇs ᴀᴠᴀɪʟᴀʙʟᴇ ᴀᴛ ᴛʜɪs ᴛɪᴍᴇ, ᴄᴏɴᴛᴀᴄᴛ sᴇʀᴠᴇʀ sᴛᴀғғ."
+    available: "ᴛʜᴇ ʜᴏᴀʀᴅᴇʀ ʜᴀs ᴘʀɪᴢᴇs ᴡᴀɪᴛɪɴɢ ғᴏʀ ʏᴏᴜ! (/ʜᴏᴀʀᴅᴇʀ ᴄʟᴀɪᴍ)"
+
+  sold:
+    fail: "ʏᴏᴜ ʜᴀᴠᴇ ɴᴏᴛʜɪɴɢ ᴛᴏ sᴇʟʟ!"
+    success: "ʏᴏᴜ sᴏʟᴅ %amountSold% ɪᴛᴇᴍs ғᴏʀ $%soldTotal%!"
+
+  hoarder:
+    starting: "The hoarder is starting in %time%!"
+    start: "The hoarder has started!"
+    end: "The hoarder has ended! (/hoarder claim)"

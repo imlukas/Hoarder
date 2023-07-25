@@ -19,8 +19,8 @@ public class EventData<T extends PlayerEventData> {
         return participants;
     }
 
-    public PlayerEventData getParticipant(UUID participantId) {
-        for (PlayerEventData participant : participants) {
+    public T getPlayerData(UUID participantId) {
+        for (T participant : participants) {
             if (participant.getPlayerId().equals(participantId)) {
                 return participant;
             }

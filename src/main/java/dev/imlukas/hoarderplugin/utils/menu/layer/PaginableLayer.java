@@ -3,8 +3,11 @@ package dev.imlukas.hoarderplugin.utils.menu.layer;
 import dev.imlukas.hoarderplugin.utils.menu.base.BaseMenu;
 import dev.imlukas.hoarderplugin.utils.menu.element.Renderable;
 import dev.imlukas.hoarderplugin.utils.menu.pagination.PaginableArea;
+import dev.imlukas.hoarderplugin.utils.text.Placeholder;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class PaginableLayer extends Renderable {
@@ -14,6 +17,13 @@ public class PaginableLayer extends Renderable {
 
     public PaginableLayer(BaseMenu menu) {
         super(menu);
+    }
+
+    @Override
+    public void setItemPlaceholders(Collection<Placeholder<Player>> placeholders) {
+        for (PaginableArea area : areas) {
+            area.getElements().forEach(element -> element.setItemPlaceholders(placeholders));
+        }
     }
 
     @Override
