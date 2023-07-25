@@ -9,6 +9,7 @@ import dev.imlukas.hoarderplugin.event.phase.impl.HoarderEventPhase;
 import dev.imlukas.hoarderplugin.event.phase.impl.PreStartPhase;
 import dev.imlukas.hoarderplugin.event.storage.EventSettings;
 import dev.imlukas.hoarderplugin.event.storage.HoarderEventSettings;
+import dev.imlukas.hoarderplugin.utils.text.Placeholder;
 import dev.imlukas.hoarderplugin.utils.time.Time;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,15 +28,15 @@ public class HoarderEvent extends Event{
         eventData = new HoarderEventData(eventSettings.isRandomMaterial() ? eventSettings.getRandomItem() : eventSettings.getFixedItem());
 
         addPhase(new PreStartPhase(this, () -> {
-            plugin.getServer().broadcastMessage("The Hoarder Event is Starting");
 
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                eventData.addParticipant(onlinePlayer);
+                getPlugin().getMessages().sendMessage(onlinePlayer, "hoarder.starting", new Placeholder<>("time", eventSettings.getStartingTime().toString()));
+                eventData.addParticipant(new HoarderPlayerEventData(onlinePlayer.getUniqueId()));
             }
 
-        }, new Time(15, TimeUnit.SECONDS)));
+        }, eventSettings.getStartingTime()));
 
-        addPhase(new HoarderEventPhase(this, new Time(10, TimeUnit.MINUTES)));
+        addPhase(new HoarderEventPhase(this, eventSettings.getEventTime()));
         addPhase(new EndPhase(this, () -> {
 
             for (Map.Entry<HoarderPlayerEventData, Integer> integerPlayerEventDataEntry : eventData.getTop().entrySet()) {
@@ -43,7 +44,8 @@ public class HoarderEvent extends Event{
                 int pos = integerPlayerEventDataEntry.getValue();
             }
 
-
+            getPlugin().getEventRegistry().setActiveEvent(null);
+            getPlugin().getEventRegistry().setLastEvent(this);
         }, new Time(5, TimeUnit.SECONDS)));
     }
 

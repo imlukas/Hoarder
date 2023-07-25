@@ -13,7 +13,6 @@ items:
     name: " "
   active:
     type: PAPER
-    name: "&e%TEMPLATE_NAME%"
     lore:
       - "&7This is the active item for this event"
       - "&7Sell the max of this item to win!"

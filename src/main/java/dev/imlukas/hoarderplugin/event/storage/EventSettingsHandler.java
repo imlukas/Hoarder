@@ -3,6 +3,7 @@ package dev.imlukas.hoarderplugin.event.storage;
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.event.data.item.HoarderItem;
 import dev.imlukas.hoarderplugin.utils.storage.YMLBase;
+import dev.imlukas.hoarderplugin.utils.time.Time;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -24,13 +25,16 @@ public class EventSettingsHandler extends YMLBase {
         boolean randomMaterial = config.getBoolean("random-material");
 
         List<HoarderItem> hoarderItemList = new ArrayList<>();
-        for (String key : config.getConfigurationSection("whitelisted-materials").getKeys(false)) {
+        for (String key : config.getConfigurationSection("material-whitelist").getKeys(false)) {
             Material material = Material.getMaterial(key);
-            double value = config.getDouble("whitelisted-materials." + key);
+            double value = config.getDouble("material-whitelist." + key);
             hoarderItemList.add(new HoarderItem(material, value));
         }
 
-        HoarderEventSettings eventSettings = new HoarderEventSettings(randomMaterial, hoarderItemList);
+        Time startingTime = Time.parseTime(config.getString("starting-time"));
+        Time eventTime = Time.parseTime(config.getString("event-time"));
+
+        HoarderEventSettings eventSettings = new HoarderEventSettings(randomMaterial, hoarderItemList, startingTime, eventTime);
 
         if (!randomMaterial) {
             HoarderItem fixedItem = new HoarderItem(Material.getMaterial(config.getString("fixed-material.material")),

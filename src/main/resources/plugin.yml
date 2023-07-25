@@ -1,4 +1,4 @@
 name: MCXHoarderPlugin
 version: '${version}'
-main: dev.imlukas.hoarderplugin.MCXHoarderPlugin
-api-version: '1.20'
+main: dev.imlukas.hoarderplugin.HoarderPlugin
+api-version: '1.16'

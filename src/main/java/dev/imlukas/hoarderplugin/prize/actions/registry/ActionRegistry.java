@@ -2,10 +2,7 @@ package dev.imlukas.hoarderplugin.prize.actions.registry;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.prize.actions.PrizeAction;
-import dev.imlukas.hoarderplugin.prize.actions.impl.CommandAction;
-import dev.imlukas.hoarderplugin.prize.actions.impl.EconomyAction;
-import dev.imlukas.hoarderplugin.prize.actions.impl.GiveAction;
-import dev.imlukas.hoarderplugin.prize.actions.impl.MessageAction;
+import dev.imlukas.hoarderplugin.prize.actions.impl.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +15,8 @@ public class ActionRegistry {
             "MESSAGE", MessageAction::new,
             "GIVE", GiveAction::new,
             "ECONOMY", EconomyAction::new,
-            "COMMAND", (ignored, input) -> new CommandAction(input));
+            "COMMAND", (ignored, input) -> new CommandAction(input),
+            "COMMAND_CONSOLE", (ignored, input) -> new CommandConsoleAction(input));
 
     private final HoarderPlugin plugin;
 
@@ -31,7 +29,9 @@ public class ActionRegistry {
         BiFunction<HoarderPlugin, String, PrizeAction> function = ACTION_MAP.get(action.substring(0, action.indexOf(":")));
 
         if (function == null) {
-            throw new IllegalArgumentException("Unknown action: " + action);
+            System.err.println("Unknown action: " + action);
+            System.out.println("Available actions: " + ACTION_MAP.keySet());
+            return null;
         }
 
         return function.apply(plugin, action.substring(action.indexOf(":") + 1));

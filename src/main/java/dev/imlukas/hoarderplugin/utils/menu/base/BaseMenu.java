@@ -113,9 +113,6 @@ public class BaseMenu implements InventoryHolder {
         int slot = event.getRawSlot();
 
         if (slot < 0 || slot >= inventory.getSize()) {
-            if (event.isShiftClick()) {
-                event.setCancelled(true);
-            }
             return;
         }
 

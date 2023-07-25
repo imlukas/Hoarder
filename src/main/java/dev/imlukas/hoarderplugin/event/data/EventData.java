@@ -11,8 +11,8 @@ public class EventData<T extends PlayerEventData> {
 
     protected final List<T> participants = new ArrayList<>();
 
-    public void addParticipant(Player player) {
-        participants.add((T) new PlayerEventData(player.getUniqueId()));
+    public void addParticipant(PlayerEventData participant) {
+        participants.add((T) participant);
     }
 
     public List<T> getParticipants() {

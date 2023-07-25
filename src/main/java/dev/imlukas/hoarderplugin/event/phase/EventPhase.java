@@ -20,6 +20,6 @@ public abstract class EventPhase {
     public abstract void run();
 
     public void runAfter(Time time) {
-        new ScheduleBuilder(plugin).in(time.asTicks()).ticks().run(this::run);
+        new ScheduleBuilder(plugin).in(time.asTicks()).ticks().run(this::run).sync().start();
     }
 }

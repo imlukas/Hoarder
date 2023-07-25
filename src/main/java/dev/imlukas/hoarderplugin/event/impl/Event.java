@@ -47,9 +47,17 @@ public abstract class Event {
         EventPhase firstPhase = phases.getFirst();
 
         for (int i = 1; i < phases.size(); i++) {
-            phases.get(i).runAfter(phases.get(i - 1).getDuration());
+
+            EventPhase toRun = phases.get(i);
+            EventPhase runAfter = phases.get(i - 1);
+
+            toRun.runAfter(runAfter.getDuration());
         }
 
         firstPhase.run();
+    }
+
+    public void forceEnd() {
+        phases.getLast().run();
     }
 }

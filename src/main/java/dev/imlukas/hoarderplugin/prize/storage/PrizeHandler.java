@@ -29,7 +29,14 @@ public class PrizeHandler extends YMLBase {
 
             LinkedList<PrizeAction> parsedActions = new LinkedList<>();
             for (String action : actions) {
-                parsedActions.add(actionRegistry.getAction(action));
+
+                PrizeAction prizeAction = actionRegistry.getAction(action);
+
+                if (prizeAction == null) {
+                    continue;
+                }
+
+                parsedActions.add(prizeAction);
             }
 
             prizeRegistry.registerPrize(new EventPrize(key, parsedActions));

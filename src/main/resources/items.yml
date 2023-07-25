@@ -6,5 +6,5 @@ enchanted-stick:
     - '&7the power of the gods.'
   material: STICK
   enchantments:
-    DAMAGE_ALL: 1
-    DURABILITY: 1
+    unbreaking: 10
+    sharpness: 2

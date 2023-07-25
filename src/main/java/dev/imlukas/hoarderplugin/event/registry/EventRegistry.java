@@ -14,6 +14,7 @@ public class EventRegistry {
     private final HoarderPlugin plugin;
     private final Map<String, Function<HoarderPlugin, Event>> registeredEvents = new HashMap<>();
     private Event activeEvent;
+    private Event lastEvent;
 
     public EventRegistry(HoarderPlugin plugin) {
         this.plugin = plugin;
@@ -35,7 +36,15 @@ public class EventRegistry {
         activeEvent = event;
     }
 
+    public void setLastEvent(Event lastEvent) {
+        this.lastEvent = lastEvent;
+    }
+
     public Event getActiveEvent() {
         return activeEvent;
+    }
+
+    public Event getLastEvent() {
+        return lastEvent;
     }
 }

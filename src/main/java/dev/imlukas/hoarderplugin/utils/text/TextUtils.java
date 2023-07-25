@@ -5,11 +5,22 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class TextUtils {
 
+    private static final Pattern hexPattern = Pattern.compile("#([A-Fa-f0-9]){6}");
+
     public static String color(String message) {
+        Matcher matcher = hexPattern.matcher(message);
+        while (matcher.find()) {
+            String color = message.substring(matcher.start(), matcher.end());
+            message = message.replace(color, ChatColor.of(color) + "");
+            matcher = hexPattern.matcher(message);
+        }
+
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 

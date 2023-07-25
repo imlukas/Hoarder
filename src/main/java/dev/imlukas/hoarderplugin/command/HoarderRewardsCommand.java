@@ -9,25 +9,25 @@ import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class HoarderCommand implements SimpleCommand {
+public class HoarderRewardsCommand implements SimpleCommand {
 
     private final HoarderPlugin plugin;
     private final EventRegistry eventRegistry;
     private final Messages messages;
 
-    public HoarderCommand(HoarderPlugin plugin) {
+    public HoarderRewardsCommand(HoarderPlugin plugin) {
         this.plugin = plugin;
         this.eventRegistry = plugin.getEventRegistry();
         this.messages = plugin.getMessages();
     }
     @Override
     public String getIdentifier() {
-        return "hoarder.sell";
+        return "hoarder.rewards";
     }
 
     @Override
     public void execute(CommandSender sender, String... args) {
-        if (eventRegistry.getActiveEvent() == null) {
+        if (eventRegistry.getLastEvent() == null) {
             messages.sendMessage(sender, "command.no-event");
             return;
         }

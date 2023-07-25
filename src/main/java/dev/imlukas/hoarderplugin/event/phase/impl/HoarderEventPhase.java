@@ -36,7 +36,7 @@ public class HoarderEventPhase extends EventPhase {
         );
 
         for (PlayerEventData playerEventData : event.getEventData().getParticipants()) {
-            messages.sendMessage(playerEventData.getPlayer(), "event.hoarder.start", placeholders);
+            messages.sendMessage(playerEventData.getPlayer(), "hoarder.start", placeholders);
         }
     }
 }
