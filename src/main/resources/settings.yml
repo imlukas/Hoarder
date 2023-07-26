@@ -1,4 +1,3 @@
-lastEpoch: 0 # Epoch time of the last event (don't touch, used for internal purposes)
 
 # days, months, weeks, years, hours. Example: 1 days, 1 weeks, 1 months, 1 years, 1 hours (Needs to be plural)
 starting-time: 10 seconds # The time it takes for the event to start

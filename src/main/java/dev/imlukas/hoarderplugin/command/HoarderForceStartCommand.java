@@ -1,6 +1,7 @@
 package dev.imlukas.hoarderplugin.command;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
+import dev.imlukas.hoarderplugin.event.impl.Event;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.utils.command.SimpleCommand;
@@ -25,6 +26,12 @@ public class HoarderForceStartCommand implements SimpleCommand {
 
     @Override
     public void execute(CommandSender sender, String... args) {
-        new HoarderEvent(plugin).start();
+        Event activeEvent = plugin.getEventTracker().getActiveEvent();
+
+        if (activeEvent != null) {
+            activeEvent.forceEnd();
+        }
+
+        new HoarderEvent(plugin);
     }
 }

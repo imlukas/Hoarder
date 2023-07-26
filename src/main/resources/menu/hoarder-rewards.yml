@@ -1,0 +1,39 @@
+title: "&7Hoarder &8| &eRewards"
+
+layout:
+  - "b b b b b b b b b"
+  - "b . . . . . . . b"
+  - "b . . 1 2 3 . . b"
+  - "b . . . . . . . b"
+  - "b b b b c b b b b"
+
+items:
+  unavailable:
+    type: BARRIER
+    name: "&7Unavailable"
+    lore:
+      - "&7This reward is unavailable"
+  claimed:
+    type: BARRIER
+    name: "&7%prize-name% [Claimed]"
+    lore:
+      - "&7You have already claimed this reward"
+  unclaimed:
+    type: PAPER
+    name: "&7%prize-name% [Unclaimed]"
+    lore:
+      - "&7Reward #%reward-number%"
+      - "&7Click to redeem this reward"
+  b:
+    type: BLACK_STAINED_GLASS_PANE
+    name: " "
+  c:
+    type: BARRIER
+    name: "&cClose"
+    lore:
+      - "&7Close this menu"
+  s:
+    type: EMERALD
+    name: "&aSell"
+    lore:
+      - "&7Click to sell the item(s)"

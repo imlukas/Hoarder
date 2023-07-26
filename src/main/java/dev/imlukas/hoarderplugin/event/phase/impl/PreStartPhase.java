@@ -22,4 +22,11 @@ public class PreStartPhase extends EventPhase {
     public void run() {
         runnable.run();
     }
+
+    @Override
+    public void end() {
+        if (onEnd != null) {
+            onEnd.run();
+        }
+    }
 }

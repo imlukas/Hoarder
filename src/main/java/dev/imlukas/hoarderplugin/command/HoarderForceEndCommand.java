@@ -1,8 +1,8 @@
 package dev.imlukas.hoarderplugin.command;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
+import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.event.impl.Event;
-import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.utils.command.SimpleCommand;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import org.bukkit.command.CommandSender;
@@ -10,27 +10,33 @@ import org.bukkit.command.CommandSender;
 public class HoarderForceEndCommand implements SimpleCommand {
 
     private final HoarderPlugin plugin;
-    private final EventRegistry eventRegistry;
+    private final EventTracker eventTracker;
     private final Messages messages;
 
     public HoarderForceEndCommand(HoarderPlugin plugin) {
         this.plugin = plugin;
-        this.eventRegistry = plugin.getEventRegistry();
+        this.eventTracker = plugin.getEventTracker();
         this.messages = plugin.getMessages();
     }
     @Override
     public String getIdentifier() {
-        return "hoarder.sell";
+        return "hoarder.forceend";
+    }
+
+    @Override
+    public String getPermission() {
+        return "hoarder.admin";
     }
 
     @Override
     public void execute(CommandSender sender, String... args) {
-        if (eventRegistry.getActiveEvent() == null) {
+        if (eventTracker.getActiveEvent() == null) {
             messages.sendMessage(sender, "command.no-event");
             return;
         }
 
-        Event activeEvent = eventRegistry.getActiveEvent();
+        Event activeEvent = eventTracker.getActiveEvent();
         activeEvent.forceEnd();
+        messages.sendMessage(sender, "hoarder.force-end");
     }
 }

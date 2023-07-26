@@ -6,6 +6,7 @@ import dev.imlukas.hoarderplugin.prize.actions.PrizeAction;
 import dev.imlukas.hoarderplugin.prize.actions.registry.ActionRegistry;
 import dev.imlukas.hoarderplugin.prize.registry.PrizeRegistry;
 import dev.imlukas.hoarderplugin.utils.storage.YMLBase;
+import dev.imlukas.hoarderplugin.utils.text.TextUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.LinkedList;
@@ -25,7 +26,8 @@ public class PrizeHandler extends YMLBase {
 
     public void load() {
         for (String key : getConfiguration().getKeys(false)) {
-            List<String> actions = getConfiguration().getStringList(key);
+            String displayName = TextUtils.color(getConfiguration().getString(key + ".display-name"));
+            List<String> actions = getConfiguration().getStringList(key + ".actions");
 
             LinkedList<PrizeAction> parsedActions = new LinkedList<>();
             for (String action : actions) {
@@ -39,7 +41,9 @@ public class PrizeHandler extends YMLBase {
                 parsedActions.add(prizeAction);
             }
 
-            prizeRegistry.registerPrize(new EventPrize(key, parsedActions));
+            prizeRegistry.registerPrize(new EventPrize(key, displayName, parsedActions));
         }
+
+        System.out.println("Loaded " + prizeRegistry.getPrizes().size() + " prizes.");
     }
 }

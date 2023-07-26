@@ -4,15 +4,12 @@ import dev.imlukas.hoarderplugin.prize.EventPrize;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerEventData {
 
     private final UUID playerId;
-    private final List<EventPrize> availablePrizes = new ArrayList<>();
-
+    private final Map<EventPrize, Boolean> availablePrizes = new HashMap<>();
 
     public PlayerEventData(UUID playerId) {
         this.playerId = playerId;
@@ -27,13 +24,22 @@ public class PlayerEventData {
         return Bukkit.getPlayer(playerId);
     }
 
-    public List<EventPrize> getAvailablePrizes() {
+    public Map<EventPrize, Boolean> getAvailablePrizes() {
         return availablePrizes;
     }
 
-    public void addAvailablePrize(EventPrize prize) {
-        availablePrizes.add(prize);
+    public void setAvailablePrize(EventPrize prize, boolean available) {
+        availablePrizes.put(prize, available);
     }
+
+    public void addAvailablePrize(EventPrize prize) {
+        availablePrizes.put(prize, false);
+    }
+
+    public void addAvailablePrize(Map<EventPrize, Boolean> prizes) {
+        availablePrizes.putAll(prizes);
+    }
+
 
     public void removeAvailablePrize(EventPrize prize) {
         availablePrizes.remove(prize);

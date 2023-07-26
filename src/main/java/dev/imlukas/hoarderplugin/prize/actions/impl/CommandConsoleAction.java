@@ -14,6 +14,6 @@ public class CommandConsoleAction implements PrizeAction {
 
     @Override
     public void handle(Player player) {
-        Bukkit.getConsoleSender().sendMessage(command);
+        Bukkit.getConsoleSender().sendMessage(command.replace("%player%", player.getName()));
     }
 }

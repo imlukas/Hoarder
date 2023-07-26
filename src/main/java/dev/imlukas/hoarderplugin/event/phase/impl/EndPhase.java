@@ -8,8 +8,7 @@ public class EndPhase extends EventPhase {
 
     private final Runnable runnable;
     public EndPhase(Event event, Time duration) {
-        this(event, () -> event.getPlugin().getServer().broadcastMessage("Event " + event.getIdentifier() + " is ending!"),
-                duration);
+        this(event, () -> {}, duration);
     }
 
     public EndPhase(Event event, Runnable runnable, Time duration) {

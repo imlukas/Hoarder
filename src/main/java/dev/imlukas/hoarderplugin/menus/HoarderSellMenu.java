@@ -15,6 +15,7 @@ import dev.imlukas.hoarderplugin.utils.text.Placeholder;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class HoarderSellMenu extends UpdatableMenu {
     private ConfigurationApplicator applicator;
     private BaseLayer layer;
 
-    public HoarderSellMenu(HoarderPlugin plugin, Player viewer, Event activeEvent) {
+    public HoarderSellMenu(HoarderPlugin plugin, Player viewer, @NotNull Event activeEvent) {
         super(plugin, viewer);
         this.activeEvent = (HoarderEvent) activeEvent;
         this.economy = plugin.getEconomy();
@@ -116,6 +117,10 @@ public class HoarderSellMenu extends UpdatableMenu {
             ItemStack item = menu.getInventory().getItem(soldItemSlot);
 
             if (item == null) {
+                continue;
+            }
+
+            if (item.getType() != activeEvent.getEventData().getActiveItem().getMaterial()) {
                 continue;
             }
 

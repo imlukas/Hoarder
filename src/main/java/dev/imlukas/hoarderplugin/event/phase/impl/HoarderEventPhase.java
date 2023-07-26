@@ -1,9 +1,9 @@
 package dev.imlukas.hoarderplugin.event.phase.impl;
 
+import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.event.data.player.PlayerEventData;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.event.phase.EventPhase;
-import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
 import dev.imlukas.hoarderplugin.utils.text.TextUtils;
@@ -16,18 +16,18 @@ public class HoarderEventPhase extends EventPhase {
 
     private final HoarderEvent event;
     private final Messages messages;
-    private final EventRegistry eventRegistry;
+    private final EventTracker eventTracker;
 
     public HoarderEventPhase(HoarderEvent event, Time duration) {
         super(event.getPlugin(), duration);
         this.event = event;
         this.messages = event.getPlugin().getMessages();
-        this.eventRegistry = event.getPlugin().getEventRegistry();
+        this.eventTracker = event.getPlugin().getEventTracker();
     }
 
     @Override
     public void run() {
-        eventRegistry.setActiveEvent(event);
+        eventTracker.setActiveEvent(event);
 
         List<Placeholder<Player>> placeholders = List.of(
                 new Placeholder<>("duration", duration.toString()),
@@ -39,4 +39,5 @@ public class HoarderEventPhase extends EventPhase {
             messages.sendMessage(playerEventData.getPlayer(), "hoarder.start", placeholders);
         }
     }
+
 }

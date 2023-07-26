@@ -1,6 +1,7 @@
 package dev.imlukas.hoarderplugin.event.impl;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
+import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.event.data.EventData;
 import dev.imlukas.hoarderplugin.event.phase.EventPhase;
 import dev.imlukas.hoarderplugin.event.storage.EventSettings;
@@ -13,12 +14,15 @@ public abstract class Event {
 
     protected final HoarderPlugin plugin;
     protected final PrizeRegistry prizeRegistry;
+    protected final EventTracker eventTracker;
 
     private final LinkedList<EventPhase> phases = new LinkedList<>();
+    private EventPhase currentPhase;
 
     public Event(HoarderPlugin plugin) {
         this.plugin = plugin;
         this.prizeRegistry = plugin.getPrizeRegistry();
+        this.eventTracker = plugin.getEventTracker();
     }
 
     public HoarderPlugin getPlugin() {
@@ -51,13 +55,27 @@ public abstract class Event {
             EventPhase toRun = phases.get(i);
             EventPhase runAfter = phases.get(i - 1);
 
-            toRun.runAfter(runAfter.getDuration());
+            toRun.runAfter(runAfter, () -> {
+                if (currentPhase != null) {
+                    currentPhase.end();
+                }
+
+                currentPhase = toRun;
+                currentPhase.run();
+            });
         }
 
+        currentPhase = firstPhase;
         firstPhase.run();
+        plugin.setupScheduler();
     }
 
     public void forceEnd() {
-        phases.getLast().run();
+        end();
+        phases.forEach(EventPhase::end);
+    }
+
+    public void end() {
+        eventTracker.setLastEvent(this);
     }
 }
