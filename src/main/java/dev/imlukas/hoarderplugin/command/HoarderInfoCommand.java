@@ -1,13 +1,9 @@
 package dev.imlukas.hoarderplugin.command;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
-import dev.imlukas.hoarderplugin.event.impl.Event;
-import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
-import dev.imlukas.hoarderplugin.menus.HoarderSellMenu;
-import dev.imlukas.hoarderplugin.utils.command.SimpleCommand;
+import dev.imlukas.hoarderplugin.utils.command.legacy.SimpleCommand;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class HoarderInfoCommand implements SimpleCommand {
 
@@ -16,6 +12,7 @@ public class HoarderInfoCommand implements SimpleCommand {
     public HoarderInfoCommand(HoarderPlugin plugin) {
         this.messages = plugin.getMessages();
     }
+
     @Override
     public String getIdentifier() {
         return "hoarder.info";

@@ -84,7 +84,6 @@ public class MenuListener implements Listener {
 
         if (content.equalsIgnoreCase("cancel")) {
             event.setMessage("");
-            player.sendMessage("Cancelled");
             data.runDisplayTasks();
             return;
         }

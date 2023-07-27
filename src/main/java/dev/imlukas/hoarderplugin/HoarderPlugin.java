@@ -1,10 +1,10 @@
 package dev.imlukas.hoarderplugin;
 
 import dev.imlukas.hoarderplugin.command.*;
-import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.event.storage.EventSettingsHandler;
+import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.items.handler.CustomItemHandler;
 import dev.imlukas.hoarderplugin.items.registry.CustomItemRegistry;
 import dev.imlukas.hoarderplugin.listener.DisconnectListener;
@@ -17,8 +17,8 @@ import dev.imlukas.hoarderplugin.storage.SQLHandler;
 import dev.imlukas.hoarderplugin.storage.sql.SQLDatabase;
 import dev.imlukas.hoarderplugin.storage.sql.constants.ColumnType;
 import dev.imlukas.hoarderplugin.storage.sql.data.ColumnData;
-import dev.imlukas.hoarderplugin.utils.command.SimpleCommand;
-import dev.imlukas.hoarderplugin.utils.command.impl.CommandManager;
+import dev.imlukas.hoarderplugin.utils.command.legacy.SimpleCommand;
+import dev.imlukas.hoarderplugin.utils.command.command.CommandManager;
 import dev.imlukas.hoarderplugin.utils.io.FileUtils;
 import dev.imlukas.hoarderplugin.utils.menu.registry.MenuRegistry;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.ScheduledTask;
@@ -58,11 +58,13 @@ public final class HoarderPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        System.out.println("[HoarderPlugin] Enabling HoarderPlugin v" + getDescription().getVersion() + " by imlukas.");
         saveDefaultConfig();
+
         FileUtils.copyBuiltInResources(this, getFile());
+        messages = new Messages(this);
         commandManager = new CommandManager(this);
         menuRegistry = new MenuRegistry(this);
-        messages = new Messages(this);
         setupEconomy();
 
         sqlDatabase = new SQLDatabase(this.getConfig().getConfigurationSection("mysql"));
@@ -144,7 +146,7 @@ public final class HoarderPlugin extends JavaPlugin {
     }
 
     public void registerCommand(SimpleCommand command) {
-        commandManager.register(command);
+        commandManager.registerCommand(command);
     }
 
     public void registerListener(Listener listener) {

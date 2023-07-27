@@ -1,4 +1,4 @@
-package dev.imlukas.hoarderplugin.utils.command;
+package dev.imlukas.hoarderplugin.utils.command.legacy;
 
 import org.bukkit.command.CommandSender;
 

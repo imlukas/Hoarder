@@ -3,8 +3,7 @@ package dev.imlukas.hoarderplugin.command;
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.event.impl.Event;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
-import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
-import dev.imlukas.hoarderplugin.utils.command.SimpleCommand;
+import dev.imlukas.hoarderplugin.utils.command.legacy.SimpleCommand;
 import org.bukkit.command.CommandSender;
 
 public class HoarderForceStartCommand implements SimpleCommand {

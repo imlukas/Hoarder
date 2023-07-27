@@ -12,6 +12,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Container;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -78,8 +79,10 @@ public class RightClickChestListener implements Listener {
         Material itemMaterial = eventData.getActiveItem().getMaterial();
         double itemValue = eventData.getActiveItem().getValue();
 
-        Chest chest = (Chest) block.getState();
-        Inventory inventory = chest.getInventory();
+        if (!(block instanceof Container container)) {
+            return;
+        }
+        Inventory inventory = container.getInventory();
 
         int itemsSold = 0;
         for (ItemStack content : inventory.getContents()) {

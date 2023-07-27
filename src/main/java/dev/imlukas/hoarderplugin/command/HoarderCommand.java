@@ -1,10 +1,10 @@
 package dev.imlukas.hoarderplugin.command;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
-import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.event.impl.Event;
+import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.menus.HoarderSellMenu;
-import dev.imlukas.hoarderplugin.utils.command.SimpleCommand;
+import dev.imlukas.hoarderplugin.utils.command.legacy.SimpleCommand;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,6 +20,7 @@ public class HoarderCommand implements SimpleCommand {
         this.eventTracker = plugin.getEventTracker();
         this.messages = plugin.getMessages();
     }
+
     @Override
     public String getIdentifier() {
         return "hoarder.sell";

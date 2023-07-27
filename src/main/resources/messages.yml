@@ -5,6 +5,9 @@ messages:
 
   command:
     no-event: "&7There's currently no active event!"
+    no-permission: "&7You don't have permission to use this command!"
+    invalid-args: "&7Invalid arguments!"
+    cannot-use: "&7You cannot use this command right now!"
 
   prize:
     claimed: "ʏᴏᴜ already ᴄʟᴀɪᴍᴇᴅ ʏᴏᴜʀ ᴘʀɪᴢᴇ!"
