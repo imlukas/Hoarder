@@ -60,8 +60,7 @@ public class ComparisonResultFull {
     private boolean searchArgs(String[] inputs, SimpleCommand command) {
         String[] args = command.getIdentifier().split("\\.");
 
-        //System.out.println("Args: " + Arrays.toString(args));
-        //System.out.println("Inputs: " + Arrays.toString(inputs));
+
         if (inputs.length > args.length) {
             return false;
         }

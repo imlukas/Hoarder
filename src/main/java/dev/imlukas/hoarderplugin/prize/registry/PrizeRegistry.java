@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class PrizeRegistry {
 
+
     private final Map<String, EventPrize> prizes = new HashMap<>();
 
     public void registerPrize(EventPrize prize) {
@@ -34,7 +35,7 @@ public class PrizeRegistry {
                 i--;
                 continue;
             }
-            System.out.println("Added prize " + prize.getIdentifier() + " to random prizes.");
+
             randomPrizes.put(prize, false);
         }
 

@@ -42,7 +42,10 @@ public class HoarderSellMenu extends UpdatableMenu {
         menu = createMenu();
         applicator = getApplicator();
         layer = new BaseLayer(menu);
-        applicator.registerButton(layer, "c", this::close);
+        applicator.registerButton(layer, "c", () -> {
+            giveItemsBack();
+            this.close();
+        });
         applicator.registerButton(layer, "s", () -> {
             updateSoldItems();
 
@@ -98,6 +101,19 @@ public class HoarderSellMenu extends UpdatableMenu {
         return menu;
     }
 
+
+    public void giveItemsBack() {
+        List<Integer> soldItemSlots = applicator.getMask().selection(".").getSlots();
+        for (Integer soldItemSlot : soldItemSlots) {
+            ItemStack item = menu.getInventory().getItem(soldItemSlot);
+
+            if (item == null) {
+                continue;
+            }
+
+            getViewer().getInventory().addItem(item);
+        }
+    }
 
     private void removeSoldItems() {
         List<Integer> soldItemSlots = applicator.getMask().selection(".").getSlots();

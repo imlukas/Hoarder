@@ -27,6 +27,6 @@ public class CustomItemHandler extends YMLBase {
             customItemRegistry.register(customItem);
         }
 
-        System.out.println("Loaded " + customItemRegistry.getCustomItems().size() + " custom items.");
+        System.out.println("Loaded " + customItemRegistry.getCustomItems().size() + " custom item(s).");
     }
 }

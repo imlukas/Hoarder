@@ -62,8 +62,9 @@ public class Messages extends YMLBase {
 
     public void sendMessage(CommandSender sender, String name, Function<String, String> action) {
         if (getConfiguration().isList("messages." + name)) {
-            for (String str : getConfiguration().getStringList("messages." + name)) {
-                msg = TextUtils.color(action.apply(str.replace("%prefix%", prefix)));
+            for (String message : getConfiguration().getStringList("messages." + name)) {
+                msg = message.replace("%prefix%", prefix);
+                msg = TextUtils.color(action.apply(msg));
             }
             return;
         }

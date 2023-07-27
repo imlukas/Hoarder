@@ -78,8 +78,6 @@ public class MultiSwitch<T> implements MenuElement {
 
     public void cycle() {
         index = (index + 1) % choices.size();
-        System.out.println("Cycling to " + index);
-        System.out.println("Selected Choice: " + choices.get(index));
         runUpdate();
     }
 
@@ -90,7 +88,6 @@ public class MultiSwitch<T> implements MenuElement {
             index = choices.size() - 1;
         }
 
-        System.out.println("Cycling back to " + index);
         runUpdate();
     }
 

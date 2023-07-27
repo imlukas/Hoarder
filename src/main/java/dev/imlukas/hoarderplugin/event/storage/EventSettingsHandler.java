@@ -44,6 +44,7 @@ public class EventSettingsHandler extends YMLBase {
         }
 
         eventSettingsMap.put(eventSettings.getEventIdentifier(), eventSettings);
+        System.out.println("Loaded settings for event " + eventSettings.getEventIdentifier() + ".");
     }
 
     public Map<String, EventSettings> getEventSettingsMap() {

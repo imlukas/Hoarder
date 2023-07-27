@@ -62,6 +62,12 @@ public class HoarderRewardsMenu extends UpdatableMenu {
         int prizeAmount = availablePrizes.size();
         int availablePrizesAmount = (int) availablePrizes.values().stream().filter(claimed -> !claimed).count() - 1;
 
+        if (availablePrizesAmount <= 0) {
+            messages.sendMessage(getViewer(), "prize.no-claim");
+            this.close();
+            return;
+        }
+
         for (int i = 1; i <= 3; i++) {
 
             if (i > prizeAmount) {

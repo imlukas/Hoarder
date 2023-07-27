@@ -7,7 +7,9 @@ import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.event.storage.EventSettingsHandler;
 import dev.imlukas.hoarderplugin.items.handler.CustomItemHandler;
 import dev.imlukas.hoarderplugin.items.registry.CustomItemRegistry;
+import dev.imlukas.hoarderplugin.listener.DisconnectListener;
 import dev.imlukas.hoarderplugin.listener.RightClickChestListener;
+import dev.imlukas.hoarderplugin.prize.PrizeRewarder;
 import dev.imlukas.hoarderplugin.prize.actions.registry.ActionRegistry;
 import dev.imlukas.hoarderplugin.prize.registry.PrizeRegistry;
 import dev.imlukas.hoarderplugin.prize.storage.PrizeHandler;
@@ -49,13 +51,13 @@ public final class HoarderPlugin extends JavaPlugin {
 
     private PrizeRegistry prizeRegistry;
     private PrizeHandler prizeHandler;
+    private PrizeRewarder prizeRewarder;
 
     private ScheduledTask scheduledTask;
 
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
         saveDefaultConfig();
         FileUtils.copyBuiltInResources(this, getFile());
         commandManager = new CommandManager(this);
@@ -80,6 +82,7 @@ public final class HoarderPlugin extends JavaPlugin {
 
         prizeRegistry = new PrizeRegistry();
         prizeHandler = new PrizeHandler(this);
+        prizeRewarder = new PrizeRewarder(this);
 
         registerCommand(new HoarderCommand(this));
         registerCommand(new HoarderForceStartCommand(this));
@@ -89,7 +92,13 @@ public final class HoarderPlugin extends JavaPlugin {
         registerCommand(new HoarderGiveSellingItemCommand(this));
 
         registerListener(new RightClickChestListener(this));
+        registerListener(new DisconnectListener(this));
 
+        setupHoarderTimer();
+    }
+
+
+    public void setupHoarderTimer() {
         long lastEpoch = getConfig().getLong("time-remaining.value");
         if (lastEpoch != 0) {
             long timeFromShutdown = (System.currentTimeMillis() - lastEpoch) / 1000;
@@ -105,8 +114,8 @@ public final class HoarderPlugin extends JavaPlugin {
         } else {
             setupScheduler();
         }
-
     }
+
     public void setupScheduler() {
         scheduledTask = new ScheduleBuilder(this).every(12).hours().run(() -> {
             new HoarderEvent(this);

@@ -15,6 +15,10 @@ public class EventData<T extends PlayerEventData> {
         participants.add((T) participant);
     }
 
+    public void removeParticipant(UUID playerId) {
+        participants.removeIf(participant -> participant.getPlayerId().equals(playerId));
+    }
+
     public List<T> getParticipants() {
         return participants;
     }

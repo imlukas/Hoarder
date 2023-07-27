@@ -17,4 +17,4 @@ selling-item:
     - "&7Use this item to sell the contents of a chest directly"
     - "&7to the hoarder. Right-click the chest with this item"
   glow: true
-  model-data: 9999 # used to identify the item
+  model-data: 9999

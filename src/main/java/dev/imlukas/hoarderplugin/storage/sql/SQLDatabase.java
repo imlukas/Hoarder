@@ -84,7 +84,7 @@ public class SQLDatabase {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, username, password);
-                System.out.println("Connected to MySQL server. // " + connection);
+                System.out.println("Connected to MySQL server | Using database: " + database);
 
                 return connection;
             } catch (Exception e) {

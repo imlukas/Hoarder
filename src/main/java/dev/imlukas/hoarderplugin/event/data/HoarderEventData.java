@@ -2,6 +2,7 @@ package dev.imlukas.hoarderplugin.event.data;
 
 import dev.imlukas.hoarderplugin.event.data.item.HoarderItem;
 import dev.imlukas.hoarderplugin.event.data.player.HoarderPlayerEventData;
+import dev.imlukas.hoarderplugin.event.data.player.PlayerEventData;
 import dev.imlukas.hoarderplugin.utils.MapUtil;
 
 import java.util.*;
@@ -32,15 +33,15 @@ public class HoarderEventData extends EventData<HoarderPlayerEventData> {
 
         Map<Integer, HoarderPlayerEventData> top = new HashMap<>();
 
-        int i = 0;
-        for (Map.Entry<Integer, HoarderPlayerEventData> integerHoarderPlayerEventDataEntry : scores.entrySet()) {
+        int i = 1;
+        for (Map.Entry<Integer, HoarderPlayerEventData> integerHoarderPlayerEventDataEntry : sortedScores.entrySet()) {
             top.put(i, integerHoarderPlayerEventDataEntry.getValue());
-        }
-
-        for (Map.Entry<Integer, HoarderPlayerEventData> integerHoarderPlayerEventDataEntry : top.entrySet()) {
-            System.out.println(integerHoarderPlayerEventDataEntry.getValue().getPlayer().getName() + " # " + integerHoarderPlayerEventDataEntry.getKey());
+            i++;
         }
         return top;
     }
 
+    public void addParticipant(HoarderPlayerEventData participant) {
+        super.addParticipant(participant);
+    }
 }

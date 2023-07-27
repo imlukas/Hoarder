@@ -44,6 +44,6 @@ public class PrizeHandler extends YMLBase {
             prizeRegistry.registerPrize(new EventPrize(key, displayName, parsedActions));
         }
 
-        System.out.println("Loaded " + prizeRegistry.getPrizes().size() + " prizes.");
+        System.out.println("Loaded " + prizeRegistry.getPrizes().size() + " prize(s).");
     }
 }
