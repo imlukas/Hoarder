@@ -1,7 +1,10 @@
-package dev.imlukas.hoarderplugin.event.storage;
+package dev.imlukas.hoarderplugin.event.settings.handler;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
-import dev.imlukas.hoarderplugin.event.data.item.HoarderItem;
+import dev.imlukas.hoarderplugin.event.data.hoarder.item.HoarderItem;
+import dev.imlukas.hoarderplugin.event.settings.EventSettings;
+import dev.imlukas.hoarderplugin.event.settings.impl.hoarder.HoarderEventSettings;
+import dev.imlukas.hoarderplugin.event.settings.registry.EventSettingsRegistry;
 import dev.imlukas.hoarderplugin.utils.storage.YMLBase;
 import dev.imlukas.hoarderplugin.utils.time.Time;
 import org.bukkit.Material;
@@ -14,12 +17,14 @@ import java.util.Map;
 
 public class EventSettingsHandler extends YMLBase {
 
-    private final Map<String, EventSettings> eventSettingsMap = new HashMap<>();
+    private final EventSettingsRegistry eventSettingsRegistry;
     public EventSettingsHandler(HoarderPlugin plugin) {
         super(plugin, "settings.yml");
+        this.eventSettingsRegistry = plugin.getEventSettingsRegistry();
         load();
     }
 
+    // TODO: make this not a registry type thing, currently this is not dynamic and would be a mess with 2+ events.
     public void load() {
         FileConfiguration config = getConfiguration();
         boolean randomMaterial = config.getBoolean("random-material");
@@ -43,15 +48,7 @@ public class EventSettingsHandler extends YMLBase {
             eventSettings.setFixedItem(fixedItem);
         }
 
-        eventSettingsMap.put(eventSettings.getEventIdentifier(), eventSettings);
+        eventSettingsRegistry.register(eventSettings);
         System.out.println("Loaded settings for event " + eventSettings.getEventIdentifier() + ".");
-    }
-
-    public Map<String, EventSettings> getEventSettingsMap() {
-        return eventSettingsMap;
-    }
-
-    public EventSettings getEventSettings(String eventIdentifier) {
-        return eventSettingsMap.get(eventIdentifier);
     }
 }

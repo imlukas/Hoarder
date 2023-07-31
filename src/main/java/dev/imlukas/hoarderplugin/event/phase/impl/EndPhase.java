@@ -1,6 +1,6 @@
 package dev.imlukas.hoarderplugin.event.phase.impl;
 
-import dev.imlukas.hoarderplugin.event.impl.Event;
+import dev.imlukas.hoarderplugin.event.Event;
 import dev.imlukas.hoarderplugin.event.phase.EventPhase;
 import dev.imlukas.hoarderplugin.utils.time.Time;
 

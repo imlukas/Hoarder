@@ -2,8 +2,8 @@ package dev.imlukas.hoarderplugin.listener;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
-import dev.imlukas.hoarderplugin.event.data.HoarderEventData;
-import dev.imlukas.hoarderplugin.event.data.player.HoarderPlayerEventData;
+import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderEventData;
+import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderPlayerEventData;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.utils.item.ItemBuilder;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
@@ -11,7 +11,6 @@ import dev.imlukas.hoarderplugin.utils.text.Placeholder;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.block.Container;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -41,11 +40,7 @@ public class RightClickChestListener implements Listener {
         String type = config.getString("selling-item.type");
         ItemStack sellingItem = ItemBuilder.fromSection(config.getConfigurationSection("selling-item"));
 
-        if (type == null) {
-            return;
-        }
-
-        if (item == null || block == null) {
+        if (type == null || item == null || block == null) {
             return;
         }
 
@@ -64,7 +59,7 @@ public class RightClickChestListener implements Listener {
             }
         }
 
-        if (block.getType() != Material.CHEST) {
+        if (!(block instanceof Container container)) {
             return;
         }
 
@@ -79,9 +74,6 @@ public class RightClickChestListener implements Listener {
         Material itemMaterial = eventData.getActiveItem().getMaterial();
         double itemValue = eventData.getActiveItem().getValue();
 
-        if (!(block instanceof Container container)) {
-            return;
-        }
         Inventory inventory = container.getInventory();
 
         int itemsSold = 0;

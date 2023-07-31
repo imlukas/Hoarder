@@ -16,9 +16,11 @@ public class CustomItem {
     public void giveItem(Player player) {
         player.getInventory().addItem(this.itemStack.clone());
     }
+
     public ItemStack getItemStack() {
         return getItemStack(true);
     }
+
     public ItemStack getItemStack(boolean clone) {
         return clone ? this.itemStack.clone() : this.itemStack;
     }

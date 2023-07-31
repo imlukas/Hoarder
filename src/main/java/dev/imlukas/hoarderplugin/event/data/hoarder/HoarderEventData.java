@@ -1,9 +1,9 @@
-package dev.imlukas.hoarderplugin.event.data;
+package dev.imlukas.hoarderplugin.event.data.hoarder;
 
-import dev.imlukas.hoarderplugin.event.data.item.HoarderItem;
-import dev.imlukas.hoarderplugin.event.data.player.HoarderPlayerEventData;
-import dev.imlukas.hoarderplugin.event.data.player.PlayerEventData;
-import dev.imlukas.hoarderplugin.utils.MapUtil;
+import dev.imlukas.hoarderplugin.event.data.EventData;
+import dev.imlukas.hoarderplugin.event.data.hoarder.item.HoarderItem;
+import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderPlayerEventData;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -41,7 +41,8 @@ public class HoarderEventData extends EventData<HoarderPlayerEventData> {
         return top;
     }
 
-    public void addParticipant(HoarderPlayerEventData participant) {
-        super.addParticipant(participant);
+    @Override
+    public void addParticipant(Player player) {
+        participants.add(new HoarderPlayerEventData(player.getUniqueId()));
     }
 }

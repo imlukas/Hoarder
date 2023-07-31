@@ -1,9 +1,9 @@
 package dev.imlukas.hoarderplugin.menus;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
-import dev.imlukas.hoarderplugin.event.data.HoarderEventData;
-import dev.imlukas.hoarderplugin.event.data.player.HoarderPlayerEventData;
-import dev.imlukas.hoarderplugin.event.impl.Event;
+import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderEventData;
+import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderPlayerEventData;
+import dev.imlukas.hoarderplugin.event.Event;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.utils.menu.base.ConfigurableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.button.Button;
@@ -24,10 +24,12 @@ public class HoarderSellMenu extends UpdatableMenu {
     private final Messages messages;
     private final Economy economy;
     private final HoarderEvent activeEvent;
-    private int itemsSold;
+
     private ConfigurableMenu menu;
     private ConfigurationApplicator applicator;
     private BaseLayer layer;
+
+    private int itemsSold;
 
     public HoarderSellMenu(HoarderPlugin plugin, Player viewer, @NotNull Event activeEvent) {
         super(plugin, viewer);
@@ -42,10 +44,12 @@ public class HoarderSellMenu extends UpdatableMenu {
         menu = createMenu();
         applicator = getApplicator();
         layer = new BaseLayer(menu);
+
         applicator.registerButton(layer, "c", () -> {
             giveItemsBack();
             this.close();
         });
+
         applicator.registerButton(layer, "s", () -> {
             updateSoldItems();
 
@@ -86,7 +90,6 @@ public class HoarderSellMenu extends UpdatableMenu {
         layer.applyRawSelection(applicator.getMask().selection("a"), activeItem);
 
         menu.setItemPlaceholders(placeholderList);
-
         menu.forceUpdate();
     }
 

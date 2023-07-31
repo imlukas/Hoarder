@@ -1,7 +1,7 @@
 package dev.imlukas.hoarderplugin.event.registry;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
-import dev.imlukas.hoarderplugin.event.impl.Event;
+import dev.imlukas.hoarderplugin.event.Event;
 
 import java.util.ArrayList;
 import java.util.HashMap;

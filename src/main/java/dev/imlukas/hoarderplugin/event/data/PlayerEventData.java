@@ -1,4 +1,4 @@
-package dev.imlukas.hoarderplugin.event.data.player;
+package dev.imlukas.hoarderplugin.event.data;
 
 import dev.imlukas.hoarderplugin.prize.EventPrize;
 import org.bukkit.Bukkit;

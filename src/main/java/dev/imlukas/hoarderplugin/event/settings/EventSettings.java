@@ -1,4 +1,4 @@
-package dev.imlukas.hoarderplugin.event.storage;
+package dev.imlukas.hoarderplugin.event.settings;
 
 public class EventSettings {
 

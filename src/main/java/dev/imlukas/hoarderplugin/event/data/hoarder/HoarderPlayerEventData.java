@@ -1,8 +1,10 @@
-package dev.imlukas.hoarderplugin.event.data.player;
+package dev.imlukas.hoarderplugin.event.data.hoarder;
+
+import dev.imlukas.hoarderplugin.event.data.PlayerEventData;
 
 import java.util.UUID;
 
-public class HoarderPlayerEventData extends PlayerEventData{
+public class HoarderPlayerEventData extends PlayerEventData {
 
     private int soldItems = 0;
 

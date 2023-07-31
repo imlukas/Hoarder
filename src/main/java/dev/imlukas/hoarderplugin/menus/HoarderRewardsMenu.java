@@ -1,7 +1,7 @@
 package dev.imlukas.hoarderplugin.menus;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
-import dev.imlukas.hoarderplugin.event.data.player.PlayerEventData;
+import dev.imlukas.hoarderplugin.event.data.PlayerEventData;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.prize.EventPrize;
@@ -11,7 +11,6 @@ import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicato
 import dev.imlukas.hoarderplugin.utils.menu.layer.BaseLayer;
 import dev.imlukas.hoarderplugin.utils.menu.mask.PatternMask;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
-import dev.imlukas.hoarderplugin.utils.menu.selection.Selection;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
 import org.bukkit.entity.Player;

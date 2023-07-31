@@ -1,4 +1,4 @@
-package dev.imlukas.hoarderplugin.event.data.item;
+package dev.imlukas.hoarderplugin.event.data.hoarder.item;
 
 import org.bukkit.Material;
 

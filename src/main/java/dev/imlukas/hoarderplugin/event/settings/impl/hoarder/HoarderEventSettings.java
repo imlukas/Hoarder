@@ -1,7 +1,8 @@
-package dev.imlukas.hoarderplugin.event.storage;
+package dev.imlukas.hoarderplugin.event.settings.impl.hoarder;
 
+import dev.imlukas.hoarderplugin.event.settings.EventSettings;
 import dev.imlukas.hoarderplugin.utils.collection.ListUtils;
-import dev.imlukas.hoarderplugin.event.data.item.HoarderItem;
+import dev.imlukas.hoarderplugin.event.data.hoarder.item.HoarderItem;
 import dev.imlukas.hoarderplugin.utils.time.Time;
 
 import java.util.ArrayList;

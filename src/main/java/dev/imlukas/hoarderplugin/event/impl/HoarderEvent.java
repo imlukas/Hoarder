@@ -1,13 +1,14 @@
 package dev.imlukas.hoarderplugin.event.impl;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
-import dev.imlukas.hoarderplugin.event.data.HoarderEventData;
-import dev.imlukas.hoarderplugin.event.data.player.HoarderPlayerEventData;
+import dev.imlukas.hoarderplugin.event.Event;
+import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderEventData;
+import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderPlayerEventData;
 import dev.imlukas.hoarderplugin.event.phase.impl.EndPhase;
-import dev.imlukas.hoarderplugin.event.phase.impl.HoarderEventPhase;
+import dev.imlukas.hoarderplugin.event.phase.impl.hoarder.HoarderEventPhase;
 import dev.imlukas.hoarderplugin.event.phase.impl.PreStartPhase;
-import dev.imlukas.hoarderplugin.event.storage.EventSettings;
-import dev.imlukas.hoarderplugin.event.storage.HoarderEventSettings;
+import dev.imlukas.hoarderplugin.event.settings.EventSettings;
+import dev.imlukas.hoarderplugin.event.settings.impl.hoarder.HoarderEventSettings;
 import dev.imlukas.hoarderplugin.prize.PrizeRewarder;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
@@ -32,7 +33,7 @@ public class HoarderEvent extends Event {
         super(plugin);
         this.messages = plugin.getMessages();
         this.prizeRewarder = plugin.getPrizeRewarder();
-        this.eventSettings = (HoarderEventSettings) plugin.getEventSettingsHandler().getEventSettings("hoarder");
+        this.eventSettings = (HoarderEventSettings) plugin.getEventSettingsRegistry().get("hoarder");
         this.eventData = new HoarderEventData(eventSettings.isRandomMaterial() ? eventSettings.getRandomItem() : eventSettings.getFixedItem());
 
         addPhase(new PreStartPhase(this, () -> {

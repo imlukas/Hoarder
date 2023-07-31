@@ -1,8 +1,6 @@
-package dev.imlukas.hoarderplugin.event.phase.impl;
+package dev.imlukas.hoarderplugin.event.phase.impl.hoarder;
 
-import dev.imlukas.hoarderplugin.event.data.player.HoarderPlayerEventData;
-import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
-import dev.imlukas.hoarderplugin.event.data.player.PlayerEventData;
+import dev.imlukas.hoarderplugin.event.data.PlayerEventData;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.event.phase.EventPhase;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
@@ -34,7 +32,7 @@ public class HoarderEventPhase extends EventPhase {
         );
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            event.getEventData().addParticipant(new HoarderPlayerEventData(onlinePlayer.getUniqueId()));
+            event.getEventData().addParticipant(onlinePlayer);
         }
 
         for (PlayerEventData playerEventData : event.getEventData().getParticipants()) {
