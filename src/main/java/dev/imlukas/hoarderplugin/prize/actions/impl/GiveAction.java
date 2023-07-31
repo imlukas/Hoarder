@@ -32,4 +32,19 @@ public class GiveAction implements PrizeAction {
 
         player.getInventory().addItem(item);
     }
+
+    @Override
+    public String getIdentifier() {
+        return "GIVE";
+    }
+
+    @Override
+    public String getInput() {
+        return input;
+    }
+
+    @Override
+    public String getFullInput() {
+        return getIdentifier() + ":" + getInput();
+    }
 }

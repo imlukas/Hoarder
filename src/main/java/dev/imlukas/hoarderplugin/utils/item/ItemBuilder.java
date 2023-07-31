@@ -8,6 +8,7 @@ import org.apache.commons.lang3.Validate;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -44,7 +45,25 @@ public class ItemBuilder {
         this.material = material;
     }
 
+    public static ConfigurationSection toSection(ItemStack itemStack, FileConfiguration config, String sectionIdentifier) {
+        ConfigurationSection section = config.createSection(sectionIdentifier);
+        ItemMeta meta = itemStack.getItemMeta();
+        section.set("type", itemStack.getType().name());
+        section.set("name", meta.getDisplayName());
+        section.set("lore", meta.getLore());
+        section.set("glow", meta.hasEnchant(Enchantment.LUCK));
+
+        if (meta.hasCustomModelData()) {
+            section.set("model-data", meta.getCustomModelData());
+        }
+        return section;
+    }
+
     public static ItemStack fromSection(ConfigurationSection section) {
+        if (section == null) {
+            return null;
+        }
+
         ItemBuilder builder = new ItemBuilder(
             Material.valueOf(
                 section.getString(section.contains("material") ? "material" : "type")));

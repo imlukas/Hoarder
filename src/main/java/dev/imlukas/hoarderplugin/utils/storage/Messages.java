@@ -65,6 +65,7 @@ public class Messages extends YMLBase {
             for (String message : getConfiguration().getStringList("messages." + name)) {
                 msg = message.replace("%prefix%", prefix);
                 msg = TextUtils.color(action.apply(msg));
+                sender.sendMessage(msg);
             }
             return;
         }
@@ -79,6 +80,20 @@ public class Messages extends YMLBase {
 
     public String getMessage(String name) {
         return getConfiguration().getString("messages." + name);
+    }
+
+    public String getMessage(String name, Placeholder<CommandSender>... placeholders) {
+        String message = getMessage(name);
+
+        if (message == null) {
+            return null;
+        }
+
+        for (Placeholder<CommandSender> placeholder : placeholders) {
+            message = placeholder.replace(message, null);
+        }
+
+        return message;
     }
 }
 

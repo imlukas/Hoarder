@@ -27,4 +27,19 @@ public class MessageAction implements PrizeAction {
         message.replace("%player%", player.getName());
         player.sendMessage(TextUtils.color(message));
     }
+
+    @Override
+    public String getIdentifier() {
+        return "MESSAGE";
+    }
+
+    @Override
+    public String getInput() {
+        return message;
+    }
+
+    @Override
+    public String getFullInput() {
+        return getIdentifier() + ":" + getInput();
+    }
 }

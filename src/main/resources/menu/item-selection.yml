@@ -1,0 +1,57 @@
+rows: 5
+title: "&7Item Selection"
+
+description:
+ - "&7In this menu you can choose the display item"
+ - "&7Click an item to select it has the display item."
+ - "&7The selected item is shown on top."
+ - "&7Click the item or the save button to save."
+
+
+layout:
+  - 'e . . . i . . . e'
+  - 'p . . . . . . . n'
+  - 'p . . . . . . . n'
+  - 'e . . . . . . . e'
+  - 'e b b s s s t t e'
+
+items:
+  item: 
+    type: BARRIER
+    name: ""
+    lore: ""
+  s: 
+    type: EMERALD
+    name: "&eSave changes"
+    lore: 
+    - "&7Click to save the changes."
+
+  t: 
+    type: PAPER
+    name: "&eWrite in chat"
+    lore: 
+    - "&7Can't find the item you're looking for?"
+    - "&7Click here, and type the item name you're seeking."
+  e: 
+    type: BLACK_STAINED_GLASS_PANE
+    name: " "
+  b: 
+    type: BARRIER
+    name: "&c&lGo back"
+    target-gui: "%PREVIOUS%"
+  i:
+    type: BARRIER
+    name: "&eSelected Item"
+    lore: 
+     - "&7This is your selected item."
+     - "&7Click the item to save changes."
+  p:
+    type: ARROW
+    name: "&7Previous page"
+    lore:
+      - '&7Click to go to the previous page'
+  n:
+    type: ARROW
+    name: "&7Next page"
+    lore:
+      - '&7Click to go to the next page.'      

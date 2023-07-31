@@ -17,6 +17,10 @@ public class PrizeRegistry {
         prizes.put(prize.getIdentifier(), prize);
     }
 
+    public void unregisterPrize(EventPrize prize) {
+        prizes.remove(prize.getIdentifier());
+    }
+
     public EventPrize getPrize(String identifier) {
         return prizes.get(identifier);
     }
@@ -44,6 +48,10 @@ public class PrizeRegistry {
 
     public EventPrize getRandomPrize() {
         return ListUtils.getRandom(prizes.values());
+    }
+
+    public List<String> getPrizeNames() {
+        return new ArrayList<>(prizes.keySet());
     }
 
 }

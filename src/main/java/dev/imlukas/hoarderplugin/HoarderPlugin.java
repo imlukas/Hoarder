@@ -1,6 +1,7 @@
 package dev.imlukas.hoarderplugin;
 
 import dev.imlukas.hoarderplugin.command.*;
+import dev.imlukas.hoarderplugin.command.prize.PrizeRemoveAction;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.event.storage.EventSettingsHandler;
@@ -19,6 +20,7 @@ import dev.imlukas.hoarderplugin.storage.sql.constants.ColumnType;
 import dev.imlukas.hoarderplugin.storage.sql.data.ColumnData;
 import dev.imlukas.hoarderplugin.utils.command.legacy.SimpleCommand;
 import dev.imlukas.hoarderplugin.utils.command.command.CommandManager;
+import dev.imlukas.hoarderplugin.utils.concurrency.MainThreadExecutor;
 import dev.imlukas.hoarderplugin.utils.io.FileUtils;
 import dev.imlukas.hoarderplugin.utils.menu.registry.MenuRegistry;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.ScheduledTask;
@@ -61,6 +63,7 @@ public final class HoarderPlugin extends JavaPlugin {
         System.out.println("[HoarderPlugin] Enabling HoarderPlugin v" + getDescription().getVersion() + " by imlukas.");
         saveDefaultConfig();
 
+        MainThreadExecutor.init(this);
         FileUtils.copyBuiltInResources(this, getFile());
         messages = new Messages(this);
         commandManager = new CommandManager(this);
@@ -93,6 +96,8 @@ public final class HoarderPlugin extends JavaPlugin {
         registerCommand(new HoarderRewardsCommand(this));
         registerCommand(new HoarderGiveSellingItemCommand(this));
 
+        commandManager.registerCommand(new PrizesCommand(this));
+        commandManager.registerCommand(new PrizeRemoveAction(this));
         registerListener(new RightClickChestListener(this));
         registerListener(new DisconnectListener(this));
 

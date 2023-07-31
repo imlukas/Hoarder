@@ -29,7 +29,7 @@ public class PaginableArea {
         this.emptyElement = emptyElement;
     }
 
-    public void clearArea() {
+    public void clear() {
         elements.clear();
     }
 

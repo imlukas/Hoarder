@@ -1,0 +1,29 @@
+title: "&7Hoarder &8| &ePrize List"
+
+layout:
+  - "b b b b b b b b b"
+  - "b . . . . . . . b"
+  - "b . . . . . . . b"
+  - "b . . . . . . . b"
+  - "b b b c b r b b b" # r refers to where the create item will be
+
+items:
+  b:
+    type: BLACK_STAINED_GLASS_PANE
+    name: " "
+  r:
+    type: BLACK_STAINED_GLASS_PANE
+    name: " "
+  item:
+    type: PAPER
+    name: "&%prize-name%"
+  c:
+    type: BARRIER
+    name: "&cClose"
+    lore:
+      - "&7Close this menu"
+  create:
+    type: EMERALD
+    name: "&cCreate"
+    lore:
+      - "&7Click to create a new prize"

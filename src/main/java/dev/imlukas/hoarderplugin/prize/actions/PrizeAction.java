@@ -4,5 +4,11 @@ import org.bukkit.entity.Player;
 
 public interface PrizeAction {
 
-    public void handle(Player player);
+    void handle(Player player);
+
+    String getIdentifier();
+
+    String getInput();
+
+    String getFullInput();
 }

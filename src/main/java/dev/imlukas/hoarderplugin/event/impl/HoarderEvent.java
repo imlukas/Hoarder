@@ -9,15 +9,12 @@ import dev.imlukas.hoarderplugin.event.phase.impl.PreStartPhase;
 import dev.imlukas.hoarderplugin.event.storage.EventSettings;
 import dev.imlukas.hoarderplugin.event.storage.HoarderEventSettings;
 import dev.imlukas.hoarderplugin.prize.PrizeRewarder;
-import dev.imlukas.hoarderplugin.utils.collection.ListUtils;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
 import dev.imlukas.hoarderplugin.utils.time.Time;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +43,7 @@ public class HoarderEvent extends Event {
         }, eventSettings.getStartingTime()));
 
         addPhase(new HoarderEventPhase(this, eventSettings.getEventTime()));
-        addPhase(new EndPhase(this, new Time(5, TimeUnit.SECONDS)).onEnd(() -> {
+        addPhase(new EndPhase(this, this::end, new Time(1, TimeUnit.SECONDS)).onEnd(() -> {
             for (HoarderPlayerEventData participant : getEventData().getParticipants()) {
                 Player player = participant.getPlayer();
                 messages.sendMessage(player, "hoarder.end");
@@ -60,21 +57,12 @@ public class HoarderEvent extends Event {
 
                 playerEventData.addAvailablePrize(prizeRewarder.getReward(pos));
                 messages.sendMessage(playerEventData.getPlayer(), "prize.available");
-                top.remove(pos);
             }
 
-            if (top.size() > 1) { // Means there's more than the top 3 players
-                HoarderPlayerEventData playerData = ListUtils.getRandom(new ArrayList<>(top.values()));
+            HoarderPlayerEventData playerData = top.get(ThreadLocalRandom.current().nextInt(4, top.size() + 1));
+            playerData.addAvailablePrize(prizeRewarder.getReward());
+            messages.sendMessage(playerData.getPlayer(), "prize.available");
 
-                if (playerData == null) {
-                    return;
-                }
-
-                playerData.addAvailablePrize(prizeRewarder.getReward());
-                messages.sendMessage(playerData.getPlayer(), "prize.available");
-            }
-
-            top = getEventData().getTop();
             HoarderPlayerEventData top1Data = top.get(1);
 
             Map<String, Object> values = Map.of(
@@ -82,9 +70,7 @@ public class HoarderEvent extends Event {
                     "item", getEventData().getActiveItem().getMaterial().toString(),
                     "sold", top1Data.getSoldItems());
 
-            getPlugin().getSQLHandler().insertValue(values).thenRun(() -> {
-                eventTracker.getActiveEvent().end();
-            });
+            getPlugin().getSQLHandler().insertValue(values);
         }));
 
         start();
@@ -93,7 +79,6 @@ public class HoarderEvent extends Event {
     public HoarderEventData getEventData() {
         return eventData;
     }
-
 
 
     @Override

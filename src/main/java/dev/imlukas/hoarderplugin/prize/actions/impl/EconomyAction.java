@@ -18,4 +18,19 @@ public class EconomyAction implements PrizeAction {
     public void handle(Player player) {
         economy.depositPlayer(player, Double.parseDouble(input));
     }
+
+    @Override
+    public String getIdentifier() {
+        return "ECONOMY";
+    }
+
+    @Override
+    public String getInput() {
+        return input;
+    }
+
+    @Override
+    public String getFullInput() {
+        return getIdentifier() + ":" + getInput();
+    }
 }

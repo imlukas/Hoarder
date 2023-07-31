@@ -4,6 +4,7 @@ import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.utils.command.legacy.SimpleCommand;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class HoarderInfoCommand implements SimpleCommand {
 

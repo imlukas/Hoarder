@@ -4,22 +4,44 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
+import dev.imlukas.hoarderplugin.utils.text.TextUtils;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class ItemUtil {
 
     private ItemUtil() {
 
+    }
+
+    public static void clearLore(ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setLore(null);
+        itemStack.setItemMeta(meta);
+    }
+    public static void addLore(ItemStack itemStack, String... toAdd) {
+        ItemMeta meta = itemStack.getItemMeta();
+        List<String> lore = meta.getLore();
+
+        for (int i = 0; i < toAdd.length; i++) {
+            toAdd[i] = TextUtils.color(toAdd[i]);
+        }
+
+        if (lore == null) {
+            lore = new ArrayList<>();
+        }
+
+        Collections.addAll(lore, toAdd);
+        meta.setLore(lore);
+        itemStack.setItemMeta(meta);
     }
 
     public static void give(Player player, ItemStack item) {
@@ -39,7 +61,7 @@ public final class ItemUtil {
     }
 
     public static <T> void replacePlaceholder(ItemStack item, T replacementObject,
-        Collection<Placeholder<T>> placeholderCollection) {
+                                              Collection<Placeholder<T>> placeholderCollection) {
         if (item == null || item.getItemMeta() == null) {
             return;
         }
@@ -71,7 +93,7 @@ public final class ItemUtil {
 
     @SafeVarargs
     public static synchronized <T> void replacePlaceholder(ItemStack item, T replacementObject,
-        Placeholder<T>... placeholder) {
+                                                           Placeholder<T>... placeholder) {
         if (item == null) {
             return;
         }
@@ -137,7 +159,7 @@ public final class ItemUtil {
                     if (profile != null) {
                         PropertyMap propertyMap = profile.getProperties();
                         Collection<Property> properties = new HashSet<>(
-                            propertyMap.get("textures")
+                                propertyMap.get("textures")
                         );
 
                         propertyMap.removeAll("properties");
@@ -166,4 +188,15 @@ public final class ItemUtil {
         item.setItemMeta(meta);
     }
 
+    public static ItemStack setGlowing(ItemStack displayItem, boolean glowing) {
+        if (!glowing) {
+            displayItem.removeEnchantment(Enchantment.LOYALTY);
+            return displayItem;
+        }
+        ItemMeta meta = displayItem.getItemMeta();
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.addEnchant(Enchantment.LOYALTY, 123, true);
+        displayItem.setItemMeta(meta);
+        return displayItem;
+    }
 }

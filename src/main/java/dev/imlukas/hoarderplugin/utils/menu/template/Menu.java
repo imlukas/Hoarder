@@ -47,12 +47,24 @@ public abstract class Menu {
         return Bukkit.getPlayer(viewerId);
     }
 
+    public MenuRegistry getMenuRegistry() {
+        return menuRegistry;
+    }
+
+    public HiddenMenuTracker getHiddenMenuTracker() {
+        return hiddenMenuTracker;
+    }
+
     public HoarderPlugin getPlugin() {
         return plugin;
     }
 
     public void holdForInput(Consumer<String> action) {
-        hiddenMenuTracker.holdForInput(getMenu(), action);
+        hiddenMenuTracker.holdForInput(getMenu(), action, true);
+    }
+
+    public void holdForInput(Consumer<String> action, boolean reOpen) {
+        hiddenMenuTracker.holdForInput(getMenu(), action, reOpen);
     }
 
     public ConfigurableMenu createMenu() {

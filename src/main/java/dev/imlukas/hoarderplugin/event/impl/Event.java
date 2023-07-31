@@ -71,8 +71,9 @@ public abstract class Event {
     }
 
     public void forceEnd() {
-        end();
-        phases.forEach(EventPhase::end);
+        for (EventPhase phase : phases) {
+            phase.end();
+        }
     }
 
     public void end() {

@@ -1,0 +1,48 @@
+title: "&7Hoarder &8| &ePrize Editor"
+
+layout:
+  - "b b b b b b b b b"
+  - "b . . . i . . . b"
+  - "b . d . a . n . b"
+  - "b . . . . . . . b"
+  - "b b b c del cr b b b"
+
+items:
+  b:
+    type: BLACK_STAINED_GLASS_PANE
+    name: " "
+  del:
+    type: BARRIER
+    name: "&cDelete"
+    lore:
+      - "&7Click to delete this prize"
+
+  d:
+    type: PAPER
+    name: "&7Display Item"
+    lore:
+      - "&7Left-Click to change the item"
+  a:
+    type: BOOK
+    name: "&7Actions"
+    lore:
+      - "&7Left-Click to add a new one"
+      - "&7Right-Click to remove one action"
+      - ""
+      - "&7Current actions:"
+  n:
+    type: NAME_TAG
+    name: "&7Name"
+    lore:
+      - "&7Current name: %display-name%"
+  c:
+    type: BARRIER
+    name: "&cClose"
+    lore:
+      - "&7Close this menu"
+      - "&7This will not save the changes"
+  cr:
+    type: EMERALD
+    name: "&cFinish"
+    lore:
+      - "&7Click to save the changes"

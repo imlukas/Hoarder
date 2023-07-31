@@ -16,4 +16,19 @@ public class CommandConsoleAction implements PrizeAction {
     public void handle(Player player) {
         Bukkit.getConsoleSender().sendMessage(command.replace("%player%", player.getName()));
     }
+
+    @Override
+    public String getIdentifier() {
+        return "COMMAND_CONSOLE";
+    }
+
+    @Override
+    public String getInput() {
+        return command;
+    }
+
+    @Override
+    public String getFullInput() {
+        return getIdentifier() + ":" + getInput();
+    }
 }

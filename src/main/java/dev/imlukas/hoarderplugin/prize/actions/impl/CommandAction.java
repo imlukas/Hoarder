@@ -15,4 +15,19 @@ public class CommandAction implements PrizeAction {
     public void handle(Player player) {
         player.performCommand(this.command);
     }
+
+    @Override
+    public String getIdentifier() {
+        return "COMMAND";
+    }
+
+    @Override
+    public String getInput() {
+        return command;
+    }
+
+    @Override
+    public String getFullInput() {
+        return getIdentifier() + ":" + getInput();
+    }
 }

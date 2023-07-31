@@ -24,8 +24,9 @@ import java.util.Map;
 public class HoarderRewardsMenu extends UpdatableMenu {
 
     private final EventRegistry eventRegistry;
-    private final Messages messages;
     private final HoarderEvent lastEvent;
+    private final Messages messages;
+
     private ConfigurableMenu menu;
     private ConfigurationApplicator applicator;
     private PatternMask mask;
