@@ -1,8 +1,9 @@
 package dev.imlukas.hoarderplugin.utils.text;
 
 
+import dev.imlukas.hoarderplugin.utils.component.ComponentUtil;
+import net.kyori.adventure.text.TextComponent;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -33,7 +34,7 @@ public class TextUtils {
     }
 
     public static TextComponent toComponent(String message) {
-        return new TextComponent(color(message));
+        return ComponentUtil.create(message);
     }
 
     /**

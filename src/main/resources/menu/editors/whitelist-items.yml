@@ -1,16 +1,13 @@
-title: "&7Hoarder &8| &ePrize List"
+title: "&7Hoarder &8| &eWhiteList Items"
 
 layout:
   - "b b b b b b b b b"
   - "b . . . . . . . b"
   - "p . . . . . . . n"
   - "b . . . . . . . b"
-  - "b b b b c b b b r"
+  - "b b b c b cr b b b"
 
 items:
-  r:
-    type: BLACK_STAINED_GLASS_PANE
-    name: " "
   p:
     type: ARROW
     name: "&cPrevious Page"
@@ -26,13 +23,19 @@ items:
     name: " "
   item:
     type: PAPER
+    lore:
+      - "&7Left-Click to change the material of this item"
+      - "&7Right-Click to change the value of this item"
+      - "&7Middle-Click to remove this item"
+      - ""
+      - "&eValue: &7%value%"
   c:
     type: BARRIER
-    name: "&cFinish"
+    name: "&cGo back"
     lore:
-      - "&7Go back"
-  create:
+        - "&7Save the item list and go back."
+  cr:
     type: EMERALD
     name: "&cCreate"
     lore:
-      - "&7Click to create a prize"
+      - "&7Click to create a new item"

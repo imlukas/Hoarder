@@ -25,6 +25,13 @@ public class Time {
 
     public static Time parseTime(String time) {
         String[] split = time.split(" ");
+        System.out.println(split.length);
+
+        if (split.length != 2) {
+            System.err.println("Invalid time format: " + time);
+            return null;
+        }
+
         int timeValue = Integer.parseInt(split[0]);
         TimeUnit timeUnit = TimeUnit.valueOf(split[1].toUpperCase());
         return new Time(timeValue, timeUnit);

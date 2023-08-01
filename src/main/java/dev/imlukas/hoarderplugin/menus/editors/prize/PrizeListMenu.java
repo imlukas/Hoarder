@@ -38,11 +38,12 @@ public class PrizeListMenu extends UpdatableMenu implements FallbackMenu {
 
             ItemStack displayItem = eventPrize.getDisplayItem();
             if (displayItem != null) {
-                button.setDisplayItem(displayItem);
+                button.setDisplayItem(displayItem.clone());
             }
 
             if (hasPermission()) {
-                ItemUtil.addLore(button.getDisplayItem(), "\n&7Left-Click to Edit this prize");
+                ItemUtil.addLore(button.getDisplayItem(), "");
+                ItemUtil.addLore(button.getDisplayItem(), "&7Left-Click to Edit this prize");
                 button.setLeftClickAction(() -> new PrizeEditorMenu(getPlugin(), getViewer(), eventPrize, this).open());
             }
 
@@ -64,6 +65,8 @@ public class PrizeListMenu extends UpdatableMenu implements FallbackMenu {
 
         menu.addRenderable(layer, paginableLayer);
 
+        applicator.registerButton(layer, "p", paginableLayer::previousPage);
+        applicator.registerButton(layer, "n", paginableLayer::nextPage);
         applicator.registerButton(layer, "c", this::close);
 
         if (hasPermission()) {

@@ -18,6 +18,11 @@ public class SettingsCommand extends AdvancedCommand {
     }
 
     @Override
+    public String getPermission() {
+        return "hoarderplugin.settings";
+    }
+
+    @Override
     public void execute(CommandSender sender, ExecutionContext context) {
         new SettingsEditor(plugin, (Player) sender, "hoarder").open();
     }

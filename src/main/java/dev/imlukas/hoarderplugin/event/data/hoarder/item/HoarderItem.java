@@ -4,8 +4,8 @@ import org.bukkit.Material;
 
 public class HoarderItem {
 
-    private final Material material;
-    private final double value;
+    private Material material;
+    private double value;
 
     public HoarderItem(Material material, double value) {
         this.material = material;
@@ -18,5 +18,13 @@ public class HoarderItem {
 
     public Material getMaterial() {
         return material;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 }

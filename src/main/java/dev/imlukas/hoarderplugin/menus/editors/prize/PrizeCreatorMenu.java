@@ -2,16 +2,17 @@ package dev.imlukas.hoarderplugin.menus.editors.prize;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.menus.ItemSelectionMenu;
+import dev.imlukas.hoarderplugin.menus.editors.LoreEditorMenu;
 import dev.imlukas.hoarderplugin.prize.EventPrize;
 import dev.imlukas.hoarderplugin.prize.actions.PrizeAction;
-import dev.imlukas.hoarderplugin.prize.actions.registry.ActionRegistry;
 import dev.imlukas.hoarderplugin.prize.registry.PrizeRegistry;
 import dev.imlukas.hoarderplugin.prize.storage.PrizeHandler;
+import dev.imlukas.hoarderplugin.utils.item.ItemUtil;
 import dev.imlukas.hoarderplugin.utils.menu.base.ConfigurableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.button.Button;
+import dev.imlukas.hoarderplugin.utils.menu.button.DecorationItem;
 import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicator;
 import dev.imlukas.hoarderplugin.utils.menu.layer.BaseLayer;
-import dev.imlukas.hoarderplugin.utils.menu.mask.PatternMask;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.template.FallbackMenu;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.builders.ScheduleBuilder;
@@ -25,13 +26,15 @@ import org.bukkit.inventory.ItemStack;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PrizeCreatorMenu extends UpdatableMenu {
+public class PrizeCreatorMenu extends UpdatableMenu implements FallbackMenu{
     private final Messages messages;
     private final PrizeRegistry prizeRegistry;
     private final PrizeHandler prizeHandler;
     private final FallbackMenu fallbackMenu;
 
     private ConfigurableMenu menu;
+    private BaseLayer layer;
+    private ConfigurationApplicator applicator;
 
     private ItemStack displayItem;
     private String displayName, identifier;
@@ -52,30 +55,39 @@ public class PrizeCreatorMenu extends UpdatableMenu {
     @Override
     public void setup() {
         menu = createMenu();
-        BaseLayer layer = new BaseLayer(menu);
-        ConfigurationApplicator applicator = getApplicator();
-
+        layer = new BaseLayer(menu);
+        applicator = getApplicator();
 
         applicator.registerButton(layer, "c", fallbackMenu::openFallback);
 
-        Button displayItem = applicator.registerButton(layer, "d");
-        displayItem.setLeftClickAction(() -> {
-            new ItemSelectionMenu(getPlugin(), getViewer(), displayItem.getDisplayItem().getType(), (newMaterial) -> {
-                displayItem.getDisplayItem().setType(newMaterial);
+        Button itemSelectionButton = applicator.registerButton(layer, "d");
+        displayItem = itemSelectionButton.getDisplayItem().clone();
+        ItemUtil.clearLore(displayItem);
+
+        itemSelectionButton.setLeftClickAction(() -> {
+            new ItemSelectionMenu(getPlugin(), getViewer(), displayItem.getType(), (newMaterial) -> {
+                displayItem.setType(newMaterial);
                 ScheduleBuilder.runIn1Tick(getPlugin(), this::open).sync().start();
                 refresh();
             });
         });
 
-        applicator.registerButton(layer, "n", () -> holdForInput((displayName) -> {
-            this.displayName = displayName;
-            refresh();
-        }));
+        applicator.registerButton(layer, "n", () -> {
+            messages.sendMessage(getViewer(), "inputs.display-name");
+            holdForInput((displayName) -> {
+                ItemUtil.setItemName(displayItem, displayName);
+                this.displayName = displayName;
+                refresh();
+            });
+        });
 
-        applicator.registerButton(layer, "i", () -> holdForInput((identifier) -> {
-            this.identifier = identifier;
-            refresh();
-        }));
+        applicator.registerButton(layer, "i", () -> {
+            messages.sendMessage(getViewer(), "inputs.identifier");
+            holdForInput((identifier) -> {
+                this.identifier = identifier;
+                refresh();
+            });
+        });
 
         Button actionButton = applicator.registerButton(layer, "a");
         actionButton.setClickAction((ignored) -> {
@@ -99,7 +111,7 @@ public class PrizeCreatorMenu extends UpdatableMenu {
                 this.displayItem = new ItemStack(Material.PAPER);
             }
 
-            EventPrize eventPrize = new EventPrize(identifier, displayName, displayItem.getDisplayItem(), actions);
+            EventPrize eventPrize = new EventPrize(identifier, displayName, displayItem, actions);
             prizeRegistry.registerPrize(eventPrize);
             prizeHandler.createPrize(eventPrize);
 
@@ -107,6 +119,12 @@ public class PrizeCreatorMenu extends UpdatableMenu {
             fallbackMenu.openFallback();
         });
 
+        applicator.registerButton(layer, "l", () -> {
+            new LoreEditorMenu(getPlugin(), getViewer(), this, displayItem);
+            refresh();
+        });
+
+        menu.addRenderable(layer);
         refresh();
     }
 
@@ -117,6 +135,7 @@ public class PrizeCreatorMenu extends UpdatableMenu {
                 new Placeholder<>("display-name", TextUtils.color(displayName)),
                 new Placeholder<>("identifier", identifier));
 
+        layer.applySelection(applicator.getMask().selection("di"), new DecorationItem(displayItem));
         menu.setItemPlaceholders(placeholderList);
         menu.forceUpdate();
     }
@@ -129,5 +148,11 @@ public class PrizeCreatorMenu extends UpdatableMenu {
     @Override
     public ConfigurableMenu getMenu() {
         return menu;
+    }
+
+    @Override
+    public void openFallback() {
+        refresh();
+        open();
     }
 }

@@ -3,17 +3,27 @@ title: "&7Hoarder &8| &eAction Editor"
 layout:
   - "b b b b b b b b b"
   - "b . . . . . . . b"
-  - "b . . . . . . . b"
+  - "p . . . . . . . n"
   - "b . . . . . . . b"
   - "b b b c b cr b b b"
 
 items:
+  p:
+    type: ARROW
+    name: "&cPrevious Page"
+    lore:
+      - "&7Click to go to the previous page"
+  n:
+    type: ARROW
+    name: "&cNext Page"
+    lore:
+      - "&7Click to go to the next page"
   b:
     type: BLACK_STAINED_GLASS_PANE
     name: " "
   item:
     type: PAPER
-    name: "&%action%"
+    name: "%action%"
     lore:
       - "&7Left-Click to edit this action"
       - "&7Right-Click to remove this action"

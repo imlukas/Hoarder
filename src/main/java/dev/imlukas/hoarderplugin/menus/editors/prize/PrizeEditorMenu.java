@@ -2,6 +2,7 @@ package dev.imlukas.hoarderplugin.menus.editors.prize;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.menus.ItemSelectionMenu;
+import dev.imlukas.hoarderplugin.menus.editors.LoreEditorMenu;
 import dev.imlukas.hoarderplugin.prize.EventPrize;
 import dev.imlukas.hoarderplugin.prize.actions.PrizeAction;
 import dev.imlukas.hoarderplugin.prize.actions.registry.ActionRegistry;
@@ -25,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PrizeEditorMenu extends UpdatableMenu {
+public class PrizeEditorMenu extends UpdatableMenu implements FallbackMenu {
     private final Messages messages;
     private final ActionRegistry actionRegistry;
     private final PrizeRegistry prizeRegistry;
@@ -88,11 +89,14 @@ public class PrizeEditorMenu extends UpdatableMenu {
             });
         });
 
-        applicator.registerButton(layer, "n", () -> holdForInput((displayName) -> {
-            this.displayName = displayName;
-            ItemUtil.setItemName(displayItem, TextUtils.color(displayName));
-            refresh();
-        }));
+        applicator.registerButton(layer, "n", () -> {
+            messages.sendMessage(getViewer(), "inputs.display-name");
+            holdForInput((displayName) -> {
+                this.displayName = displayName;
+                ItemUtil.setItemName(displayItem, TextUtils.color(displayName));
+                refresh();
+            });
+        });
 
         Button actionButton = applicator.registerButton(layer, "a");
         actionButton.setClickAction((ignored) -> {
@@ -111,6 +115,11 @@ public class PrizeEditorMenu extends UpdatableMenu {
             prizeHandler.updatePrize(prize);
             messages.sendMessage(getViewer(), "editors.prize-updated", new Placeholder<>("prize", prize.getDisplayName()));
             fallbackMenu.openFallback();
+        });
+
+        applicator.registerButton(layer, "l", () -> {
+            new LoreEditorMenu(getPlugin(), getViewer(), this, displayItem);
+            refresh();
         });
 
         refresh();
@@ -140,5 +149,11 @@ public class PrizeEditorMenu extends UpdatableMenu {
     @Override
     public ConfigurableMenu getMenu() {
         return menu;
+    }
+
+    @Override
+    public void openFallback() {
+        refresh();
+        open();
     }
 }

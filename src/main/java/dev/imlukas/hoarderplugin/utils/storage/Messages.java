@@ -72,7 +72,7 @@ public class Messages extends YMLBase {
 
         msg = setMessage(name, action);
         if (useActionbar && sender instanceof Player player) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextUtils.toComponent(msg));
+            player.sendActionBar(TextUtils.toComponent(msg));
         } else {
             sender.sendMessage(msg);
         }

@@ -2,20 +2,23 @@ title: "&7Hoarder &8| &ePrize Creator"
 
 layout:
   - "b b b b b b b b b"
-  - "b . . . d . . . b"
+  - "b . . . di . . . b"
   - "b . i . a . n . b"
-  - "b . . . l . . . b"
+  - "b . . l . d . . b"
   - "b b b c b cr b b b"
 
 items:
   b:
     type: BLACK_STAINED_GLASS_PANE
     name: " "
+  di:
+    type: PAPER
   i:
     type: PAPER
     name: "&7Identifier"
     lore:
       - "&7Left-Click to change prize's identifier"
+      - "&7Current identifier: %identifier%"
   d:
     type: PAPER
     name: "&7Display Item"
@@ -37,7 +40,6 @@ items:
     name: "&7Lore"
     lore:
       - "&7Left-Click to change the lore"
-      - "&7Current lore:"
   c:
     type: BARRIER
     name: "&cClose"

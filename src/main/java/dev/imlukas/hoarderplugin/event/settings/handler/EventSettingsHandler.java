@@ -39,12 +39,10 @@ public class EventSettingsHandler extends YMLBase {
 
         HoarderEventSettings eventSettings = new HoarderEventSettings(randomMaterial, hoarderItemList, startingTime, eventTime);
 
-        if (!randomMaterial) {
-            HoarderItem fixedItem = new HoarderItem(Material.getMaterial(config.getString("fixed-material.material")),
-                    config.getDouble("fixed-material.value"));
+        HoarderItem fixedItem = new HoarderItem(Material.getMaterial(config.getString("fixed-material.material")),
+                config.getDouble("fixed-material.value"));
 
-            eventSettings.setFixedItem(fixedItem);
-        }
+        eventSettings.setFixedItem(fixedItem);
 
         eventSettingsRegistry.register(eventSettings);
         System.out.println("Loaded settings for event " + eventSettings.getEventIdentifier() + ".");
@@ -53,6 +51,23 @@ public class EventSettingsHandler extends YMLBase {
     public void updateSetting(String key, Object value) {
         FileConfiguration config = getConfiguration();
         config.set(key, value);
+        save();
+    }
+
+    public void updatedFixed(HoarderItem item) {
+        FileConfiguration config = getConfiguration();
+        config.set("fixed-material", null);
+        config.set("fixed-material.material", item.getMaterial().name());
+        config.set("fixed-material.value", item.getValue());
+        save();
+    }
+
+    public void updateWhitelist(List<HoarderItem> items) {
+        FileConfiguration config = getConfiguration();
+        config.set("material-whitelist", null);
+        for (HoarderItem item : items) {
+            config.set("material-whitelist." + item.getMaterial().name(), item.getValue());
+        }
         save();
     }
 }

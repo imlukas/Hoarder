@@ -3,7 +3,6 @@ package dev.imlukas.hoarderplugin;
 import dev.imlukas.hoarderplugin.command.*;
 import dev.imlukas.hoarderplugin.command.editor.PrizesCommand;
 import dev.imlukas.hoarderplugin.command.editor.SettingsCommand;
-import dev.imlukas.hoarderplugin.command.prize.PrizeRemoveAction;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.event.settings.handler.EventSettingsHandler;
@@ -103,7 +102,6 @@ public final class HoarderPlugin extends JavaPlugin {
 
         commandManager.registerCommand(new PrizesCommand(this));
         commandManager.registerCommand(new SettingsCommand(this));
-        commandManager.registerCommand(new PrizeRemoveAction(this));
         registerListener(new RightClickChestListener(this));
         registerListener(new DisconnectListener(this));
 

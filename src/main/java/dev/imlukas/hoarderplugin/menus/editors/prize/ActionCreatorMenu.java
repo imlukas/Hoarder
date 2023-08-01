@@ -59,7 +59,7 @@ public class ActionCreatorMenu extends UpdatableMenu {
             int finalIndex = i;
 
             button.setMiddleClickAction(() -> {
-                messages.sendMessage(getViewer(), "editors.action.order", new Placeholder<>("max", String.valueOf(actions.size())));
+                messages.sendMessage(getViewer(), "inputs.order", new Placeholder<>("max", String.valueOf(actions.size())));
                 holdForInput((input) -> {
                     int newIndex = TextUtils.parseInt(input) - 1;
 
@@ -78,7 +78,7 @@ public class ActionCreatorMenu extends UpdatableMenu {
             });
 
             button.setLeftClickAction(() -> {
-                messages.sendMessage(getViewer(), "editors.action.edit");
+                messages.sendMessage(getViewer(), "inputs.edit");
                 holdForInput((input) -> {
                     if (!input.contains(":")) {
                         action.setInput(input);
@@ -127,11 +127,15 @@ public class ActionCreatorMenu extends UpdatableMenu {
         PaginableLayer paginableLayer = new PaginableLayer(menu);
         paginableLayer.addArea(area);
 
+        applicator.registerButton(baseLayer, "p", paginableLayer::previousPage);
+        applicator.registerButton(baseLayer, "n", paginableLayer::nextPage);
+
         applicator.registerButton(baseLayer, "c", () -> {
             afterSetup.accept(actions);
         });
 
         applicator.registerButton(baseLayer, "cr", () -> {
+            messages.sendMessage(getViewer(), "inputs.action");
             holdForInput((action) -> {
                 PrizeAction prizeAction = actionRegistry.getAction(action);
 
@@ -152,7 +156,7 @@ public class ActionCreatorMenu extends UpdatableMenu {
 
     @Override
     public String getIdentifier() {
-        return "action-list";
+        return "action-editor";
     }
 
     @Override

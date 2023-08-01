@@ -18,8 +18,10 @@ import java.util.*;
 
 public final class ItemUtil {
 
-    private ItemUtil() {
-
+    public static void setItemName(ItemStack itemStack, String name) {
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(TextUtils.color(name));
+        itemStack.setItemMeta(meta);
     }
 
     public static void clearLore(ItemStack itemStack) {
@@ -27,10 +29,9 @@ public final class ItemUtil {
         meta.setLore(null);
         itemStack.setItemMeta(meta);
     }
-
-    public static void setItemName(ItemStack itemStack, String name) {
+    public static void setLore(ItemStack itemStack, List<String> lore) {
         ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(TextUtils.color(name));
+        meta.setLore(lore);
         itemStack.setItemMeta(meta);
     }
 

@@ -1,0 +1,26 @@
+title: "&7Hoarder &8| &eEdit fixed item"
+
+layout:
+  - "b b b b b b b b b"
+  - "b . . . . . . . b"
+  - "b . . . i . . . b"
+  - "b . . . . . . . b"
+  - "b b b b c b b b b"
+
+items:
+  b:
+    type: BLACK_STAINED_GLASS_PANE
+    name: " "
+  item:
+    type: PAPER
+    lore:
+      - "&7Left-Click to change the material of this item"
+      - "&7Right-Click to change the value of this item"
+      - "&7Middle-Click to remove this item"
+      - ""
+      - "&eValue: &7%value%"
+  c:
+    type: BARRIER
+    name: "&cGo back"
+    lore:
+        - "&7Save the item and go back."

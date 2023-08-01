@@ -8,6 +8,7 @@ import dev.imlukas.hoarderplugin.utils.menu.base.ConfigurableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicator;
 import dev.imlukas.hoarderplugin.utils.menu.layer.BaseLayer;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
+import dev.imlukas.hoarderplugin.utils.menu.template.FallbackMenu;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
 import dev.imlukas.hoarderplugin.utils.time.Time;
@@ -15,7 +16,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class SettingsEditor extends UpdatableMenu {
+public class SettingsEditor extends UpdatableMenu implements FallbackMenu {
 
     private final Messages messages;
     private final EventSettingsRegistry eventSettingsRegistry;
@@ -59,8 +60,14 @@ public class SettingsEditor extends UpdatableMenu {
                 new Placeholder<>("random-material", eventSettings.isRandomMaterial() ? "true" : "false"));
 
         applicator.registerButton(layer, "s", () -> {
+            messages.sendMessage(getViewer(),"inputs.time");
             holdForInput((newTime) -> {
                 Time time = Time.parseTime(newTime);
+
+                if (time == null) {
+                    messages.sendMessage(getViewer(), "editors.invalid-time");
+                    return;
+                }
 
                 eventSettings.setStartingTime(time);
                 eventSettingsHandler.updateSetting("starting-time", newTime);
@@ -70,8 +77,14 @@ public class SettingsEditor extends UpdatableMenu {
         });
 
         applicator.registerButton(layer, "e", () -> {
+            messages.sendMessage(getViewer(),"inputs.time");
             holdForInput((newTime) -> {
                 Time time = Time.parseTime(newTime);
+
+                if (time == null) {
+                    messages.sendMessage(getViewer(), "editors.invalid-time");
+                    return;
+                }
 
                 eventSettings.setEventTime(time);
                 eventSettingsHandler.updateSetting("event-time", newTime);
@@ -86,6 +99,10 @@ public class SettingsEditor extends UpdatableMenu {
             sendUpdateMessage("random-material", eventSettings.isRandomMaterial() ? "true" : "false");
             refresh();
         });
+
+        applicator.registerButton(layer, "w", () -> new WhitelistItemList(getPlugin(), getViewer(), this, eventSettings).open());
+
+        applicator.registerButton(layer, "f", () -> new FixedItemEditor(getPlugin(), getViewer(), this, eventSettings).open());
 
         menu.setItemPlaceholders(placeholderList);
         layer.setItemPlaceholders(placeholderList);
@@ -103,8 +120,14 @@ public class SettingsEditor extends UpdatableMenu {
     }
 
     public void sendUpdateMessage(String key, String value) {
-        messages.sendMessage(getViewer(), "editors.setting-updated",
+        messages.sendMessage(getViewer(), "editors.setting.updated",
                 new Placeholder<>("setting", key),
                 new Placeholder<>("value", value));
+    }
+
+    @Override
+    public void openFallback() {
+        refresh();
+        open();
     }
 }

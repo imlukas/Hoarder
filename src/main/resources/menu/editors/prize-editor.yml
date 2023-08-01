@@ -38,7 +38,6 @@ items:
     name: "&7Lore"
     lore:
       - "&7Left-Click to change the lore"
-      - "&7Current lore:"
   c:
     type: BARRIER
     name: "&cClose"

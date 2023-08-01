@@ -1,16 +1,13 @@
-title: "&7Hoarder &8| &ePrize List"
+title: "&7Hoarder &8| &eLore Editor"
 
 layout:
   - "b b b b b b b b b"
   - "b . . . . . . . b"
   - "p . . . . . . . n"
   - "b . . . . . . . b"
-  - "b b b b c b b b r"
+  - "b b b c b cr b b b"
 
 items:
-  r:
-    type: BLACK_STAINED_GLASS_PANE
-    name: " "
   p:
     type: ARROW
     name: "&cPrevious Page"
@@ -24,15 +21,23 @@ items:
   b:
     type: BLACK_STAINED_GLASS_PANE
     name: " "
+  r:
+    type: BLACK_STAINED_GLASS_PANE
+    name: " "
   item:
     type: PAPER
+    name: "%line%"
+    lore:
+      - "&7Left-Click to edit this line"
+      - "&7Right-Click to remove this line"
+      - "&7Middle-click to change the order of this line"
   c:
     type: BARRIER
-    name: "&cFinish"
+    name: "&cClose"
     lore:
-      - "&7Go back"
-  create:
+      - "&7Close this menu"
+  cr:
     type: EMERALD
-    name: "&cCreate"
+    name: "&cAdd"
     lore:
-      - "&7Click to create a prize"
+      - "&7Click to add a new line to the lore"

@@ -15,6 +15,11 @@ public class PaginableLayer extends Renderable {
     private final List<PaginableArea> areas = new ArrayList<>();
     private int page = 1;
 
+    public PaginableLayer(BaseMenu menu, PaginableArea... areas) {
+        super(menu);
+        this.areas.addAll(List.of(areas));
+    }
+
     public PaginableLayer(BaseMenu menu) {
         super(menu);
     }
