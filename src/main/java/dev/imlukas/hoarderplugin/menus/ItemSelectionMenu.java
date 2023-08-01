@@ -84,7 +84,7 @@ public class ItemSelectionMenu extends UpdatableMenu {
         });
 
         applicator.registerButton(layer, "t", () -> {
-           holdForInput((text) -> {
+            holdForInput((text) -> {
                 text = text.replace(" ", "_").toUpperCase();
                 Material material = Material.matchMaterial(text);
 

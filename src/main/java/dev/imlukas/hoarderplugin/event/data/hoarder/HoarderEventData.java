@@ -2,10 +2,12 @@ package dev.imlukas.hoarderplugin.event.data.hoarder;
 
 import dev.imlukas.hoarderplugin.event.data.EventData;
 import dev.imlukas.hoarderplugin.event.data.hoarder.item.HoarderItem;
-import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderPlayerEventData;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class HoarderEventData extends EventData<HoarderPlayerEventData> {
     private final HoarderItem activeItem;

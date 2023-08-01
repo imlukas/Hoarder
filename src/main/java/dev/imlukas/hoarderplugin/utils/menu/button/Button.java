@@ -25,6 +25,7 @@ public class Button implements MenuElement {
     private Consumer<InventoryClickEvent> clickTask;
     private Consumer<InventoryClickEvent> rightClickTask;
     private Consumer<InventoryClickEvent> leftClickTask;
+    private Consumer<InventoryClickEvent> middleClickTask;
 
     private Collection<Placeholder<Player>> placeholders;
 
@@ -49,6 +50,10 @@ public class Button implements MenuElement {
         this.leftClickTask = event -> clickTask.run();
     }
 
+    public void setMiddleClickAction(Runnable clickTask) {
+        this.middleClickTask = event -> clickTask.run();
+    }
+
     @Override
     public void handle(InventoryClickEvent event) {
         ClickType clickType = event.getClick();
@@ -64,6 +69,10 @@ public class Button implements MenuElement {
         }
         if (clickType == ClickType.RIGHT && rightClickTask != null) {
             rightClickTask.accept(event);
+        }
+
+        if (clickType == ClickType.MIDDLE && middleClickTask != null) {
+            middleClickTask.accept(event);
         }
 
     }
@@ -82,7 +91,7 @@ public class Button implements MenuElement {
 
     @Override
     public MenuElement copy() {
-        return new Button(displayItem.clone(), clickTask, rightClickTask, leftClickTask, placeholders);
+        return new Button(displayItem.clone(), clickTask, rightClickTask, leftClickTask, middleClickTask, placeholders);
     }
 
     @Override

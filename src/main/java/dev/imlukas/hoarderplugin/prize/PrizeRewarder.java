@@ -4,7 +4,6 @@ import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.prize.registry.PrizeRegistry;
 
 import java.util.Map;
-import java.util.function.Function;
 
 public class PrizeRewarder {
 

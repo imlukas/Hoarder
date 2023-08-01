@@ -39,7 +39,7 @@ public class FileUtils {
     }
 
     public static void copyBuiltInResources(JavaPlugin plugin,
-        File jarFile) { // the jarFile must be fetched through JavaPlugin#getFile, as it's a protected method
+                                            File jarFile) { // the jarFile must be fetched through JavaPlugin#getFile, as it's a protected method
         // Copy all resources from the jar to the data folder, except plugin.yml and code
         // Open the jar file as a zip
         try (JarFile jar = new JarFile(jarFile)) {

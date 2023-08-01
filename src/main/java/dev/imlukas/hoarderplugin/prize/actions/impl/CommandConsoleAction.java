@@ -6,15 +6,15 @@ import org.bukkit.entity.Player;
 
 public class CommandConsoleAction implements PrizeAction {
 
-    private final String command;
+    private String input;
 
     public CommandConsoleAction(String command) {
-        this.command = command;
+        this.input = command;
     }
 
     @Override
     public void handle(Player player) {
-        Bukkit.getConsoleSender().sendMessage(command.replace("%player%", player.getName()));
+        Bukkit.getConsoleSender().sendMessage(input.replace("%player%", player.getName()));
     }
 
     @Override
@@ -24,11 +24,16 @@ public class CommandConsoleAction implements PrizeAction {
 
     @Override
     public String getInput() {
-        return command;
+        return input;
     }
 
     @Override
     public String getFullInput() {
         return getIdentifier() + ":" + getInput();
+    }
+
+    @Override
+    public void setInput(String input) {
+        this.input = input;
     }
 }

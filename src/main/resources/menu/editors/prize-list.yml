@@ -5,7 +5,7 @@ layout:
   - "b . . . . . . . b"
   - "b . . . . . . . b"
   - "b . . . . . . . b"
-  - "b b b c b r b b b" # r refers to where the create item will be
+  - "b b b b c b b b r" # r refers to where the create item will be
 
 items:
   b:

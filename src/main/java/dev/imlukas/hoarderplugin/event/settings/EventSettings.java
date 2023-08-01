@@ -1,6 +1,8 @@
 package dev.imlukas.hoarderplugin.event.settings;
 
-public class EventSettings {
+import java.util.Map;
+
+public abstract class EventSettings {
 
     private final String eventIdentifier;
 

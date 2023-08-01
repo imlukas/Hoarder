@@ -32,11 +32,21 @@ messages:
        - "#c66389f#c86487r#ca6584o#cc6681m #cf677ft#d1697ch#d36a79e #d56b77H#d76c74o#da6d71a#dc6f6fr#de706cd#e0716ae#e37267r#e57364'#e77462s #e9765fT#eb775cr#ee785ae#f07957a#f27a55s#f47b52u#f77d4fr#f97e4de#fb7f4a!"
 
   editors:
+    setting-updated: "&7%setting% has been updated to %value%!"
     action:
       entry: "&7ᴀᴄᴛɪᴏɴ: %action% - &c[X]"
       hover-delete: "&7Click to delete this action!"
       added: "&7ᴀᴄᴛɪᴏɴ %action% ʜᴀs ʙᴇᴇɴ ᴀᴅᴅᴇᴅ ᴛᴏ ᴛʜᴇ prize!"
       removed: "&7ᴀᴄᴛɪᴏɴ %action% ʜᴀs ʙᴇᴇɴ ʀᴇᴍᴏᴠᴇᴅ ғʀᴏᴍ ᴛʜᴇ prize!"
+
+      order: "&7Input a number between 1 and %max% to change the order of the action!"
+      order-change: "&7ᴀᴄᴛɪᴏɴ %action% ʜᴀs ʙᴇᴇɴ ᴄʜᴀɴɢᴇᴅ ᴛᴏ %new-order%!"
+      changed: "&7ᴀᴄᴛɪᴏɴ %action% ʜᴀs ʙᴇᴇɴ ᴄʜᴀɴɢᴇᴅ ᴛᴏ %new-action%!"
+      edit:
+       - "&7Write the new action: "
+       - "&7You can either change the full action or change the input."
+       - "&7for input: simply write the new input. (NEW INPUT)"
+       - "&7for action: write the new action and then the new input. (COMMAND:ACTION)"
 
     prize-created: "&7ᴘʀɪᴢᴇ %prize% ʜᴀs ʙᴇᴇɴ ᴄʀᴇᴀᴛᴇᴅ!"
     prize-updated: "&7ᴘʀɪᴢᴇ %prize% ʜᴀs ʙᴇᴇɴ ᴜᴘᴅᴀᴛᴇᴅ!"

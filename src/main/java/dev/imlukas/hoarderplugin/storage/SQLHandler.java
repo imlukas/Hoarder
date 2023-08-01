@@ -2,7 +2,6 @@ package dev.imlukas.hoarderplugin.storage;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.storage.sql.SQLDatabase;
-import dev.imlukas.hoarderplugin.storage.sql.constants.TableType;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

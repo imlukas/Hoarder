@@ -33,10 +33,10 @@ public class ConfigurationApplicator {
         if (config.contains("paginable-title")) {
             ConfigurationSection section = config.getConfigurationSection("paginable-title");
             title = new PaginableTitle(
-                section.getString("none"),
-                section.getString("left"),
-                section.getString("right"),
-                section.getString("all")
+                    section.getString("none"),
+                    section.getString("left"),
+                    section.getString("right"),
+                    section.getString("all")
             );
         } else {
             String menuTitle = config.getString("title");
@@ -68,6 +68,10 @@ public class ConfigurationApplicator {
         }
 
         return item;
+    }
+
+    public Button makeButton(String key) {
+        return new Button(getItem(key));
     }
 
     public MenuElement getDecorationItem(String key) {

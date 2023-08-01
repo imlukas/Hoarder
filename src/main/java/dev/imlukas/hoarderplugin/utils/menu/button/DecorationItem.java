@@ -11,11 +11,12 @@ import java.util.function.Consumer;
 public class DecorationItem extends Button {
 
     public DecorationItem(ItemStack displayItem,
-        Consumer<InventoryClickEvent> clickTask,
-        Consumer<InventoryClickEvent> rightClickTask,
-        Consumer<InventoryClickEvent> leftClickTask,
-        Collection<Placeholder<Player>> placeholders) {
-        super(displayItem, clickTask, rightClickTask, leftClickTask, placeholders);
+                          Consumer<InventoryClickEvent> clickTask,
+                          Consumer<InventoryClickEvent> rightClickTask,
+                          Consumer<InventoryClickEvent> leftClickTask,
+                          Consumer<InventoryClickEvent> middleClickTask,
+                          Collection<Placeholder<Player>> placeholders) {
+        super(displayItem, clickTask, rightClickTask, leftClickTask, middleClickTask,  placeholders);
     }
 
     public DecorationItem(ItemStack displayItem) {
@@ -23,7 +24,7 @@ public class DecorationItem extends Button {
     }
 
     public DecorationItem(ItemStack displayItem,
-        Consumer<InventoryClickEvent> clickTask) {
+                          Consumer<InventoryClickEvent> clickTask) {
         super(displayItem, clickTask);
     }
 

@@ -1,4 +1,4 @@
-package dev.imlukas.hoarderplugin.menus.editors;
+package dev.imlukas.hoarderplugin.menus.editors.prize;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.menus.ItemSelectionMenu;
@@ -13,55 +13,56 @@ import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicato
 import dev.imlukas.hoarderplugin.utils.menu.layer.BaseLayer;
 import dev.imlukas.hoarderplugin.utils.menu.mask.PatternMask;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
-import dev.imlukas.hoarderplugin.utils.menu.template.Menu;
+import dev.imlukas.hoarderplugin.utils.menu.template.FallbackMenu;
+import dev.imlukas.hoarderplugin.utils.schedulerutil.builders.ScheduleBuilder;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
+import dev.imlukas.hoarderplugin.utils.text.TextUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import javax.swing.*;
 import java.util.LinkedList;
 import java.util.List;
 
 public class PrizeCreatorMenu extends UpdatableMenu {
     private final Messages messages;
-    private final ActionRegistry actionRegistry;
     private final PrizeRegistry prizeRegistry;
     private final PrizeHandler prizeHandler;
+    private final FallbackMenu fallbackMenu;
 
     private ConfigurableMenu menu;
-    private ConfigurationApplicator applicator;
-    private PatternMask mask;
-    private BaseLayer layer;
 
     private ItemStack displayItem;
     private String displayName, identifier;
     private LinkedList<PrizeAction> actions = new LinkedList<>();
 
-    public PrizeCreatorMenu(HoarderPlugin plugin, Player viewer) {
+    public PrizeCreatorMenu(HoarderPlugin plugin, Player viewer, FallbackMenu fallbackMenu) {
         super(plugin, viewer);
         this.messages = plugin.getMessages();
-        this.actionRegistry = plugin.getActionRegistry();
         this.prizeRegistry = plugin.getPrizeRegistry();
         this.prizeHandler = plugin.getPrizeHandler();
-        setup();
+        this.fallbackMenu = fallbackMenu;
 
+        this.displayName = "";
+        this.identifier = "";
+        setup();
     }
 
     @Override
     public void setup() {
         menu = createMenu();
-        applicator = getApplicator();
-        mask = applicator.getMask();
-        layer = new BaseLayer(menu);
+        BaseLayer layer = new BaseLayer(menu);
+        ConfigurationApplicator applicator = getApplicator();
 
-        applicator.registerButton(layer, "c", () -> new PrizeListMenu(getPlugin(), getViewer()).open());
 
-        Button displayItem = applicator.registerButton(layer, "i");
+        applicator.registerButton(layer, "c", fallbackMenu::openFallback);
+
+        Button displayItem = applicator.registerButton(layer, "d");
         displayItem.setLeftClickAction(() -> {
             new ItemSelectionMenu(getPlugin(), getViewer(), displayItem.getDisplayItem().getType(), (newMaterial) -> {
                 displayItem.getDisplayItem().setType(newMaterial);
+                ScheduleBuilder.runIn1Tick(getPlugin(), this::open).sync().start();
                 refresh();
             });
         });
@@ -77,37 +78,11 @@ public class PrizeCreatorMenu extends UpdatableMenu {
         }));
 
         Button actionButton = applicator.registerButton(layer, "a");
-        actionButton.setLeftClickAction(() -> {
-            messages.sendMessage(getViewer(), "editors.available-action");
-            holdForInput((action) -> {
-                PrizeAction prizeAction = actionRegistry.getAction(action);
-
-                if (prizeAction == null) {
-                    messages.sendMessage(getViewer(), "editors.invalid-action");
-                    return;
-                }
-
-                actions.add(prizeAction);
-            });
-        });
-
-        actionButton.setRightClickAction(() -> {
-            if (actions.isEmpty()) {
-                return;
-            }
-
-            for (PrizeAction action : actions) {
-                messages.sendMessage(getViewer(), "editors.action", new Placeholder<>("action", action.getIdentifier()),
-                        new Placeholder<>("index", String.valueOf(actions.indexOf(action))));
-            }
-
-            holdForInput((index) -> {
-                try {
-                    int i = Integer.parseInt(index);
-                    actions.remove(i);
-                } catch (NumberFormatException e) {
-                    messages.sendMessage(getViewer(), "editors.invalid-index");
-                }
+        actionButton.setClickAction((ignored) -> {
+            new ActionCreatorMenu(getPlugin(), getViewer(), this.actions, (actions) -> {
+                this.actions = actions;
+                ScheduleBuilder.runIn1Tick(getPlugin(), this::open).sync().start();
+                refresh();
             });
         });
 
@@ -128,19 +103,21 @@ public class PrizeCreatorMenu extends UpdatableMenu {
             prizeRegistry.registerPrize(eventPrize);
             prizeHandler.createPrize(eventPrize);
 
-            messages.sendMessage(getViewer(), "editors.prize-created");
+            messages.sendMessage(getViewer(), "editors.prize-created", new Placeholder<>("prize", eventPrize.getDisplayName()));
+            fallbackMenu.openFallback();
         });
+
+        refresh();
     }
 
 
     @Override
     public void refresh() {
         List<Placeholder<Player>> placeholderList = List.of(
-                new Placeholder<>("display-name", displayName),
+                new Placeholder<>("display-name", TextUtils.color(displayName)),
                 new Placeholder<>("identifier", identifier));
 
         menu.setItemPlaceholders(placeholderList);
-        layer.setItemPlaceholders(placeholderList);
         menu.forceUpdate();
     }
 

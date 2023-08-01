@@ -4,7 +4,9 @@ import dev.imlukas.hoarderplugin.prize.EventPrize;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlayerEventData {
 

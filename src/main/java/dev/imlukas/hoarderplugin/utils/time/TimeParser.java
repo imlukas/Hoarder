@@ -7,10 +7,10 @@ import java.util.concurrent.TimeUnit;
 public class TimeParser {
 
     private static final Map<TimeUnit, List<String>> UNIT_ALIASES = Map.of(
-        TimeUnit.SECONDS, List.of("s", "sec", "secs", "second", "seconds"),
-        TimeUnit.MINUTES, List.of("m", "min", "mins", "minute", "minutes"),
-        TimeUnit.HOURS, List.of("h", "hr", "hrs", "hour", "hours"),
-        TimeUnit.DAYS, List.of("d", "day", "days")
+            TimeUnit.SECONDS, List.of("s", "sec", "secs", "second", "seconds"),
+            TimeUnit.MINUTES, List.of("m", "min", "mins", "minute", "minutes"),
+            TimeUnit.HOURS, List.of("h", "hr", "hrs", "hour", "hours"),
+            TimeUnit.DAYS, List.of("d", "day", "days")
     );
 
     public static Time parse(String input) {

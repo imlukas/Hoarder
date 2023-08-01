@@ -48,9 +48,15 @@ public class ItemBuilder {
     public static ConfigurationSection toSection(ItemStack itemStack, FileConfiguration config, String sectionIdentifier) {
         ConfigurationSection section = config.createSection(sectionIdentifier);
         ItemMeta meta = itemStack.getItemMeta();
+
+        List<String> lore = meta.getLore();
+        lore.removeIf(String::isBlank);
+
+        section.set("lore", null);
+
         section.set("type", itemStack.getType().name());
         section.set("name", meta.getDisplayName());
-        section.set("lore", meta.getLore());
+        section.set("lore", lore);
         section.set("glow", meta.hasEnchant(Enchantment.LUCK));
 
         if (meta.hasCustomModelData()) {
@@ -65,8 +71,8 @@ public class ItemBuilder {
         }
 
         ItemBuilder builder = new ItemBuilder(
-            Material.valueOf(
-                section.getString(section.contains("material") ? "material" : "type")));
+                Material.valueOf(
+                        section.getString(section.contains("material") ? "material" : "type")));
 
         ItemConfigurationSerializer.applySection(builder, section);
 
@@ -205,7 +211,7 @@ public class ItemBuilder {
 
     public ItemBuilder skull(String name) {
         Validate.isTrue(material.name().contains("SKULL") || material.name().contains("HEAD"),
-            "Attempt to set skull data on non skull item");
+                "Attempt to set skull data on non skull item");
         this.skullName = name;
         data(3);
         return this;
@@ -213,7 +219,7 @@ public class ItemBuilder {
 
     public ItemBuilder skullHash(String hash) {
         Validate.isTrue(material.name().contains("SKULL") || material.name().contains("HEAD"),
-            "Attempt to set skull data on non skull item");
+                "Attempt to set skull data on non skull item");
         this.skullHash = hash;
         data(3);
         return this;

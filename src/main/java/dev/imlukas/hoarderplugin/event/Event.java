@@ -1,10 +1,10 @@
 package dev.imlukas.hoarderplugin.event;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
-import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.event.data.EventData;
 import dev.imlukas.hoarderplugin.event.phase.EventPhase;
 import dev.imlukas.hoarderplugin.event.settings.EventSettings;
+import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.prize.registry.PrizeRegistry;
 
 import java.util.LinkedList;

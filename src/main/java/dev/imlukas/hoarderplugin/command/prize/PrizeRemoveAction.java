@@ -9,16 +9,12 @@ import dev.imlukas.hoarderplugin.utils.command.command.impl.AdvancedCommand;
 import dev.imlukas.hoarderplugin.utils.command.command.impl.ExecutionContext;
 import dev.imlukas.hoarderplugin.utils.command.language.type.Parameter;
 import dev.imlukas.hoarderplugin.utils.command.language.type.impl.StringParameterType;
-import dev.imlukas.hoarderplugin.utils.command.legacy.SimpleCommand;
 import dev.imlukas.hoarderplugin.utils.component.ComponentEvent;
 import dev.imlukas.hoarderplugin.utils.component.ComponentUtil;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.CommandSender;
-
-import java.util.List;
-import java.util.Map;
 
 public class PrizeRemoveAction extends AdvancedCommand {
     private final Messages messages;

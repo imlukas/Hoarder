@@ -7,8 +7,9 @@ import org.bukkit.entity.Player;
 
 public class EconomyAction implements PrizeAction {
 
-    private final String input;
+    private String input;
     private final Economy economy;
+
     public EconomyAction(HoarderPlugin plugin, String input) {
         this.input = input;
         this.economy = plugin.getEconomy();
@@ -32,5 +33,10 @@ public class EconomyAction implements PrizeAction {
     @Override
     public String getFullInput() {
         return getIdentifier() + ":" + getInput();
+    }
+
+    @Override
+    public void setInput(String input) {
+        this.input = input;
     }
 }

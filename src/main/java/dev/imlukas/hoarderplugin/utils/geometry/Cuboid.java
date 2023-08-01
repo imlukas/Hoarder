@@ -104,7 +104,7 @@ public class Cuboid implements Iterable<BlockVector>, Cloneable {
 
     public boolean contains(Vector vector) {
         return vector.getX() >= minX && vector.getX() <= maxX && vector.getY() >= minY && vector.getY() <= maxY && vector.getZ() >= minZ
-            && vector.getZ() <= maxZ;
+                && vector.getZ() <= maxZ;
     }
 
     public boolean contains(double x, double y, double z) {
@@ -186,7 +186,7 @@ public class Cuboid implements Iterable<BlockVector>, Cloneable {
 
         return new Cuboid((int) Math.floor(minX), (int) Math.floor(minY), (int) Math.floor(minZ),
 
-            (int) Math.ceil(maxX), (int) Math.ceil(maxY), (int) Math.ceil(maxZ));
+                (int) Math.ceil(maxX), (int) Math.ceil(maxY), (int) Math.ceil(maxZ));
     }
 
     /**

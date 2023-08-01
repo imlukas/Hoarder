@@ -1,9 +1,9 @@
 package dev.imlukas.hoarderplugin.menus;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
+import dev.imlukas.hoarderplugin.event.Event;
 import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderEventData;
 import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderPlayerEventData;
-import dev.imlukas.hoarderplugin.event.Event;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.utils.menu.base.ConfigurableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.button.Button;

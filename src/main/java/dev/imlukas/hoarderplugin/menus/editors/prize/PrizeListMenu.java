@@ -1,4 +1,4 @@
-package dev.imlukas.hoarderplugin.menus.editors;
+package dev.imlukas.hoarderplugin.menus.editors.prize;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.prize.EventPrize;
@@ -12,10 +12,11 @@ import dev.imlukas.hoarderplugin.utils.menu.layer.PaginableLayer;
 import dev.imlukas.hoarderplugin.utils.menu.pagination.PaginableArea;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.selection.Selection;
+import dev.imlukas.hoarderplugin.utils.menu.template.FallbackMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class PrizeListMenu extends UpdatableMenu {
+public class PrizeListMenu extends UpdatableMenu implements FallbackMenu {
 
     private final PrizeRegistry prizeRegistry;
 
@@ -42,7 +43,7 @@ public class PrizeListMenu extends UpdatableMenu {
 
             if (hasPermission()) {
                 ItemUtil.addLore(button.getDisplayItem(), "\n&7Left-Click to Edit this prize");
-                button.setLeftClickAction(() -> new PrizeEditorMenu(getPlugin(), getViewer(), eventPrize).open());
+                button.setLeftClickAction(() -> new PrizeEditorMenu(getPlugin(), getViewer(), eventPrize, this).open());
             }
 
             area.addElement(button);
@@ -67,10 +68,10 @@ public class PrizeListMenu extends UpdatableMenu {
 
         if (hasPermission()) {
             Button createButton = new Button(applicator.getItem("create"));
-            createButton.setLeftClickAction(() -> new PrizeCreatorMenu(getPlugin(), getViewer()).open());
+            createButton.setLeftClickAction(() -> new PrizeCreatorMenu(getPlugin(), getViewer(), this).open());
 
-           Selection selection = getApplicator().getMask().selection("r");
-           layer.applySelection(selection, createButton);
+            Selection selection = getApplicator().getMask().selection("r");
+            layer.applySelection(selection, createButton);
         }
 
         refresh();
@@ -88,5 +89,11 @@ public class PrizeListMenu extends UpdatableMenu {
 
     public boolean hasPermission() {
         return getViewer().hasPermission("hoarder.prize.edit");
+    }
+
+    @Override
+    public void openFallback() {
+        refresh();
+        open();
     }
 }

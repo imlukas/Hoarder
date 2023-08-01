@@ -4,7 +4,7 @@ layout:
   - "b b b b b b b b b"
   - "b . . . d . . . b"
   - "b . i . a . n . b"
-  - "b . . . . . . . b"
+  - "b . . . l . . . b"
   - "b b b c b cr b b b"
 
 items:
@@ -17,16 +17,27 @@ items:
     lore:
       - "&7Left-Click to change prize's identifier"
   d:
-    type: CHEST
+    type: PAPER
     name: "&7Display Item"
     lore:
-      - "&7Left-Click to change item material"
+      - "&7Left-Click to change the item"
   a:
     type: BOOK
     name: "&7Actions"
+    lore:
+      - "&7Left-Click to open action editor"
   n:
     type: NAME_TAG
     name: "&7Name"
+    lore:
+      - "&7Left-Click to change the name"
+      - "&7Current name: %display-name%"
+  l:
+    type: NAME_TAG
+    name: "&7Lore"
+    lore:
+      - "&7Left-Click to change the lore"
+      - "&7Current lore:"
   c:
     type: BARRIER
     name: "&cClose"

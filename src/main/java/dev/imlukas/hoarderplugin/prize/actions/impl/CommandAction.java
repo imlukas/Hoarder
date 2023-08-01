@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 public class CommandAction implements PrizeAction {
 
-    private final String command;
+    private String command;
 
     public CommandAction(String command) {
         this.command = command;
@@ -29,5 +29,10 @@ public class CommandAction implements PrizeAction {
     @Override
     public String getFullInput() {
         return getIdentifier() + ":" + getInput();
+    }
+
+    @Override
+    public void setInput(String input) {
+        command = input;
     }
 }

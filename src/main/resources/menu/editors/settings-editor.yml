@@ -1,0 +1,51 @@
+title: "&7Hoarder &8| &eSettings Editor"
+
+layout:
+  - "b b b b b b b b b"
+  - "b . s . e . r . b"
+  - "b . . w . f . . b"
+  - "b b b b c b b b b"
+
+items:
+  b:
+    type: BLACK_STAINED_GLASS_PANE
+    name: " "
+  w:
+    type: PAPER
+    name: "&7White-listed Items"
+    lore:
+      - "&7Left-Click to open the white-listed items editor"
+  f:
+    type: PAPER
+    name: "&7Fixed Item"
+    lore:
+      - "&7Left-Click change the fixed item"
+  r:
+    type: NETHER_STAR
+    name: "&7Random Material"
+    lore:
+      - "&7Click to enable/disable random material"
+      - "&7Value: %random-material%"
+  e:
+    type: PAPER
+    name: "&7Event Time"
+    lore:
+      - "&7Left-Click to change the event time"
+      - "&7Current time: %event-time%"
+  s:
+    type: PAPER
+    name: "&7Starting Time"
+    lore:
+      - "&7Left-Click to change the starting time"
+      - "&7Current time: %starting-time%"
+      -
+  item:
+    type: PAPER
+    name: "&%setting%"
+    lore:
+      - "&7Left-Click to change the setting"
+  c:
+    type: BARRIER
+    name: "&cClose"
+    lore:
+      - "&7Close this menu"

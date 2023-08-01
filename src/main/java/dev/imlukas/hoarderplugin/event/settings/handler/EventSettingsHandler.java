@@ -2,7 +2,6 @@ package dev.imlukas.hoarderplugin.event.settings.handler;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.event.data.hoarder.item.HoarderItem;
-import dev.imlukas.hoarderplugin.event.settings.EventSettings;
 import dev.imlukas.hoarderplugin.event.settings.impl.hoarder.HoarderEventSettings;
 import dev.imlukas.hoarderplugin.event.settings.registry.EventSettingsRegistry;
 import dev.imlukas.hoarderplugin.utils.storage.YMLBase;
@@ -11,13 +10,12 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class EventSettingsHandler extends YMLBase {
 
     private final EventSettingsRegistry eventSettingsRegistry;
+
     public EventSettingsHandler(HoarderPlugin plugin) {
         super(plugin, "settings.yml");
         this.eventSettingsRegistry = plugin.getEventSettingsRegistry();
@@ -50,5 +48,11 @@ public class EventSettingsHandler extends YMLBase {
 
         eventSettingsRegistry.register(eventSettings);
         System.out.println("Loaded settings for event " + eventSettings.getEventIdentifier() + ".");
+    }
+
+    public void updateSetting(String key, Object value) {
+        FileConfiguration config = getConfiguration();
+        config.set(key, value);
+        save();
     }
 }

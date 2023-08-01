@@ -34,7 +34,7 @@ public class PaginableArea {
     }
 
     public void setEmptyElement(
-        MenuElement emptyElement) {
+            MenuElement emptyElement) {
         this.emptyElement = emptyElement;
     }
 

@@ -44,7 +44,7 @@ public class TextUtils {
      * @return The parsed integer
      */
     public static int parseInt(String stringToParse, Predicate<Integer> predicate) { // not really a text utility, but it's used in a text utility
-        int parsed = 1;
+        int parsed;
         try {
             parsed = Integer.parseInt(stringToParse);
         } catch (NumberFormatException e) {
@@ -58,6 +58,10 @@ public class TextUtils {
         }
 
         return parsed;
+    }
+
+    public static int parseInt(String stringToParse) { // not really a text utility, but it's used in a text utility
+        return parseInt(stringToParse, (ignored) -> true);
     }
 
 }

@@ -7,7 +7,6 @@ import dev.imlukas.hoarderplugin.utils.command.language.CompiledObjective;
 import dev.imlukas.hoarderplugin.utils.command.legacy.SimpleCommand;
 import dev.imlukas.hoarderplugin.utils.geometry.Pair;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;

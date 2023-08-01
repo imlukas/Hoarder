@@ -31,4 +31,6 @@ public interface PrizeAction {
      * @return the full input
      */
     String getFullInput();
+
+    void setInput(String input);
 }

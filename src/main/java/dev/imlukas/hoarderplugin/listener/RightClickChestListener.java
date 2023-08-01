@@ -1,10 +1,10 @@
 package dev.imlukas.hoarderplugin.listener;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
-import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderEventData;
 import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderPlayerEventData;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
+import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.utils.item.ItemBuilder;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
@@ -32,6 +32,7 @@ public class RightClickChestListener implements Listener {
         this.config = plugin.getConfig();
         this.eventTracker = plugin.getEventTracker();
     }
+
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();

@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 public class CustomItemHandler extends YMLBase {
 
     private final CustomItemRegistry customItemRegistry;
+
     public CustomItemHandler(HoarderPlugin plugin) {
         super(plugin, "items.yml");
         customItemRegistry = plugin.getCustomItemRegistry();

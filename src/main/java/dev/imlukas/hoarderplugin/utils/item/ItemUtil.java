@@ -27,6 +27,13 @@ public final class ItemUtil {
         meta.setLore(null);
         itemStack.setItemMeta(meta);
     }
+
+    public static void setItemName(ItemStack itemStack, String name) {
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(TextUtils.color(name));
+        itemStack.setItemMeta(meta);
+    }
+
     public static void addLore(ItemStack itemStack, String... toAdd) {
         ItemMeta meta = itemStack.getItemMeta();
         List<String> lore = meta.getLore();
