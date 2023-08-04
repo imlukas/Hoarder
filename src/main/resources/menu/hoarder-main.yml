@@ -1,0 +1,44 @@
+title: "&7Hoarder &8| &eMain"
+
+layout:
+  - "b b b b b b b b b"
+  - "b . . . . . . . b"
+  - "b . l . h . s . b"
+  - "b . . . r . . . b"
+  - "b b b b c b b b b"
+
+items:
+  b:
+    type: BLACK_STAINED_GLASS_PANE
+    name: " "
+  r:
+    type: NETHER_STAR
+    name: "&eRewards"
+    lore:
+      - "&7Click to open the rewards menu"
+  c:
+    type: BARRIER
+    name: "&cClose"
+    lore:
+      - "&7Close this menu"
+  l:
+    type: EMERALD
+    name: "&aLeaderboards"
+    lore:
+      - "&7Click to open the leaderboard menu"
+
+  h:
+    type: CHEST
+    name: "&eHoarder"
+    lore:
+      - "&7Click to open the hoarder menu"
+      - "&7Hoarder is currently: &f%status%"
+      - "&7Next hoarder in: &f%time%"
+  s:
+    type: PLAYER_HEAD
+    skull: "%player_name%"
+    name: "&eStats"
+    lore:
+      - "&7Total Wins: &f%totalWins%"
+      - "&7Total Sold: &f%totalSold%"
+      - "&7Times in Top 3: &f%totalTop3%"

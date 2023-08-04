@@ -3,9 +3,9 @@ package dev.imlukas.hoarderplugin.utils.schedulerutil.data;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.ScheduledTask;
 import lombok.Getter;
 
+@Getter
 public class ScheduleThread implements ScheduleBuilderBase {
 
-    @Getter
     private final ScheduleData data;
 
     public ScheduleThread(ScheduleData data) {

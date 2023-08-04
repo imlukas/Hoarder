@@ -9,10 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Getter
 @Setter(AccessLevel.PACKAGE)
 public class ScheduleBuilder implements ScheduleBuilderBase {
 
-    @Getter
     private ScheduleData data;
 
     // Presets

@@ -4,11 +4,12 @@ import dev.imlukas.hoarderplugin.event.data.hoarder.item.HoarderItem;
 import dev.imlukas.hoarderplugin.event.settings.EventSettings;
 import dev.imlukas.hoarderplugin.utils.collection.ListUtils;
 import dev.imlukas.hoarderplugin.utils.time.Time;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+@Getter
 public class HoarderEventSettings extends EventSettings {
 
     private final List<HoarderItem> whitelistedItems = new ArrayList<>();
@@ -29,28 +30,8 @@ public class HoarderEventSettings extends EventSettings {
         this.fixedItem = fixedItem;
     }
 
-    public boolean isRandomMaterial() {
-        return randomMaterial;
-    }
-
-    public List<HoarderItem> getWhitelistedItems() {
-        return whitelistedItems;
-    }
-
-    public HoarderItem getFixedItem() {
-        return fixedItem;
-    }
-
     public HoarderItem getRandomItem() {
         return ListUtils.getRandom(whitelistedItems);
-    }
-
-    public Time getEventTime() {
-        return eventTime;
-    }
-
-    public Time getStartingTime() {
-        return startingTime;
     }
 
     public void setEventTime(Time eventTime) {

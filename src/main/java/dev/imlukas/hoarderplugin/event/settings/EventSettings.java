@@ -1,7 +1,8 @@
 package dev.imlukas.hoarderplugin.event.settings;
 
-import java.util.Map;
+import lombok.Getter;
 
+@Getter
 public abstract class EventSettings {
 
     private final String eventIdentifier;
@@ -10,7 +11,4 @@ public abstract class EventSettings {
         this.eventIdentifier = eventIdentifier;
     }
 
-    public String getEventIdentifier() {
-        return eventIdentifier;
-    }
 }

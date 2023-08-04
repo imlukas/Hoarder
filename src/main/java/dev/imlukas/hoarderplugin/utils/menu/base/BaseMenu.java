@@ -5,6 +5,7 @@ import dev.imlukas.hoarderplugin.utils.item.ItemUtil;
 import dev.imlukas.hoarderplugin.utils.menu.element.MenuElement;
 import dev.imlukas.hoarderplugin.utils.menu.element.Renderable;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,15 +20,13 @@ public class BaseMenu implements InventoryHolder {
     private final UUID destinationPlayerId;
     private final List<Renderable> renderables = new ArrayList<>();
     private final Map<Integer, MenuElement> elements = new HashMap<>();
-    private final List<Placeholder<Player>> titlePlaceholders = new ArrayList<>();
-    private final String title;
     private final Inventory inventory;
     private final List<Runnable> closeTasks = new ArrayList<>();
+    @Getter
     private boolean allowRemoveItems = false;
 
 
     public BaseMenu(UUID playerId, String title, int rows) {
-        this.title = title;
         this.inventory = Bukkit.createInventory(this, rows * 9, title);
         this.destinationPlayerId = playerId;
     }
@@ -51,6 +50,10 @@ public class BaseMenu implements InventoryHolder {
         }
         forceUpdate();
         player.openInventory(inventory);
+    }
+
+    public void setItemPlaceholders(Placeholder<Player>... placeholders) {
+        setItemPlaceholders(List.of(placeholders));
     }
 
     public void setItemPlaceholders(Collection<Placeholder<Player>> placeholders) {
@@ -99,10 +102,6 @@ public class BaseMenu implements InventoryHolder {
 
     public void onClose(Runnable task) {
         closeTasks.add(task);
-    }
-
-    public boolean isAllowRemoveItems() {
-        return allowRemoveItems;
     }
 
     public void setAllowRemoveItems(boolean allowRemoveItems) {

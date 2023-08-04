@@ -1,0 +1,47 @@
+title: "&7Hoarder &8| &eLeaderboard"
+
+layout:
+  - "b b b b b b b b b"
+  - "b . . . . . . . b"
+  - "p . . . . . . . n"
+  - "b . . . . . . . b"
+  - "b b b c b t b b b"
+
+items:
+  entry:
+    type: PLAYER_HEAD
+    skull: "%player%"
+    name: "%player% - #%position%"
+    lore:
+      - "&7Wins &8» &e%wins%"
+      - "&7Sold items &8» &e%sold_items%"
+      - "&7Times in top 3 &8» &e%top3%"
+
+  p:
+    type: PLAYER_HEAD
+    skull-hash: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDAyY2YwZGVhNGQwNmVmMWRlMjU1YmI4MTVmNjQyNjhkNjhiYjNiOTAzZDYwNjIxYWU5MmUwMDdlMjg4MTk4YyJ9fX0="
+    name: "&cPrevious Page"
+    lore:
+      - "&7Click to go to the previous page"
+  n:
+    type: PLAYER_HEAD
+    skull-hash: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjVkYTE4NDU0NmEwNWRlOTZhNGQxZmI4MjBmNzJjMDlmMTU5N2RmNTZkODhhNGFiMzVlOWI0YTJjNzgwYWI4NCJ9fX0="
+    name: "&cNext Page"
+    lore:
+      - "&7Click to go to the next page"
+  b:
+    type: BLACK_STAINED_GLASS_PANE
+    name: " "
+  c:
+    type: PLAYER_HEAD
+    skull-hash: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmViNTg4YjIxYTZmOThhZDFmZjRlMDg1YzU1MmRjYjA1MGVmYzljYWI0MjdmNDYwNDhmMThmYzgwMzQ3NWY3In19fQ=="
+    name: "&cClose"
+    lore:
+      - "&7Click to close the menu."
+  t:
+    type: PLAYER_HEAD
+    skull-hash: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWQ4NjA0YjllMTk1MzY3Zjg1YTIzZDAzZDlkZDUwMzYzOGZjZmIwNWIwMDMyNTM1YmM0MzczNDQyMjQ4M2JkZSJ9fX0="
+    name: "&cChange type"
+    lore:
+      - "&7Click to change the leaderboard type"
+      - "&7Current type: &e%type%"

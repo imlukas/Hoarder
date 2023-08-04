@@ -12,11 +12,10 @@ import dev.imlukas.hoarderplugin.utils.menu.layer.PaginableLayer;
 import dev.imlukas.hoarderplugin.utils.menu.pagination.PaginableArea;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.selection.Selection;
-import dev.imlukas.hoarderplugin.utils.menu.template.FallbackMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class PrizeListMenu extends UpdatableMenu implements FallbackMenu {
+public class PrizeListMenu extends UpdatableMenu {
 
     private final PrizeRegistry prizeRegistry;
 
@@ -44,7 +43,7 @@ public class PrizeListMenu extends UpdatableMenu implements FallbackMenu {
             if (hasPermission()) {
                 ItemUtil.addLore(button.getDisplayItem(), "");
                 ItemUtil.addLore(button.getDisplayItem(), "&7Left-Click to Edit this prize");
-                button.setLeftClickAction(() -> new PrizeEditorMenu(getPlugin(), getViewer(), eventPrize, this).open());
+                button.setLeftClickAction(() -> new PrizeEditorMenu(getPlugin(), getViewer(), eventPrize).onClose(this::open).open());
             }
 
             area.addElement(button);
@@ -71,7 +70,8 @@ public class PrizeListMenu extends UpdatableMenu implements FallbackMenu {
 
         if (hasPermission()) {
             Button createButton = new Button(applicator.getItem("create"));
-            createButton.setLeftClickAction(() -> new PrizeCreatorMenu(getPlugin(), getViewer(), this).open());
+            createButton.setLeftClickAction(() -> new PrizeCreatorMenu(getPlugin(), getViewer()).onClose(this::open).open());
+            createButton.setClickWithItemTask((itemStack) -> new PrizeCreatorMenu(getPlugin(), getViewer(), itemStack).onClose(this::open).open());
 
             Selection selection = getApplicator().getMask().selection("r");
             layer.applySelection(selection, createButton);
@@ -92,11 +92,5 @@ public class PrizeListMenu extends UpdatableMenu implements FallbackMenu {
 
     public boolean hasPermission() {
         return getViewer().hasPermission("hoarder.prize.edit");
-    }
-
-    @Override
-    public void openFallback() {
-        refresh();
-        open();
     }
 }

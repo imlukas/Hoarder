@@ -8,7 +8,6 @@ import dev.imlukas.hoarderplugin.utils.menu.base.ConfigurableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicator;
 import dev.imlukas.hoarderplugin.utils.menu.layer.BaseLayer;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
-import dev.imlukas.hoarderplugin.utils.menu.template.FallbackMenu;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
 import dev.imlukas.hoarderplugin.utils.time.Time;
@@ -16,7 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class SettingsEditor extends UpdatableMenu implements FallbackMenu {
+public class SettingsEditor extends UpdatableMenu {
 
     private final Messages messages;
     private final EventSettingsRegistry eventSettingsRegistry;
@@ -60,7 +59,7 @@ public class SettingsEditor extends UpdatableMenu implements FallbackMenu {
                 new Placeholder<>("random-material", eventSettings.isRandomMaterial() ? "true" : "false"));
 
         applicator.registerButton(layer, "s", () -> {
-            messages.sendMessage(getViewer(),"inputs.time");
+            messages.sendMessage(getViewer(), "inputs.time");
             holdForInput((newTime) -> {
                 Time time = Time.parseTime(newTime);
 
@@ -77,7 +76,7 @@ public class SettingsEditor extends UpdatableMenu implements FallbackMenu {
         });
 
         applicator.registerButton(layer, "e", () -> {
-            messages.sendMessage(getViewer(),"inputs.time");
+            messages.sendMessage(getViewer(), "inputs.time");
             holdForInput((newTime) -> {
                 Time time = Time.parseTime(newTime);
 
@@ -100,9 +99,8 @@ public class SettingsEditor extends UpdatableMenu implements FallbackMenu {
             refresh();
         });
 
-        applicator.registerButton(layer, "w", () -> new WhitelistItemList(getPlugin(), getViewer(), this, eventSettings).open());
-
-        applicator.registerButton(layer, "f", () -> new FixedItemEditor(getPlugin(), getViewer(), this, eventSettings).open());
+        applicator.registerButton(layer, "w", () -> new WhitelistItemList(getPlugin(), getViewer(), eventSettings).onClose(this::open).open());
+        applicator.registerButton(layer, "f", () -> new FixedItemEditor(getPlugin(), getViewer(), eventSettings).onClose(this::open).open());
 
         menu.setItemPlaceholders(placeholderList);
         layer.setItemPlaceholders(placeholderList);
@@ -123,11 +121,5 @@ public class SettingsEditor extends UpdatableMenu implements FallbackMenu {
         messages.sendMessage(getViewer(), "editors.setting.updated",
                 new Placeholder<>("setting", key),
                 new Placeholder<>("value", value));
-    }
-
-    @Override
-    public void openFallback() {
-        refresh();
-        open();
     }
 }

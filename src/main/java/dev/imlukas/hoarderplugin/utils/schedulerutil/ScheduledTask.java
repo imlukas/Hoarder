@@ -1,6 +1,7 @@
 package dev.imlukas.hoarderplugin.utils.schedulerutil;
 
 import dev.imlukas.hoarderplugin.utils.schedulerutil.data.ScheduleData;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -15,6 +16,7 @@ public class ScheduledTask {
     private final JavaPlugin plugin;
     private final List<Runnable> cancelTasks = new ArrayList<>();
     private boolean running = false;
+    @Getter
     private int id = 0;
 
     public ScheduledTask(JavaPlugin plugin, ScheduleData data) {
@@ -85,7 +87,4 @@ public class ScheduledTask {
         cancelTasks.forEach(Runnable::run);
     }
 
-    public int getId() {
-        return id;
-    }
 }

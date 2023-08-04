@@ -50,10 +50,6 @@ public class ItemBuilder {
         ItemMeta meta = itemStack.getItemMeta();
 
         List<String> lore = meta.getLore();
-        lore.removeIf(String::isBlank);
-
-        section.set("lore", null);
-
         section.set("type", itemStack.getType().name());
         section.set("name", meta.getDisplayName());
         section.set("lore", lore);

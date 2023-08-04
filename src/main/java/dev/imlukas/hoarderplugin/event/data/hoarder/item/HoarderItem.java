@@ -1,7 +1,9 @@
 package dev.imlukas.hoarderplugin.event.data.hoarder.item;
 
+import lombok.Getter;
 import org.bukkit.Material;
 
+@Getter
 public class HoarderItem {
 
     private Material material;
@@ -10,14 +12,6 @@ public class HoarderItem {
     public HoarderItem(Material material, double value) {
         this.material = material;
         this.value = value;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public Material getMaterial() {
-        return material;
     }
 
     public void setValue(double value) {

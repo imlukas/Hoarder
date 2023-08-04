@@ -1,10 +1,12 @@
 package dev.imlukas.hoarderplugin.event.tracker;
 
 import dev.imlukas.hoarderplugin.event.Event;
+import lombok.Getter;
 
 /**
  * Tracks the active event and the last event
  */
+@Getter
 public class EventTracker {
 
     private Event activeEvent;
@@ -19,11 +21,4 @@ public class EventTracker {
         this.lastEvent = lastEvent;
     }
 
-    public Event getActiveEvent() {
-        return activeEvent;
-    }
-
-    public Event getLastEvent() {
-        return lastEvent;
-    }
 }

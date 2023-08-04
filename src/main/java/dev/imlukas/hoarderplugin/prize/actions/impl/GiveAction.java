@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class GiveAction implements PrizeAction {
 
-    private  String input;
+    private String input;
     private final CustomItemRegistry customItemRegistry;
 
     public GiveAction(HoarderPlugin plugin, String input) {

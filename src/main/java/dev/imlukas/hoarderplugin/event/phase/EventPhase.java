@@ -4,10 +4,12 @@ import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.ScheduledTask;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.builders.ScheduleBuilder;
 import dev.imlukas.hoarderplugin.utils.time.Time;
+import lombok.Getter;
 
 public abstract class EventPhase {
 
     protected final HoarderPlugin plugin;
+    @Getter
     protected final Time duration;
     protected Runnable onEnd;
     protected ScheduledTask runAfterTask;
@@ -15,10 +17,6 @@ public abstract class EventPhase {
     public EventPhase(HoarderPlugin plugin, Time duration) {
         this.plugin = plugin;
         this.duration = duration;
-    }
-
-    public Time getDuration() {
-        return duration;
     }
 
     public abstract void run();

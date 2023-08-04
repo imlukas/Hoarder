@@ -5,6 +5,7 @@ import dev.imlukas.hoarderplugin.utils.component.ComponentUtil;
 import net.kyori.adventure.text.TextComponent;
 import net.md_5.bungee.api.ChatColor;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,7 +31,7 @@ public class TextUtils {
     }
 
     public static String capitalize(String toCapitalize) {
-        return toCapitalize.substring(0, 1).toUpperCase() + toCapitalize.substring(1);
+        return toCapitalize.substring(0, 1).toUpperCase() + toCapitalize.substring(1).toLowerCase();
     }
 
     public static TextComponent toComponent(String message) {
@@ -44,24 +45,24 @@ public class TextUtils {
      * @param predicate     A Predicate to test the parsed integer against
      * @return The parsed integer
      */
-    public static int parseInt(String stringToParse, Predicate<Integer> predicate) { // not really a text utility, but it's used in a text utility
+    public static Optional<Integer> parseInt(String stringToParse, Predicate<Integer> predicate) { // not really a text utility, but it's used in a text utility
         int parsed;
         try {
             parsed = Integer.parseInt(stringToParse);
         } catch (NumberFormatException e) {
             System.err.println("Invalid number: " + stringToParse);
-            return 1;
+            return Optional.of(1);
         }
 
         if (!predicate.test(parsed)) {
             System.err.println("Invalid number: " + stringToParse);
-            return 1;
+            return Optional.of(1);
         }
 
-        return parsed;
+        return Optional.of(parsed);
     }
 
-    public static int parseInt(String stringToParse) { // not really a text utility, but it's used in a text utility
+    public static Optional<Integer> parseInt(String stringToParse) { // not really a text utility, but it's used in a text utility
         return parseInt(stringToParse, (ignored) -> true);
     }
 

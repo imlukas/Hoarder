@@ -14,4 +14,10 @@ public abstract class UpdatableMenu extends Menu {
      * Handles refreshing placeholders and updating buttons and other elements accordingly.
      */
     public abstract void refresh();
+
+    @Override
+    public void open() {
+        refresh();
+        super.open();
+    }
 }

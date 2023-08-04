@@ -1,13 +1,17 @@
 package dev.imlukas.hoarderplugin.utils.command.language.parser.argument;
 
 import dev.imlukas.hoarderplugin.utils.command.language.parser.ArgumentType;
+import lombok.Getter;
 
 public class Argument<T> {
 
+    @Getter
     private final String name;
     private final ArgumentType type;
+    @Getter
     private boolean optional;
 
+    @Getter
     private Object value;
 
     public Argument(String name, ArgumentType type, boolean optional, Object value) {
@@ -17,24 +21,12 @@ public class Argument<T> {
         this.value = value;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public ArgumentType getArgumentType() {
         return type;
     }
 
-    public boolean isOptional() {
-        return optional;
-    }
-
     public void setOptional(boolean optional) {
         this.optional = optional;
-    }
-
-    public Object getValue() {
-        return value;
     }
 
     public void setValue(Object value) {

@@ -26,6 +26,7 @@ public class Button implements MenuElement {
     private Consumer<InventoryClickEvent> rightClickTask;
     private Consumer<InventoryClickEvent> leftClickTask;
     private Consumer<InventoryClickEvent> middleClickTask;
+    private Consumer<ItemStack> clickWithItemTask;
 
     private Collection<Placeholder<Player>> placeholders;
 
@@ -36,6 +37,10 @@ public class Button implements MenuElement {
     public Button(ItemStack displayItem, Consumer<InventoryClickEvent> clickTask) {
         this.displayItem = displayItem;
         this.clickTask = clickTask;
+    }
+
+    public void setClickWithItemTask(Consumer<ItemStack> clickWithItemTask) {
+        this.clickWithItemTask = clickWithItemTask;
     }
 
     public void setClickAction(Consumer<InventoryClickEvent> clickTask) {
@@ -57,6 +62,15 @@ public class Button implements MenuElement {
     @Override
     public void handle(InventoryClickEvent event) {
         ClickType clickType = event.getClick();
+
+        if (!event.getCursor().getType().isAir()) {
+            if (!event.getCurrentItem().getType().isAir()) {
+                if (clickWithItemTask != null) {
+                    clickWithItemTask.accept(event.getCursor());
+                    return;
+                }
+            }
+        }
 
         if (clickTask != null) {
             clickTask.accept(event);
@@ -81,17 +95,9 @@ public class Button implements MenuElement {
         this.displayItem = displayItem;
     }
 
-    public void setPlaceholders(Collection<Placeholder<Player>> placeholders) {
-        this.placeholders = placeholders;
-    }
-
-    public void setPlaceholders(Placeholder<Player>... placeholders) {
-        this.placeholders = List.of(placeholders);
-    }
-
     @Override
     public MenuElement copy() {
-        return new Button(displayItem.clone(), clickTask, rightClickTask, leftClickTask, middleClickTask, placeholders);
+        return new Button(displayItem.clone(), clickTask, rightClickTask, leftClickTask, middleClickTask, clickWithItemTask, placeholders);
     }
 
     @Override

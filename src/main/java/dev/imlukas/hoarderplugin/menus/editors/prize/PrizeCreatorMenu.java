@@ -14,7 +14,6 @@ import dev.imlukas.hoarderplugin.utils.menu.button.DecorationItem;
 import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicator;
 import dev.imlukas.hoarderplugin.utils.menu.layer.BaseLayer;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
-import dev.imlukas.hoarderplugin.utils.menu.template.FallbackMenu;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.builders.ScheduleBuilder;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
@@ -22,15 +21,15 @@ import dev.imlukas.hoarderplugin.utils.text.TextUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class PrizeCreatorMenu extends UpdatableMenu implements FallbackMenu{
+public class PrizeCreatorMenu extends UpdatableMenu {
     private final Messages messages;
     private final PrizeRegistry prizeRegistry;
     private final PrizeHandler prizeHandler;
-    private final FallbackMenu fallbackMenu;
 
     private ConfigurableMenu menu;
     private BaseLayer layer;
@@ -40,15 +39,25 @@ public class PrizeCreatorMenu extends UpdatableMenu implements FallbackMenu{
     private String displayName, identifier;
     private LinkedList<PrizeAction> actions = new LinkedList<>();
 
-    public PrizeCreatorMenu(HoarderPlugin plugin, Player viewer, FallbackMenu fallbackMenu) {
+    public PrizeCreatorMenu(HoarderPlugin plugin, Player viewer) {
+        this(plugin, viewer, null);
+    }
+
+    public PrizeCreatorMenu(HoarderPlugin plugin, Player viewer, ItemStack displayItem) {
         super(plugin, viewer);
         this.messages = plugin.getMessages();
         this.prizeRegistry = plugin.getPrizeRegistry();
         this.prizeHandler = plugin.getPrizeHandler();
-        this.fallbackMenu = fallbackMenu;
 
         this.displayName = "";
         this.identifier = "";
+
+        if (displayItem == null) {
+            this.displayItem = new ItemStack(Material.PAPER);
+        } else {
+            this.displayItem = displayItem.clone();
+            this.displayItem.setAmount(1);
+        }
         setup();
     }
 
@@ -58,18 +67,28 @@ public class PrizeCreatorMenu extends UpdatableMenu implements FallbackMenu{
         layer = new BaseLayer(menu);
         applicator = getApplicator();
 
-        applicator.registerButton(layer, "c", fallbackMenu::openFallback);
+        applicator.registerButton(layer, "c", this::close);
 
         Button itemSelectionButton = applicator.registerButton(layer, "d");
-        displayItem = itemSelectionButton.getDisplayItem().clone();
-        ItemUtil.clearLore(displayItem);
 
         itemSelectionButton.setLeftClickAction(() -> {
-            new ItemSelectionMenu(getPlugin(), getViewer(), displayItem.getType(), (newMaterial) -> {
-                displayItem.setType(newMaterial);
+            new ItemSelectionMenu(getPlugin(), getViewer(), displayItem, (newItem) -> {
+                displayItem.setType(newItem.getType());
+                ItemMeta meta = newItem.getItemMeta();
+
+                if (meta.hasCustomModelData()) {
+                    ItemUtil.setModelData(displayItem, meta.getCustomModelData());
+                }
+
                 ScheduleBuilder.runIn1Tick(getPlugin(), this::open).sync().start();
                 refresh();
-            });
+            }).onClose(this::open);
+        });
+
+        itemSelectionButton.setClickWithItemTask((newItem) -> {
+            displayItem.setType(newItem.getType());
+            ScheduleBuilder.runIn1Tick(getPlugin(), this::open).sync().start();
+            refresh();
         });
 
         applicator.registerButton(layer, "n", () -> {
@@ -100,7 +119,7 @@ public class PrizeCreatorMenu extends UpdatableMenu implements FallbackMenu{
 
         applicator.registerButton(layer, "cr", () -> {
             if (identifier.isEmpty()) {
-                identifier = "prize-" + prizeRegistry.getPrizes().size();
+                identifier = "prize-" + (prizeRegistry.getPrizes().size() + 1);
             }
 
             if (displayName.isEmpty()) {
@@ -116,11 +135,11 @@ public class PrizeCreatorMenu extends UpdatableMenu implements FallbackMenu{
             prizeHandler.createPrize(eventPrize);
 
             messages.sendMessage(getViewer(), "editors.prize-created", new Placeholder<>("prize", eventPrize.getDisplayName()));
-            fallbackMenu.openFallback();
+            this.close();
         });
 
         applicator.registerButton(layer, "l", () -> {
-            new LoreEditorMenu(getPlugin(), getViewer(), this, displayItem);
+            new LoreEditorMenu(getPlugin(), getViewer(), displayItem).onClose(this::open).open();
             refresh();
         });
 
@@ -135,6 +154,7 @@ public class PrizeCreatorMenu extends UpdatableMenu implements FallbackMenu{
                 new Placeholder<>("display-name", TextUtils.color(displayName)),
                 new Placeholder<>("identifier", identifier));
 
+
         layer.applySelection(applicator.getMask().selection("di"), new DecorationItem(displayItem));
         menu.setItemPlaceholders(placeholderList);
         menu.forceUpdate();
@@ -148,11 +168,5 @@ public class PrizeCreatorMenu extends UpdatableMenu implements FallbackMenu{
     @Override
     public ConfigurableMenu getMenu() {
         return menu;
-    }
-
-    @Override
-    public void openFallback() {
-        refresh();
-        open();
     }
 }

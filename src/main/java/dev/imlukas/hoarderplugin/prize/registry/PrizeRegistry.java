@@ -2,12 +2,14 @@ package dev.imlukas.hoarderplugin.prize.registry;
 
 import dev.imlukas.hoarderplugin.prize.EventPrize;
 import dev.imlukas.hoarderplugin.utils.collection.ListUtils;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 public class PrizeRegistry {
 
 
@@ -25,22 +27,22 @@ public class PrizeRegistry {
         return prizes.get(identifier);
     }
 
-    public Map<String, EventPrize> getPrizes() {
-        return prizes;
-    }
-
-    public Map<EventPrize, Boolean> getRandomPrizes(int amount) {
-        Map<EventPrize, Boolean> randomPrizes = new HashMap<>();
+    public List<EventPrize> getRandomPrizes(int amount) {
+        List<EventPrize> randomPrizes = new ArrayList<>();
 
         for (int i = 0; i < amount; i++) {
-            EventPrize prize = ListUtils.getRandom(prizes.values());
+            EventPrize randomPrize = getRandomPrize();
 
-            if (randomPrizes.containsKey(prize) && prizes.size() >= amount) {
+            if (randomPrize == null) {
+                continue;
+            }
+
+            if (randomPrizes.contains(randomPrize)) {
                 i--;
                 continue;
             }
 
-            randomPrizes.put(prize, false);
+            randomPrizes.add(randomPrize.copy());
         }
 
         return randomPrizes;

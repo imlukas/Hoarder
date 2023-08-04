@@ -3,7 +3,6 @@ package dev.imlukas.hoarderplugin.utils.storage;
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
 import dev.imlukas.hoarderplugin.utils.text.TextUtils;
-import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

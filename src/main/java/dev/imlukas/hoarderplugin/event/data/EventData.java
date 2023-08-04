@@ -1,11 +1,13 @@
 package dev.imlukas.hoarderplugin.event.data;
 
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
 public abstract class EventData<T extends PlayerEventData> {
 
     protected final List<T> participants = new ArrayList<>();
@@ -14,10 +16,6 @@ public abstract class EventData<T extends PlayerEventData> {
 
     public void removeParticipant(Player player) {
         participants.removeIf(participant -> participant.getPlayerId().equals(player.getUniqueId()));
-    }
-
-    public List<T> getParticipants() {
-        return participants;
     }
 
     public T getPlayerData(UUID participantId) {

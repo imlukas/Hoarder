@@ -1,7 +1,6 @@
 package dev.imlukas.hoarderplugin.command.editor;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
-import dev.imlukas.hoarderplugin.menus.editors.prize.PrizeListMenu;
 import dev.imlukas.hoarderplugin.menus.editors.settings.SettingsEditor;
 import dev.imlukas.hoarderplugin.utils.command.command.impl.AdvancedCommand;
 import dev.imlukas.hoarderplugin.utils.command.command.impl.ExecutionContext;

@@ -9,6 +9,7 @@ import dev.imlukas.hoarderplugin.utils.command.language.type.Parameter;
 import dev.imlukas.hoarderplugin.utils.command.language.type.ParameterType;
 import dev.imlukas.hoarderplugin.utils.command.language.type.ParameterTypes;
 import dev.imlukas.hoarderplugin.utils.command.language.type.impl.FilteredParameterType;
+import lombok.Getter;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
@@ -18,6 +19,7 @@ public abstract class AbstractObjectiveModel<T extends CompiledObjective> {
     private final Map<String, Parameter<?>> argumentMap = new HashMap<>();
     private final List<Argument<?>> arguments = new ArrayList<>();
 
+    @Getter
     private final String syntax;
 
     public AbstractObjectiveModel(String syntax) {
@@ -375,10 +377,6 @@ public abstract class AbstractObjectiveModel<T extends CompiledObjective> {
         }
 
         return input;
-    }
-
-    public String getSyntax() {
-        return syntax;
     }
 
 }

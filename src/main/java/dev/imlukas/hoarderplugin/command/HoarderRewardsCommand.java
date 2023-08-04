@@ -30,7 +30,7 @@ public class HoarderRewardsCommand implements SimpleCommand {
     @Override
     public void execute(CommandSender sender, String... args) {
         if (eventTracker.getLastEvent() == null) {
-            messages.sendMessage(sender, "command.no-event");
+            messages.sendMessage(sender, "command.no-prizes");
             return;
         }
 

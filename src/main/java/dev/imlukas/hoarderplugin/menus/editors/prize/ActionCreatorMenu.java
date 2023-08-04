@@ -61,60 +61,63 @@ public class ActionCreatorMenu extends UpdatableMenu {
             button.setMiddleClickAction(() -> {
                 messages.sendMessage(getViewer(), "inputs.order", new Placeholder<>("max", String.valueOf(actions.size())));
                 holdForInput((input) -> {
-                    int newIndex = TextUtils.parseInt(input) - 1;
+                    TextUtils.parseInt(input).ifPresent((newIndex) -> {
+                        newIndex = newIndex - 1;
 
-                    if (newIndex < 0 || newIndex >= actions.size()) {
-                        messages.sendMessage(getViewer(), "editors.invalid-action");
-                        return;
-                    }
-
-                    actions.remove(finalIndex);
-                    actions.add(newIndex, action);
-                    messages.sendMessage(getViewer(), "editors.action.order-change",
-                            actionInputPlaceholder,
-                            new Placeholder<>("new-order", input));
-                    refresh();
-                });
-            });
-
-            button.setLeftClickAction(() -> {
-                messages.sendMessage(getViewer(), "inputs.edit");
-                holdForInput((input) -> {
-                    if (!input.contains(":")) {
-                        action.setInput(input);
-                        messages.sendMessage(getViewer(), "editors.action.changed", actionInputPlaceholder, new Placeholder<>("new-action", input));
-                        return;
-                    }
-
-                    String identifier = input.substring(0, input.indexOf(":"));
-
-                    if (!identifier.equals(action.getIdentifier())) {
-                        PrizeAction newAction = actionRegistry.getAction(input);
-
-                        if (newAction == null) {
+                        if (newIndex < 0 || newIndex >= actions.size()) {
                             messages.sendMessage(getViewer(), "editors.invalid-action");
                             return;
                         }
 
-                        actions.set(finalIndex, newAction);
-                    }
+                        actions.remove(finalIndex);
+                        actions.add(newIndex, action);
+                        messages.sendMessage(getViewer(), "editors.action.order-change",
+                                actionInputPlaceholder,
+                                new Placeholder<>("new-order", input));
+                        refresh();
+                    });
+                });
 
-                    messages.sendMessage(getViewer(), "editors.action.changed", actionInputPlaceholder, new Placeholder<>("new-action", input));
+                button.setLeftClickAction(() -> {
+                    messages.sendMessage(getViewer(), "inputs.edit");
+                    holdForInput((input) -> {
+                        if (!input.contains(":")) {
+                            action.setInput(input);
+                            messages.sendMessage(getViewer(), "editors.action.changed", actionInputPlaceholder, new Placeholder<>("new-action", input));
+                            refresh();
+                            return;
+                        }
+
+                        String identifier = input.substring(0, input.indexOf(":"));
+
+                        if (!identifier.equals(action.getIdentifier())) {
+                            PrizeAction newAction = actionRegistry.getAction(input);
+
+                            if (newAction == null) {
+                                messages.sendMessage(getViewer(), "editors.invalid-action");
+                                return;
+                            }
+
+                            actions.set(finalIndex, newAction);
+                        }
+
+                        messages.sendMessage(getViewer(), "editors.action.changed", actionInputPlaceholder, new Placeholder<>("new-action", input));
+                        refresh();
+                    });
+                });
+
+                button.setRightClickAction(() -> {
+                    messages.sendMessage(getViewer(), "editors.action.removed", actionInputPlaceholder);
+                    actions.remove(finalIndex);
                     refresh();
                 });
+
+                area.addElement(button);
             });
 
-            button.setRightClickAction(() -> {
-                messages.sendMessage(getViewer(), "editors.action.removed", actionInputPlaceholder);
-                actions.remove(finalIndex);
-                refresh();
-            });
 
-            area.addElement(button);
+            menu.forceUpdate();
         }
-
-
-        menu.forceUpdate();
     }
 
     @Override

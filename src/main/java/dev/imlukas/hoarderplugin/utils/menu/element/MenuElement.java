@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public interface MenuElement {
 
@@ -18,6 +19,10 @@ public interface MenuElement {
 
     default Collection<Placeholder<Player>> getItemPlaceholders() {
         return Collections.emptyList();
+    }
+
+    default MenuElement setItemPlaceholders(Placeholder<Player>... placeholders) {
+        return setItemPlaceholders(List.of(placeholders));
     }
 
     default MenuElement setItemPlaceholders(Collection<Placeholder<Player>> placeholders) {

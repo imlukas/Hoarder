@@ -6,13 +6,16 @@ import dev.imlukas.hoarderplugin.event.phase.EventPhase;
 import dev.imlukas.hoarderplugin.event.settings.EventSettings;
 import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.prize.registry.PrizeRegistry;
+import lombok.Getter;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Event {
 
+    @Getter
     protected final HoarderPlugin plugin;
+    @Getter
     protected final PrizeRegistry prizeRegistry;
     protected final EventTracker eventTracker;
 
@@ -23,14 +26,6 @@ public abstract class Event {
         this.plugin = plugin;
         this.prizeRegistry = plugin.getPrizeRegistry();
         this.eventTracker = plugin.getEventTracker();
-    }
-
-    public HoarderPlugin getPlugin() {
-        return plugin;
-    }
-
-    public PrizeRegistry getPrizeRegistry() {
-        return prizeRegistry;
     }
 
     public List<EventPhase> getPhases() {
@@ -67,7 +62,7 @@ public abstract class Event {
 
         currentPhase = firstPhase;
         firstPhase.run();
-        plugin.setupScheduler();
+        plugin.setupScheduler(43200);
     }
 
     public void forceEnd() {

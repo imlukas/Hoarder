@@ -6,6 +6,7 @@ import dev.imlukas.hoarderplugin.utils.menu.base.ConfigurableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicator;
 import dev.imlukas.hoarderplugin.utils.menu.registry.MenuRegistry;
 import dev.imlukas.hoarderplugin.utils.menu.registry.meta.HiddenMenuTracker;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -14,10 +15,15 @@ import java.util.function.Consumer;
 
 public abstract class Menu {
 
+    @Getter
     private final HoarderPlugin plugin;
+    @Getter
     private final MenuRegistry menuRegistry;
+    @Getter
     private final HiddenMenuTracker hiddenMenuTracker;
+    @Getter
     private final UUID viewerId;
+    private Runnable onClose;
 
     public Menu(HoarderPlugin plugin, Player viewer) {
         this.plugin = plugin;
@@ -39,24 +45,13 @@ public abstract class Menu {
         return getMenu().getApplicator();
     }
 
-    public UUID getViewerId() {
-        return viewerId;
-    }
-
     public Player getViewer() {
         return Bukkit.getPlayer(viewerId);
     }
 
-    public MenuRegistry getMenuRegistry() {
-        return menuRegistry;
-    }
-
-    public HiddenMenuTracker getHiddenMenuTracker() {
-        return hiddenMenuTracker;
-    }
-
-    public HoarderPlugin getPlugin() {
-        return plugin;
+    public Menu onClose(Runnable onClose) {
+        this.onClose = onClose;
+        return this;
     }
 
     public void holdForInput(Consumer<String> action) {
@@ -79,6 +74,10 @@ public abstract class Menu {
                 viewer.closeInventory();
             } else {
                 MainThreadExecutor.INSTANCE.execute(viewer::closeInventory); // fuck you bukkit
+            }
+
+            if (onClose != null) {
+                onClose.run();
             }
         }
     }

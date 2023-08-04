@@ -5,6 +5,7 @@ messages:
 
   command:
     no-event: "&7There's currently no active event!"
+    no-prizes: "&7You don't have any rewards to claim!"
     no-permission: "&7You don't have permission to use this command!"
     invalid: "&7Invalid command!"
     cannot-use: "&7You cannot use this command right now!"
@@ -25,7 +26,10 @@ messages:
     starting: "ᴛʜᴇ ʜᴏᴀʀᴅᴇʀ ɪs sᴛᴀʀᴛɪɴɢ ɪɴ %time%!"
     start: "ᴛʜᴇ ʜᴏᴀʀᴅᴇʀ ʜᴀs sᴛᴀʀᴛᴇᴅ!"
     force-end: "ᴛʜᴇ ʜᴏᴀʀᴅᴇʀ ʜᴀs been force ended!"
-    end: "ᴛʜᴇ ʜᴏᴀʀᴅᴇʀ ʜᴀs ᴇɴᴅᴇᴅ! (/ʜᴏᴀʀᴅᴇʀ rewards)"
+    end-header:
+      - "%prefix% &7ᴛʜᴇ ʜᴏᴀʀᴅᴇʀ ʜᴀs ᴇɴᴅᴇᴅ!"
+      - "%prefix% &7Leaderboard:"
+    end-entry: "&7#%pos% %player% - &e%items%&7 items sold"
     info:
       - "#fb7f4aC#f87e4do#f67c51l#f37b54l#f07957e#ed785ac#eb765et #e87561t#e57364h#e27267e #e0706bi#dd6f6et#da6e71e#d76c74m #d56b78t#d2697bh#cf687ee #cc6681h#ca6585o#c76388a#c4628br#c1608ed#bf5f92e#bc5e95r #b95c98w#b65b9ba#b4599fn#b158a2t#ae56a5s #ab55a8a#a953acn#a652afd #a350b2s#a04fb5e#9e4eb9l#9b4cbcl #984bbfi#9549c2t #9348c6f#9046c9o#8d45ccr #8a43cfm#8842d3o#8540d6n#823fd9e#7f3edcy #7d3ce0a#7a3be3n#7739e6d "
       - "#7438e9p#7236edo#6f35f0i#6c33f3n#6932f6t#6730fas#642ffd! #642ffdT#6630fah#6831f8e #6b33f5t#6d34f2o#6f35f0p #7136ed4 #7437ebp#7638e8l#783ae5a#7a3be3y#7c3ce0e#7f3dddr#813edbs #833fd8w#8541d6i#8842d3t#8a43d0h #8c44cet#8e45cbh#9047c8e #9348c6m#9549c3o#974ac0s#994bbet #9c4cbbp#9e4eb9o#a04fb6i#a250b3n#a451b1t#a752aes #a953abw#ab55a9i#ad56a6l#b057a4l #b258a1g#b4599ee#b65b9ct #b85c99a #bb5d96p#bd5e94r#bf5f91i#c1608ez#c3628ce "

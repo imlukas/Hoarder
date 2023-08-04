@@ -7,6 +7,7 @@ import dev.imlukas.hoarderplugin.utils.command.language.CompiledObjective;
 import dev.imlukas.hoarderplugin.utils.command.legacy.SimpleCommand;
 import dev.imlukas.hoarderplugin.utils.geometry.Pair;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ public class CommandManager {
     private final List<AbstractObjectiveModel<?>> commands = new ArrayList<>();
     private final Map<String, BukkitBaseCommand> bukkitCommands = new HashMap<>();
 
+    @Getter
     private final Messages messages;
     private final HoarderPlugin plugin;
 
@@ -76,7 +78,4 @@ public class CommandManager {
         return null;
     }
 
-    public Messages getMessages() {
-        return messages;
-    }
 }

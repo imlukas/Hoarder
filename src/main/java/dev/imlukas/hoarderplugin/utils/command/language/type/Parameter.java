@@ -1,5 +1,8 @@
 package dev.imlukas.hoarderplugin.utils.command.language.type;
 
+import lombok.Getter;
+
+@Getter
 public class Parameter<Type> {
 
     private final String name;
@@ -11,18 +14,6 @@ public class Parameter<Type> {
         this.name = name;
         this.type = type;
         this.optional = optional;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ParameterType<Type> getType() {
-        return type;
-    }
-
-    public boolean isOptional() {
-        return optional;
     }
 
     public Type parse(String input) {

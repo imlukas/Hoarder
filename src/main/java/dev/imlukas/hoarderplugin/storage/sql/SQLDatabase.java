@@ -43,12 +43,20 @@ public class SQLDatabase {
         return tables;
     }
 
+    public SQLTable createTable(String name, String creationQuery) {
+        SQLTable table = new SQLTable(name, this);
+        table.create(creationQuery);
+        tables.put(name, table);
+        return table;
+    }
+
     public SQLTable getOrCreateTable(String name) {
         if (tables.containsKey(name)) {
             return tables.get(name);
         }
 
         SQLTable table = new SQLTable(name, this);
+        table.create();
         tables.put(name, table);
         return table;
     }

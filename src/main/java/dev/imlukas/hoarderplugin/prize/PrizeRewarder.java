@@ -3,6 +3,7 @@ package dev.imlukas.hoarderplugin.prize;
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.prize.registry.PrizeRegistry;
 
+import java.util.List;
 import java.util.Map;
 
 public class PrizeRewarder {
@@ -13,7 +14,7 @@ public class PrizeRewarder {
         this.prizeRegistry = plugin.getPrizeRegistry();
     }
 
-    public Map<EventPrize, Boolean> getReward(int position) {
+    public List<EventPrize> getReward(int position) {
         return switch (position) {
             case 1 -> prizeRegistry.getRandomPrizes(3);
             case 2 -> prizeRegistry.getRandomPrizes(2);
@@ -21,7 +22,7 @@ public class PrizeRewarder {
         };
     }
 
-    public Map<EventPrize, Boolean> getReward() {
+    public List<EventPrize> getReward() {
         return getReward(0);
     }
 }

@@ -13,7 +13,6 @@ import dev.imlukas.hoarderplugin.utils.menu.layer.BaseLayer;
 import dev.imlukas.hoarderplugin.utils.menu.layer.PaginableLayer;
 import dev.imlukas.hoarderplugin.utils.menu.pagination.PaginableArea;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
-import dev.imlukas.hoarderplugin.utils.menu.template.FallbackMenu;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.builders.ScheduleBuilder;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
@@ -28,17 +27,15 @@ public class WhitelistItemList extends UpdatableMenu {
     private final Messages messages;
     private final EventSettingsHandler eventSettingsHandler;
     private final HoarderEventSettings eventSettings;
-    private final FallbackMenu fallbackMenu;
 
     private ConfigurableMenu menu;
     private PaginableArea area;
 
-    public WhitelistItemList(HoarderPlugin plugin, Player viewer, FallbackMenu fallbackMenu, EventSettings eventSettings) {
+    public WhitelistItemList(HoarderPlugin plugin, Player viewer, EventSettings eventSettings) {
         super(plugin, viewer);
         this.messages = plugin.getMessages();
         this.eventSettingsHandler = plugin.getEventSettingsHandler();
 
-        this.fallbackMenu = fallbackMenu;
         this.eventSettings = (HoarderEventSettings) eventSettings;
         setup();
     }
@@ -58,14 +55,25 @@ public class WhitelistItemList extends UpdatableMenu {
 
             itemButton.setLeftClickAction(() -> {
                 new ItemSelectionMenu(getPlugin(), getViewer(), item, (newItem) -> {
-                    whitelistedItem.setMaterial(newItem);
-                    itemButton.getDisplayItem().setType(newItem);
+                    Material newItemType = newItem.getType();
+                    whitelistedItem.setMaterial(newItemType);
+                    itemButton.getDisplayItem().setType(newItemType);
                     ScheduleBuilder.runIn1Tick(getPlugin(), this::open).sync().start();
                     messages.sendMessage(getViewer(), "editors.item.material",
-                            new Placeholder<>("material", TextUtils.capitalize(newItem.name().toLowerCase())));
+                            new Placeholder<>("material", TextUtils.capitalize(newItemType.name().toLowerCase())));
                     refresh();
-                });
+                }).onClose(this::open);
             });
+
+            itemButton.setClickWithItemTask((newItem) -> {
+                whitelistedItem.setMaterial(newItem.getType());
+                itemButton.getDisplayItem().setType(newItem.getType());
+                ScheduleBuilder.runIn1Tick(getPlugin(), this::open).sync().start();
+                messages.sendMessage(getViewer(), "editors.item.material",
+                        new Placeholder<>("material", TextUtils.capitalize(newItem.getType().name()).toLowerCase()));
+                refresh();
+            });
+
 
             itemButton.setRightClickAction(() -> {
                 messages.sendMessage(getViewer(), "inputs.value");
@@ -102,26 +110,36 @@ public class WhitelistItemList extends UpdatableMenu {
         applicator.registerButton(layer, "n", paginableLayer::nextPage);
         applicator.registerButton(layer, "c", () -> {
             eventSettingsHandler.updateWhitelist(eventSettings.getWhitelistedItems());
-            fallbackMenu.openFallback();
+            this.close();
         });
 
-        applicator.registerButton(layer, "cr", () -> {
+        Button createButton = applicator.registerButton(layer, "cr", () -> {
             new ItemSelectionMenu(getPlugin(), getViewer(), Material.STONE, (newItem) -> {
                 messages.sendMessage(getViewer(), "inputs.value");
-                holdForInput((value) -> {
-                    HoarderItem item = new HoarderItem(newItem, Double.parseDouble(value));
-                    eventSettings.getWhitelistedItems().add(item);
-                    messages.sendMessage(getViewer(), "editors.item.added",
-                            new Placeholder<>("material", TextUtils.capitalize(newItem.name().toLowerCase())),
-                            new Placeholder<>("value", value));
-                    refresh();
-                });
+                Material newItemType = newItem.getType();
+                holdForValue(newItemType);
             });
+        });
+
+        createButton.setClickWithItemTask((newItem) -> {
+            Material newItemType = newItem.getType();
+            holdForValue(newItemType);
         });
 
 
         menu.addRenderable(layer, paginableLayer);
         refresh();
+    }
+
+    public void holdForValue(Material newItemType) {
+        holdForInput((value) -> {
+            HoarderItem item = new HoarderItem(newItemType, Double.parseDouble(value));
+            eventSettings.getWhitelistedItems().add(item);
+            messages.sendMessage(getViewer(), "editors.item.added",
+                    new Placeholder<>("material", TextUtils.capitalize(newItemType.name().toLowerCase())),
+                    new Placeholder<>("value", value));
+            refresh();
+        });
     }
 
     @Override

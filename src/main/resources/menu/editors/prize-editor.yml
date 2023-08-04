@@ -5,14 +5,24 @@ layout:
   - "b . . . i . . . b"
   - "b . d . a . n . b"
   - "b . . . l . . . b"
-  - "b b b b c b b del cr"
+  - "f b b b c b b del cr"
 
 items:
+  f:
+    type: PLAYER_HEAD
+    skull-hash: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGM0ZTQ0MWVhYzg4NGRlMzM0N2E4Nzc1YTA3YTY2YmJjNGM4MmEyNGVkMmQwY2ZlYjFhY2FmNmNlOTlkNTNiNiJ9fX0="
+    name: "&cInformation"
+    lore:
+      - "&7This menu handles prize editing"
+      - "&7You can change the prize's display item, name and lore"
+      - "&7You can also edit actions of the prize"
+      - "&7Click on the &aSave Changes &7item to save changes"
   b:
     type: BLACK_STAINED_GLASS_PANE
     name: " "
   del:
-    type: REDSTONE
+    type: PLAYER_HEAD
+    skull-hash: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTdmOWM2ZmVmMmFkOTZiM2E1NDY1NjQyYmE5NTQ2NzFiZTFjNDU0M2UyZTI1ZTU2YWVmMGE0N2Q1ZjFmIn19fQ=="
     name: "&cDelete"
     lore:
       - "&7Click to delete this prize"
@@ -21,31 +31,32 @@ items:
     type: PAPER
     name: "&7Display Item"
     lore:
-      - "&7Left-Click to change the item"
+      - "&7Left-Click to change the prize's display item"
   a:
     type: BOOK
     name: "&7Actions"
     lore:
-      - "&7Left-Click to open action editor"
+      - "&7Left-Click to open the action editor"
   n:
     type: NAME_TAG
     name: "&7Name"
     lore:
-      - "&7Left-Click to change the name"
+      - "&7Left-Click to change the prize's display name"
       - "&7Current name: %display-name%"
   l:
     type: NAME_TAG
     name: "&7Lore"
     lore:
-      - "&7Left-Click to change the lore"
+      - "&7Left-Click to change the lore for the prize's display item"
   c:
-    type: BARRIER
+    type: PLAYER_HEAD
+    skull-hash: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmViNTg4YjIxYTZmOThhZDFmZjRlMDg1YzU1MmRjYjA1MGVmYzljYWI0MjdmNDYwNDhmMThmYzgwMzQ3NWY3In19fQ=="
     name: "&cClose"
     lore:
-      - "&7Close this menu"
-      - "&7This will not save the changes"
+      - "&7Click to close the menu. &c&lTHIS WILL NOT SAVE CHANGES"
   cr:
-    type: EMERALD
-    name: "&cFinish"
+    type: PLAYER_HEAD
+    skull-hash: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWQ4NjA0YjllMTk1MzY3Zjg1YTIzZDAzZDlkZDUwMzYzOGZjZmIwNWIwMDMyNTM1YmM0MzczNDQyMjQ4M2JkZSJ9fX0="
+    name: "&aSave changes"
     lore:
-      - "&7Click to save the changes"
+      - "&7Click to save changes"

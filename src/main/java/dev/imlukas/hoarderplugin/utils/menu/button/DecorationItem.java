@@ -15,8 +15,9 @@ public class DecorationItem extends Button {
                           Consumer<InventoryClickEvent> rightClickTask,
                           Consumer<InventoryClickEvent> leftClickTask,
                           Consumer<InventoryClickEvent> middleClickTask,
+                          Consumer<ItemStack> clickWithItemTask,
                           Collection<Placeholder<Player>> placeholders) {
-        super(displayItem, clickTask, rightClickTask, leftClickTask, middleClickTask,  placeholders);
+        super(displayItem, clickTask, rightClickTask, leftClickTask, middleClickTask, clickWithItemTask, placeholders);
     }
 
     public DecorationItem(ItemStack displayItem) {

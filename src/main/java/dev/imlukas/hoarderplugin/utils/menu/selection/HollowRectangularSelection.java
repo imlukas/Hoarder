@@ -1,6 +1,7 @@
 package dev.imlukas.hoarderplugin.utils.menu.selection;
 
 import dev.imlukas.hoarderplugin.utils.menu.math.Point;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ public class HollowRectangularSelection implements Selection {
 
     private final Point firstPoint;
     private final Point secondPoint;
+    @Getter
     private int thickness = 1;
 
     public HollowRectangularSelection(Point firstPoint, Point secondPoint) {
@@ -20,10 +22,6 @@ public class HollowRectangularSelection implements Selection {
         this.firstPoint = firstPoint;
         this.secondPoint = secondPoint;
         this.thickness = thickness;
-    }
-
-    public int getThickness() {
-        return thickness;
     }
 
     public void setThickness(int thickness) {

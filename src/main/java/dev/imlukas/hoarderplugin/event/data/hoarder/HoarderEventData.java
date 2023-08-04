@@ -2,13 +2,13 @@ package dev.imlukas.hoarderplugin.event.data.hoarder;
 
 import dev.imlukas.hoarderplugin.event.data.EventData;
 import dev.imlukas.hoarderplugin.event.data.hoarder.item.HoarderItem;
+import dev.imlukas.hoarderplugin.utils.collection.MapUtils;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
+@Getter
 public class HoarderEventData extends EventData<HoarderPlayerEventData> {
     private final HoarderItem activeItem;
 
@@ -16,31 +16,26 @@ public class HoarderEventData extends EventData<HoarderPlayerEventData> {
         this.activeItem = activeItem;
     }
 
-    public HoarderItem getActiveItem() {
-        return activeItem;
-    }
-
     public Map<Integer, HoarderPlayerEventData> getTop() {
-        // get scores and PlayerEventData and order them by highest to lowest
-
-        Map<Integer, HoarderPlayerEventData> scores = new HashMap<>();
+        Map<HoarderPlayerEventData, Integer> scores = new HashMap<>();
 
         for (HoarderPlayerEventData participant : participants) {
-            scores.put(participant.getSoldItems(), participant);
+            scores.put(participant, participant.getSoldItems());
         }
 
+        return MapUtils.getLeaderboardMap(scores);
+    }
 
-        Map<Integer, HoarderPlayerEventData> sortedScores = new TreeMap<>(Comparator.reverseOrder());
-        sortedScores.putAll(scores);
+    public boolean isTop3(UUID player) {
+        Map<Integer, HoarderPlayerEventData> top = getTop();
 
-        Map<Integer, HoarderPlayerEventData> top = new HashMap<>();
-
-        int i = 1;
-        for (Map.Entry<Integer, HoarderPlayerEventData> integerHoarderPlayerEventDataEntry : sortedScores.entrySet()) {
-            top.put(i, integerHoarderPlayerEventDataEntry.getValue());
-            i++;
+        for (int i = 1; i < 4; i++) {
+            if (top.get(i).getPlayerId().equals(player)) {
+                return true;
+            }
         }
-        return top;
+
+        return false;
     }
 
     @Override

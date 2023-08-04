@@ -1,8 +1,11 @@
 package dev.imlukas.hoarderplugin.storage.sql.constants;
 
+import lombok.Getter;
+
 /**
  * Enum for available tables in this plugin
  */
+@Getter
 public enum TableType {
 
     BANS("bans"),
@@ -17,7 +20,4 @@ public enum TableType {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
 }

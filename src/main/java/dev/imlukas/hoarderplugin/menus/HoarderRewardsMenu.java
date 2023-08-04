@@ -7,9 +7,12 @@ import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.prize.EventPrize;
 import dev.imlukas.hoarderplugin.utils.menu.base.ConfigurableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.button.Button;
+import dev.imlukas.hoarderplugin.utils.menu.button.DecorationItem;
 import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicator;
 import dev.imlukas.hoarderplugin.utils.menu.layer.BaseLayer;
+import dev.imlukas.hoarderplugin.utils.menu.layer.PaginableLayer;
 import dev.imlukas.hoarderplugin.utils.menu.mask.PatternMask;
+import dev.imlukas.hoarderplugin.utils.menu.pagination.PaginableArea;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
@@ -17,23 +20,21 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class HoarderRewardsMenu extends UpdatableMenu {
 
-    private final EventRegistry eventRegistry;
     private final HoarderEvent lastEvent;
     private final Messages messages;
 
     private ConfigurableMenu menu;
     private ConfigurationApplicator applicator;
-    private PatternMask mask;
-    private BaseLayer layer;
+    private PaginableArea area;
 
     public HoarderRewardsMenu(HoarderPlugin plugin, Player viewer, @NotNull HoarderEvent lastEvent) {
         super(plugin, viewer);
-        this.eventRegistry = plugin.getEventRegistry();
         this.messages = plugin.getMessages();
         this.lastEvent = lastEvent;
         setup();
@@ -43,64 +44,61 @@ public class HoarderRewardsMenu extends UpdatableMenu {
     public void setup() {
         menu = createMenu();
         applicator = getApplicator();
-        mask = applicator.getMask();
-        layer = new BaseLayer(menu);
+        area = new PaginableArea(applicator.getMask().selection("t"), new DecorationItem(applicator.getItem("unavailable")));
+        PaginableLayer paginableLayer = new PaginableLayer(menu);
+        paginableLayer.addArea(area);
+
+        BaseLayer layer = new BaseLayer(menu);
 
         applicator.registerButton(layer, "c", this::close);
 
-        menu.addRenderable(layer);
+        menu.addRenderable(layer, paginableLayer);
         refresh();
-
     }
-
 
     @Override
     public void refresh() {
+        area.clear();
         PlayerEventData playerData = lastEvent.getEventData().getPlayerData(getViewerId());
-        Map<EventPrize, Boolean> availablePrizes = playerData.getAvailablePrizes();
-        List<EventPrize> prizes = new ArrayList<>(availablePrizes.keySet());
-        int prizeAmount = availablePrizes.size();
-        int availablePrizesAmount = (int) availablePrizes.values().stream().filter(claimed -> !claimed).count() - 1;
+        LinkedList<EventPrize> prizes = playerData.getAvailablePrizes();
 
-        if (availablePrizesAmount <= 0) {
-            messages.sendMessage(getViewer(), "prize.no-claim");
-            this.close();
-            return;
+        int notClaimedPrizes = 0;
+        for (EventPrize prize : prizes) {
+            if (!prize.isClaimed()) {
+                notClaimedPrizes++;
+            }
         }
 
-        for (int i = 1; i <= 3; i++) {
+        if (notClaimedPrizes <= 0) {
+            messages.sendMessage(getViewer(), "prize.no-claim");
+        }
 
-            if (i > prizeAmount) {
-                layer.applyRawSelection(mask.selection(String.valueOf(i)), new Button(applicator.getItem("unavailable")));
-                continue;
-            }
-
-            EventPrize prize = prizes.get(i - 1);
-
-            List<Placeholder<Player>> placeholderList = List.of(new Placeholder<>("remaining-prizes", String.valueOf(availablePrizesAmount)),
-                    new Placeholder<>("reward-number", String.valueOf(i)),
+        for (EventPrize prize : prizes) {
+            List<Placeholder<Player>> placeholderList = List.of(new Placeholder<>("remaining-prizes", String.valueOf(notClaimedPrizes - 1)),
+                    new Placeholder<>("reward-number", String.valueOf(prizes.indexOf(prize) + 1)),
                     new Placeholder<>("prize-name", prize.getDisplayName()));
 
             Button button = new Button(applicator.getItem("unclaimed"));
-
             button.setItemPlaceholders(placeholderList);
             button.setLeftClickAction(() -> {
-                if (availablePrizes.get(prize)) {
+                if (prize.isClaimed()) {
                     messages.sendMessage(getViewer(), "prize.claimed");
                     return;
                 }
 
                 prize.runAll(getViewer());
-                playerData.setAvailablePrize(prize, true);
+                prize.setClaimed(true);
                 messages.sendMessage(getViewer(), "prize.claim", placeholderList);
                 refresh();
             });
 
-            if (availablePrizes.get(prize)) {
+            button.getDisplayItem().setType(prize.getDisplayItem().getType());
+
+            if (prize.isClaimed()) {
                 button.setDisplayItem(applicator.getItem("claimed"));
             }
 
-            layer.applyRawSelection(mask.selection(String.valueOf(i)), button);
+            area.addElement(button);
         }
 
         menu.forceUpdate();

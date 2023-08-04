@@ -13,13 +13,18 @@ layout:
   - 'p . . . . . . . n'
   - 'p . . . . . . . n'
   - 'e . . . . . . . e'
-  - 'e b b s s s t t e'
+  - 'e e e b s t e e m'
 
 items:
   item: 
     type: BARRIER
     name: ""
     lore: ""
+  m:
+    type: PAPER
+    name: "Model-Data"
+    lore:
+     - "&7Click to change the model-data of this item."
   s: 
     type: EMERALD
     name: "&eSave changes"

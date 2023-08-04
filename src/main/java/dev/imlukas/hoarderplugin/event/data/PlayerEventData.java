@@ -1,49 +1,31 @@
 package dev.imlukas.hoarderplugin.event.data;
 
 import dev.imlukas.hoarderplugin.prize.EventPrize;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
+@Getter
 public class PlayerEventData {
 
     private final UUID playerId;
-    private final Map<EventPrize, Boolean> availablePrizes = new HashMap<>();
+    private final LinkedList<EventPrize> availablePrizes = new LinkedList<>();
 
     public PlayerEventData(UUID playerId) {
         this.playerId = playerId;
-    }
-
-
-    public UUID getPlayerId() {
-        return playerId;
     }
 
     public Player getPlayer() {
         return Bukkit.getPlayer(playerId);
     }
 
-    public Map<EventPrize, Boolean> getAvailablePrizes() {
-        return availablePrizes;
+    public void addPrizes(List<EventPrize> prizes) {
+        availablePrizes.addAll(prizes);
     }
 
-    public void setAvailablePrize(EventPrize prize, boolean available) {
-        availablePrizes.put(prize, available);
-    }
-
-    public void addAvailablePrize(EventPrize prize) {
-        availablePrizes.put(prize, false);
-    }
-
-    public void addAvailablePrize(Map<EventPrize, Boolean> prizes) {
-        availablePrizes.putAll(prizes);
-    }
-
-
-    public void removeAvailablePrize(EventPrize prize) {
-        availablePrizes.remove(prize);
+    public void addPrize(EventPrize prize) {
+        availablePrizes.add(prize);
     }
 }

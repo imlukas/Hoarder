@@ -1,9 +1,11 @@
 package dev.imlukas.hoarderplugin.event.data.hoarder;
 
 import dev.imlukas.hoarderplugin.event.data.PlayerEventData;
+import lombok.Getter;
 
 import java.util.UUID;
 
+@Getter
 public class HoarderPlayerEventData extends PlayerEventData {
 
     private int soldItems = 0;
@@ -20,7 +22,4 @@ public class HoarderPlayerEventData extends PlayerEventData {
         soldItems += amount;
     }
 
-    public int getSoldItems() {
-        return soldItems;
-    }
 }

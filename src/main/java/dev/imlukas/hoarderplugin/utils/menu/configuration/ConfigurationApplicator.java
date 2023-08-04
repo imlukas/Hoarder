@@ -7,6 +7,7 @@ import dev.imlukas.hoarderplugin.utils.menu.element.MenuElement;
 import dev.imlukas.hoarderplugin.utils.menu.layer.BaseLayer;
 import dev.imlukas.hoarderplugin.utils.menu.mask.PatternMask;
 import dev.imlukas.hoarderplugin.utils.menu.pagination.PaginableTitle;
+import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -21,10 +22,13 @@ import java.util.function.Consumer;
 public class ConfigurationApplicator {
 
     private final Map<String, ItemStack> items = new ConcurrentHashMap<>();
+    @Getter
     private final PatternMask mask;
     private final PaginableTitle title;
+    @Getter
     private final List<String> description;
 
+    @Getter
     private final FileConfiguration config;
 
     public ConfigurationApplicator(FileConfiguration config) {
@@ -82,10 +86,6 @@ public class ConfigurationApplicator {
         return title;
     }
 
-    public List<String> getDescription() {
-        return description;
-    }
-
     public Button registerButton(BaseLayer layer, String key) {
         ItemStack item = getItem(key);
 
@@ -115,14 +115,6 @@ public class ConfigurationApplicator {
 
     public Button createButton(String key, Consumer<InventoryClickEvent> defaultHandler) {
         return new Button(getItem(key).clone(), defaultHandler);
-    }
-
-    public PatternMask getMask() {
-        return mask;
-    }
-
-    public FileConfiguration getConfig() {
-        return config;
     }
 
     public void applyConfiguration(BaseLayer layer) {

@@ -1,9 +1,6 @@
 package dev.imlukas.hoarderplugin.utils.time.localdate;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -20,6 +17,13 @@ public class DateUtil {
             "month", (amount, date) -> date.plusMonths(amount),
             "years", (amount, date) -> date.plusYears(amount),
             "year", (amount, date) -> date.plusYears(amount));
+
+
+    public static String formatDuration(Duration duration) {
+        return duration.toString()
+                .substring(2)
+                .replaceAll("\\.\\d+", "").toLowerCase();
+    }
 
     public static LocalDateTime parseTime(String time) {
         LocalDateTime localDate = LocalDateTime.now();

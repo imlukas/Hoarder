@@ -18,6 +18,6 @@ public class PrizesCommand extends AdvancedCommand {
 
     @Override
     public void execute(CommandSender sender, ExecutionContext context) {
-        new PrizeListMenu(plugin, (Player) sender).openFallback();
+        new PrizeListMenu(plugin, (Player) sender).open();
     }
 }

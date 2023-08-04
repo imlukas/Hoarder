@@ -29,6 +29,7 @@ public final class ItemUtil {
         meta.setLore(null);
         itemStack.setItemMeta(meta);
     }
+
     public static void setLore(ItemStack itemStack, List<String> lore) {
         ItemMeta meta = itemStack.getItemMeta();
         meta.setLore(lore);
@@ -64,6 +65,7 @@ public final class ItemUtil {
 
     public static void setModelData(ItemStack item, int modelData) {
         ItemMeta meta = item.getItemMeta();
+
         meta.setCustomModelData(modelData);
         item.setItemMeta(meta);
     }

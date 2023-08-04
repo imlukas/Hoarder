@@ -2,6 +2,7 @@ package dev.imlukas.hoarderplugin.menus;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.utils.Reference;
+import dev.imlukas.hoarderplugin.utils.item.ItemUtil;
 import dev.imlukas.hoarderplugin.utils.menu.base.ConfigurableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.button.Button;
 import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicator;
@@ -11,8 +12,10 @@ import dev.imlukas.hoarderplugin.utils.menu.mask.PatternMask;
 import dev.imlukas.hoarderplugin.utils.menu.pagination.PaginableArea;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
+import dev.imlukas.hoarderplugin.utils.text.TextUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -20,19 +23,24 @@ import java.util.function.Consumer;
 public class ItemSelectionMenu extends UpdatableMenu {
 
     private final Messages messages;
-    private final Material originalItem;
-    private Material selectedItem;
+    private final ItemStack originalItem;
+    private final ItemStack selectedItem;
 
-    private final Consumer<Material> afterSetup;
+    private final Consumer<ItemStack> afterSetup;
     private final Reference<Boolean> found = new Reference<>(false);
 
     private ConfigurableMenu menu;
 
-    public ItemSelectionMenu(HoarderPlugin plugin, Player player, Material selectedItem, Consumer<Material> afterSetup) {
+    public ItemSelectionMenu(HoarderPlugin plugin, Player player, Material selectedItem, Consumer<ItemStack> afterSetup) {
+        this(plugin, player, new ItemStack(selectedItem), afterSetup);
+    }
+
+    public ItemSelectionMenu(HoarderPlugin plugin, Player player, ItemStack selectedItem, Consumer<ItemStack> afterSetup) {
         super(plugin, player);
         this.messages = plugin.getMessages();
-        this.selectedItem = selectedItem;
-        this.originalItem = selectedItem;
+
+        this.selectedItem = selectedItem.clone();
+        this.originalItem = selectedItem.clone();
 
         this.afterSetup = afterSetup;
 
@@ -48,7 +56,7 @@ public class ItemSelectionMenu extends UpdatableMenu {
 
         Player player = getViewer();
 
-        CompletableFuture<Material> future = new CompletableFuture<>();
+        CompletableFuture<ItemStack> future = new CompletableFuture<>();
         future.thenRun(player::closeInventory);
 
         PaginableLayer paginableLayer = new PaginableLayer(menu);
@@ -66,7 +74,7 @@ public class ItemSelectionMenu extends UpdatableMenu {
 
         applicator.registerButton(layer, "s", (event) -> {
             event.setCancelled(true);
-            if (selectedItem == null) {
+            if (selectedItemButton == null) {
                 afterSetup.accept(originalItem);
                 player.closeInventory();
                 return;
@@ -78,6 +86,15 @@ public class ItemSelectionMenu extends UpdatableMenu {
 
         applicator.registerButton(layer, "n", paginableLayer::nextPage);
         applicator.registerButton(layer, "p", paginableLayer::previousPage);
+        applicator.registerButton(layer, "m", () -> {
+            holdForInput((input) -> {
+                TextUtils.parseInt(input).ifPresent((modelData) -> {
+                    ItemUtil.setModelData(selectedItem, modelData);
+                    updateButton(selectedItemButton, menu, modelData);
+                    refresh();
+                });
+            });
+        });
 
         applicator.registerButton(layer, "b", (event) -> {
             future.complete(originalItem);
@@ -94,7 +111,7 @@ public class ItemSelectionMenu extends UpdatableMenu {
                     return;
                 }
 
-                this.selectedItem = material;
+                this.selectedItem.setType(material);
                 updateButton(selectedItemButton, menu);
             });
         });
@@ -110,14 +127,14 @@ public class ItemSelectionMenu extends UpdatableMenu {
             button.getDisplayItem().setType(material);
 
             button.setLeftClickAction(() -> {
-                this.selectedItem = material;
+                this.selectedItem.setType(material);
                 updateButton(selectedItemButton, menu);
             });
 
             area.addElement(button);
         }
 
-        selectedItemButton.getDisplayItem().setType(selectedItem);
+        selectedItemButton.getDisplayItem().setType(selectedItem.getType());
         paginableLayer.addArea(area);
         player.closeInventory();
 
@@ -130,8 +147,14 @@ public class ItemSelectionMenu extends UpdatableMenu {
         menu.open();
     }
 
+    private void updateButton(Button button, ConfigurableMenu menu, int modelData) {
+        button.getDisplayItem().setType(selectedItem.getType());
+        ItemUtil.setModelData(button.getDisplayItem(), modelData);
+        menu.forceUpdate();
+    }
+
     private void updateButton(Button button, ConfigurableMenu menu) {
-        button.getDisplayItem().setType(selectedItem);
+        button.getDisplayItem().setType(selectedItem.getType());
         menu.forceUpdate();
     }
 

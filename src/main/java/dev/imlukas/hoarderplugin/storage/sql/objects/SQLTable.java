@@ -2,17 +2,16 @@ package dev.imlukas.hoarderplugin.storage.sql.objects;
 
 import dev.imlukas.hoarderplugin.storage.sql.SQLDatabase;
 import dev.imlukas.hoarderplugin.storage.sql.data.ColumnData;
+import lombok.Getter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class SQLTable {
 
+    @Getter
     private final String name;
     private final SQLDatabase provider;
     private final Map<String, SQLColumn> columns = new HashMap<>();
@@ -20,17 +19,20 @@ public class SQLTable {
     public SQLTable(String name, SQLDatabase provider) {
         this.name = name;
         this.provider = provider;
-        createTable();
     }
 
-    public CompletableFuture<Void> createTable() {
+    public CompletableFuture<Void> create(String creationQuery) {
         return provider.getConnection().thenAccept(connection -> {
             try {
-                connection.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS " + name + " (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id))");
+                connection.createStatement().executeUpdate(creationQuery);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    public CompletableFuture<Void> create() {
+        return create("CREATE TABLE IF NOT EXISTS " + name + " (id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id))");
     }
 
     public CompletableFuture<Void> addColumn(ColumnData... columnList) {
@@ -72,34 +74,61 @@ public class SQLTable {
         });
     }
 
+    public CompletableFuture<Void> insertOnDuplicate(Map<String, Object> data, String onDuplicate) {
+        return provider.getConnection().thenAccept(connection -> {
+            try {
+                connection.createStatement().executeUpdate("INSERT INTO " + name + " (" + getColumns(data.keySet()) + ") " +
+                        "VALUES (" + getValues(data.values()) + ") ON DUPLICATE KEY UPDATE " + onDuplicate);
+            } catch (Exception e) {
+                System.err.println("Error inserting data into table " + name + ": " + e.getMessage());
+            }
+        });
+    }
+
+    public CompletableFuture<Void> insert(Map<String, Object> data, String whereClause) {
+        return provider.getConnection().thenAccept(connection -> {
+            try {
+                connection.createStatement().executeUpdate("INSERT INTO " + name + " (" + getColumns(data.keySet()) + ") " +
+                        "VALUES (" + getValues(data.values()) + ") WHERE " + whereClause);
+            } catch (Exception e) {
+                System.err.println("Error inserting data into table " + name + ": " + e.getMessage());
+            }
+        });
+    }
+
     public CompletableFuture<Void> insert(Map<String, Object> data) {
         return provider.getConnection().thenAccept(connection -> {
             try {
-                StringBuilder builder = new StringBuilder();
-
-                for (String key : data.keySet()) {
-                    builder.append(key).append(", ");
-                }
-
-                String columns = builder.substring(0, builder.length() - 2);
-
-                builder = new StringBuilder();
-
-                for (Object value : data.values()) {
-
-                    if (value instanceof String) {
-                        value = "'" + value + "'";
-                    }
-                    builder.append(value).append(", ");
-                }
-
-                String values = builder.substring(0, builder.length() - 2);
-
-                connection.createStatement().executeUpdate("INSERT INTO " + name + " (" + columns + ") VALUES (" + values + ")");
+                connection.createStatement().executeUpdate("INSERT INTO " + name + " (" + getColumns(data.keySet()) + ")" +
+                        " VALUES (" + getValues(data.values()) + ")");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    public String getColumns(Set<String> columns) {
+        StringBuilder builder = new StringBuilder();
+
+        for (String column : columns) {
+            builder.append(column).append(", ");
+        }
+
+        return builder.substring(0, builder.length() - 2);
+    }
+
+    public String getValues(Collection<Object> values) {
+        StringBuilder builder = new StringBuilder();
+
+        for (Object value : values) {
+
+            if (value instanceof String) {
+                value = "'" + value + "'";
+            }
+            builder.append(value).append(", ");
+        }
+
+        return builder.substring(0, builder.length() - 2);
     }
 
     public CompletableFuture<ResultSet> executeQuery(String query, Object... args) {
@@ -135,7 +164,4 @@ public class SQLTable {
         return columns.get(columnName);
     }
 
-    public String getName() {
-        return name;
-    }
 }

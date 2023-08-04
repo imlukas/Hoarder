@@ -5,9 +5,9 @@ import dev.imlukas.hoarderplugin.utils.schedulerutil.data.ScheduleData;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.data.ScheduleThread;
 import lombok.Getter;
 
+@Getter
 public class ScheduleBuilderT2 implements ScheduleBuilderBase {
 
-    @Getter
     private final ScheduleData data;
 
     ScheduleBuilderT2(ScheduleData data) {

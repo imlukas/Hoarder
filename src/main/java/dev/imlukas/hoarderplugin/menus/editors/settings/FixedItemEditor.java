@@ -12,7 +12,6 @@ import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicato
 import dev.imlukas.hoarderplugin.utils.menu.layer.BaseLayer;
 import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.selection.Selection;
-import dev.imlukas.hoarderplugin.utils.menu.template.FallbackMenu;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.builders.ScheduleBuilder;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
@@ -27,18 +26,16 @@ public class FixedItemEditor extends UpdatableMenu {
     private final Messages messages;
     private final EventSettingsHandler eventSettingsHandler;
     private final HoarderEventSettings eventSettings;
-    private final FallbackMenu fallbackMenu;
 
     private ConfigurableMenu menu;
     private ConfigurationApplicator applicator;
     private BaseLayer layer;
 
-    public FixedItemEditor(HoarderPlugin plugin, Player viewer, FallbackMenu fallbackMenu, EventSettings eventSettings) {
+    public FixedItemEditor(HoarderPlugin plugin, Player viewer, EventSettings eventSettings) {
         super(plugin, viewer);
         this.messages = plugin.getMessages();
         this.eventSettingsHandler = plugin.getEventSettingsHandler();
 
-        this.fallbackMenu = fallbackMenu;
         this.eventSettings = (HoarderEventSettings) eventSettings;
         setup();
     }
@@ -57,13 +54,22 @@ public class FixedItemEditor extends UpdatableMenu {
 
         itemButton.setLeftClickAction(() -> {
             new ItemSelectionMenu(getPlugin(), getViewer(), item, (newItem) -> {
-                fixedItem.setMaterial(newItem);
-                itemButton.getDisplayItem().setType(newItem);
+                fixedItem.setMaterial(newItem.getType());
+                itemButton.getDisplayItem().setType(newItem.getType());
                 ScheduleBuilder.runIn1Tick(getPlugin(), this::open).sync().start();
                 messages.sendMessage(getViewer(), "editors.item.material",
-                        new Placeholder<>("material", TextUtils.capitalize(newItem.name().toLowerCase())));
+                        new Placeholder<>("material", TextUtils.capitalize(newItem.getType().name()).toLowerCase()));
                 refresh();
-            });
+            }).onClose(this::open);
+        });
+
+        itemButton.setClickWithItemTask((newItem) -> {
+            fixedItem.setMaterial(newItem.getType());
+            itemButton.getDisplayItem().setType(newItem.getType());
+            ScheduleBuilder.runIn1Tick(getPlugin(), this::open).sync().start();
+            messages.sendMessage(getViewer(), "editors.item.material",
+                    new Placeholder<>("material", TextUtils.capitalize(newItem.getType().name()).toLowerCase()));
+            refresh();
         });
 
         itemButton.setRightClickAction(() -> {
@@ -97,7 +103,7 @@ public class FixedItemEditor extends UpdatableMenu {
 
         applicator.registerButton(layer, "c", () -> {
             eventSettingsHandler.updatedFixed(eventSettings.getFixedItem());
-            fallbackMenu.openFallback();
+            this.close();
         });
 
         menu.addRenderable(layer);
