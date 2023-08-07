@@ -2,20 +2,33 @@ title: "&7Hoarder &8| &eMain"
 
 layout:
   - "b b b b b b b b b"
-  - "b . . . . . . . b"
-  - "b . l . h . s . b"
-  - "b . . . r . . . b"
+  - "b . t . t . t . b"
+  - "b . . . h . . . b"
+  - "b p . s . l . r b"
   - "b b b b c b b b b"
 
 items:
+  empty:
+    type: WHITE_STAINED_GLASS_PANE
+    name: "&cNo player"
+    lore:
+      - "&7There is no player in this position"
+  t:
+    type: PLAYER_HEAD
+    name: "%player_name% #%position%"
+    skull: "%player_name%"
+    lore:
+      - "&7Total Wins: &f%totalWins%"
+      - "&7Total Sold: &f%totalSold%"
+      - "&7Times in Top 3: &f%totalTop3%"
   b:
     type: BLACK_STAINED_GLASS_PANE
     name: " "
   r:
     type: NETHER_STAR
-    name: "&eRewards"
+    name: "&eRedeem prizes"
     lore:
-      - "&7Click to open the rewards menu"
+      - "&7Click to redeem your prizes"
   c:
     type: BARRIER
     name: "&cClose"
@@ -27,6 +40,11 @@ items:
     lore:
       - "&7Click to open the leaderboard menu"
 
+  p:
+    type: FIREWORK_ROCKET
+    name: "&7Prize list"
+    lore:
+      - "&7Click to view all the available prizes for the hoarder"
   h:
     type: CHEST
     name: "&eHoarder"
@@ -36,9 +54,9 @@ items:
       - "&7Next hoarder in: &f%time%"
   s:
     type: PLAYER_HEAD
-    skull: "%player_name%"
+    skull: "%statsName%"
     name: "&eStats"
     lore:
-      - "&7Total Wins: &f%totalWins%"
-      - "&7Total Sold: &f%totalSold%"
-      - "&7Times in Top 3: &f%totalTop3%"
+      - "&7Total Wins: &f%statsWins%"
+      - "&7Total Sold: &f%statsSold%"
+      - "&7Times in Top 3: &f%statsTop3%"

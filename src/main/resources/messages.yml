@@ -3,6 +3,7 @@ messages:
   use-prefix: true
   use-actionbar: false
 
+  reload: "&7Successfully reloaded the messages, custom items and prizes!"
   command:
     no-event: "&7There's currently no active event!"
     no-prizes: "&7You don't have any rewards to claim!"

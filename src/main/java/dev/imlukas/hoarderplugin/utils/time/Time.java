@@ -25,7 +25,6 @@ public class Time {
 
     public static Time parseTime(String time) {
         String[] split = time.split(" ");
-        System.out.println(split.length);
 
         if (split.length != 2) {
             System.err.println("Invalid time format: " + time);

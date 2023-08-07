@@ -51,7 +51,6 @@ public class HoarderLeaderboardMenu extends UpdatableMenu {
             }
         }
 
-        System.out.println("leaderboard = " + leaderboard);
         Map<Integer, PlayerStats> sortedLeaderboard = MapUtils.getLeaderboardMap(leaderboard);
 
         for (Map.Entry<Integer, PlayerStats> leaderboardEntry : sortedLeaderboard.entrySet()) {

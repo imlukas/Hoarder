@@ -20,13 +20,6 @@ public class BaseLayer extends Renderable {
     }
 
     @Override
-    public void setItemPlaceholders(Placeholder<Player>... placeholders) {
-        for (MenuElement element : slots.values()) {
-            element.setItemPlaceholders(placeholders);
-        }
-    }
-
-    @Override
     public void forceUpdate() {
         for (Map.Entry<Integer, MenuElement> entry : slots.entrySet()) {
             menu.setElement(entry.getKey(), entry.getValue());

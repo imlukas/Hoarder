@@ -22,7 +22,9 @@ public class DateUtil {
     public static String formatDuration(Duration duration) {
         return duration.toString()
                 .substring(2)
-                .replaceAll("\\.\\d+", "").toLowerCase();
+                .replaceAll("(\\d[HMS])(?!$)", "$1 ")
+                .replaceAll("\\.\\d+", "")
+                .toLowerCase();
     }
 
     public static LocalDateTime parseTime(String time) {

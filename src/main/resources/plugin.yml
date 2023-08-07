@@ -2,3 +2,6 @@ name: MCXHoarderPlugin
 version: '${version}'
 main: dev.imlukas.hoarderplugin.HoarderPlugin
 api-version: '1.16'
+depend:
+  - PlaceholderAPI
+  - Vault

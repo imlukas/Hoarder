@@ -6,6 +6,7 @@ import dev.imlukas.hoarderplugin.event.phase.EventPhase;
 import dev.imlukas.hoarderplugin.event.settings.EventSettings;
 import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.prize.registry.PrizeRegistry;
+import dev.imlukas.hoarderplugin.utils.schedulerutil.builders.ScheduleBuilder;
 import lombok.Getter;
 
 import java.util.LinkedList;
@@ -50,19 +51,23 @@ public abstract class Event {
             EventPhase toRun = phases.get(i);
             EventPhase runAfter = phases.get(i - 1);
 
+            int finalI = i;
             toRun.runAfter(runAfter, () -> {
                 if (currentPhase != null) {
                     currentPhase.end();
                 }
 
                 currentPhase = toRun;
-                currentPhase.run();
+                toRun.run();
+
+                if (phases.size() == finalI + 1) {
+                    new ScheduleBuilder(plugin).in(toRun.getDuration().asTicks()).ticks().run(toRun::end).sync().start();
+                }
             });
         }
 
         currentPhase = firstPhase;
         firstPhase.run();
-        plugin.setupScheduler(43200);
     }
 
     public void forceEnd() {

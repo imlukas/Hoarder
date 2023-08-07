@@ -121,10 +121,14 @@ public class HoarderEvent extends Event {
         }));
 
         start();
+        plugin.setupScheduler(
+                getEventSettings().getEventTime().as(TimeUnit.SECONDS) +
+                getEventSettings().getStartingTime().as(TimeUnit.SECONDS) +
+                5);
     }
 
     @Override
-    public EventSettings getEventSettings() {
+    public HoarderEventSettings getEventSettings() {
         return eventSettings;
     }
 

@@ -1,7 +1,8 @@
 
 # days, months, weeks, years, hours. Example: 1 days, 1 weeks, 1 months, 1 years, 1 hours (Needs to be plural)
 starting-time: 10 seconds # The time it takes for the event to start
-event-time: 10 minutes # The duration of the event
+event-time: 12 hours
+
 
 random-material: true # If material should be randomly choosen; Refer to fixed-material for a fixed material.
 fixed-material:  # If random-material is false, this material will be used.

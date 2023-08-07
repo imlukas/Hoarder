@@ -33,6 +33,11 @@ repositories {
         url = "https://jitpack.io"
     }
 
+    maven {
+        name = "placeholderapi"
+        url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+    }
+
 }
 
 dependencies {
@@ -42,6 +47,7 @@ dependencies {
     compileOnly "com.mojang:authlib:1.6.25"
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
     compileOnly "org.jetbrains:annotations:22.0.0"
+    compileOnly "me.clip:placeholderapi:2.11.3"
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 }
 

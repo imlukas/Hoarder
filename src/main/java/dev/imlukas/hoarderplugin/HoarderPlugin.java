@@ -8,8 +8,10 @@ import dev.imlukas.hoarderplugin.event.registry.EventRegistry;
 import dev.imlukas.hoarderplugin.event.settings.handler.EventSettingsHandler;
 import dev.imlukas.hoarderplugin.event.settings.registry.EventSettingsRegistry;
 import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
+import dev.imlukas.hoarderplugin.hooks.HoarderPlaceholderExtension;
 import dev.imlukas.hoarderplugin.items.handler.CustomItemHandler;
 import dev.imlukas.hoarderplugin.items.registry.CustomItemRegistry;
+import dev.imlukas.hoarderplugin.leaderboard.LeaderboardCache;
 import dev.imlukas.hoarderplugin.listener.ConnectionListener;
 import dev.imlukas.hoarderplugin.listener.RightClickChestListener;
 import dev.imlukas.hoarderplugin.prize.PrizeRewarder;
@@ -30,6 +32,7 @@ import dev.imlukas.hoarderplugin.utils.schedulerutil.ScheduledTask;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.builders.ScheduleBuilder;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import lombok.Getter;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -64,6 +67,8 @@ public final class HoarderPlugin extends JavaPlugin {
     private PrizeRegistry prizeRegistry;
     private PrizeHandler prizeHandler;
     private PrizeRewarder prizeRewarder;
+
+    private LeaderboardCache leaderboardCache;
 
     private ScheduledTask scheduledTask;
     private LocalDateTime timeLeft;
@@ -103,6 +108,12 @@ public final class HoarderPlugin extends JavaPlugin {
         prizeHandler = new PrizeHandler(this);
         prizeRewarder = new PrizeRewarder(this);
 
+        leaderboardCache = new LeaderboardCache(this);
+
+        new ScheduleBuilder(this).every(30).seconds().run(() -> {
+            SQLHandler.fetchEventStats().thenAccept(eventStats -> leaderboardCache.update(eventStats));
+        }).sync().start();
+
         registerCommand(new HoarderSellCommand(this));
         registerCommand(new HoarderForceStartCommand(this));
         registerCommand(new HoarderForceEndCommand(this));
@@ -110,6 +121,7 @@ public final class HoarderPlugin extends JavaPlugin {
         registerCommand(new HoarderRewardsCommand(this));
         registerCommand(new HoarderGiveSellingItemCommand(this));
         registerCommand(new HoarderLeaderboardCommand(this));
+        commandManager.registerCommand(new ReloadCommand(this));
 
         commandManager.registerCommand(new PrizesCommand(this));
         commandManager.registerCommand(new SettingsCommand(this));
@@ -118,12 +130,27 @@ public final class HoarderPlugin extends JavaPlugin {
         registerListener(new RightClickChestListener(this));
         registerListener(new ConnectionListener(this));
 
+        new HoarderPlaceholderExtension(this).register();
         setupHoarderTimer();
     }
 
     @Override
     public void onDisable() {
         scheduledTask.cancel();
+    }
+
+    public void reload() {
+        messages = new Messages(this);
+        actionRegistry = new ActionRegistry(this);
+
+        customItemRegistry = new CustomItemRegistry();
+        customItemHandler = new CustomItemHandler(this);
+
+        prizeRegistry = new PrizeRegistry();
+        prizeHandler = new PrizeHandler(this);
+        prizeRewarder = new PrizeRewarder(this);
+
+        menuRegistry = new MenuRegistry(this);
     }
 
     public void setupHoarderTimer() {
@@ -138,7 +165,7 @@ public final class HoarderPlugin extends JavaPlugin {
             setupScheduler(timeRemaining);
             return;
         }
-        setupScheduler(43200);
+        new HoarderEvent(this);
     }
 
     public void updateTimeLeft(long timeToStart) {

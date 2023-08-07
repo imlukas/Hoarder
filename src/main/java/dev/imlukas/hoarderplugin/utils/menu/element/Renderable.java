@@ -22,8 +22,6 @@ public abstract class Renderable {
         forceUpdate();
     }
 
-    public abstract void setItemPlaceholders(Placeholder<Player>... placeholders);
-
     public abstract void setItemPlaceholders(Collection<Placeholder<Player>> placeholders);
 
     public abstract void forceUpdate();

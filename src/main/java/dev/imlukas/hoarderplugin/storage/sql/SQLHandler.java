@@ -5,9 +5,7 @@ import dev.imlukas.hoarderplugin.storage.cache.PlayerStats;
 import dev.imlukas.hoarderplugin.storage.cache.PlayerStatsRegistry;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class SQLHandler {
@@ -39,5 +37,22 @@ public class SQLHandler {
 
             return stats;
         });
+    }
+
+    public CompletableFuture<List<UUID>> fetchLastWinners() {
+        List<UUID> winners = new ArrayList<>();
+        return sqlDatabase.getOrCreateTable("hoarder_winners").executeQuery("SELECT * FROM hoarder_winners ORDER BY id DESC LIMIT 3").thenApply((resultSet -> {
+            try {
+                while (resultSet.next()) {
+                    UUID playerId = UUID.fromString(resultSet.getString("top1"));
+
+                    winners.add(playerId);
+                }
+            } catch (SQLException e) {
+                System.err.println("Error while fetching event stats from database: " + e.getMessage());
+            }
+
+            return winners;
+        }));
     }
 }

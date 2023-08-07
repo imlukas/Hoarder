@@ -6,7 +6,6 @@ mysql:
   password: ""
 
 time-remaining:
-  enabled: true # Should hoarder assume the time that was remaining before the server shutdown?
   value:
 
 selling-item:

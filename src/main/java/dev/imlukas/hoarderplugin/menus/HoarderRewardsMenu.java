@@ -51,7 +51,6 @@ public class HoarderRewardsMenu extends UpdatableMenu {
         BaseLayer layer = new BaseLayer(menu);
 
         applicator.registerButton(layer, "c", this::close);
-
         menu.addRenderable(layer, paginableLayer);
         refresh();
     }
@@ -62,6 +61,8 @@ public class HoarderRewardsMenu extends UpdatableMenu {
         PlayerEventData playerData = lastEvent.getEventData().getPlayerData(getViewerId());
         LinkedList<EventPrize> prizes = playerData.getAvailablePrizes();
 
+        menu.onClose(() -> prizes.removeIf(EventPrize::isClaimed));
+
         int notClaimedPrizes = 0;
         for (EventPrize prize : prizes) {
             if (!prize.isClaimed()) {
@@ -69,16 +70,12 @@ public class HoarderRewardsMenu extends UpdatableMenu {
             }
         }
 
-        if (notClaimedPrizes <= 0) {
-            messages.sendMessage(getViewer(), "prize.no-claim");
-        }
-
         for (EventPrize prize : prizes) {
             List<Placeholder<Player>> placeholderList = List.of(new Placeholder<>("remaining-prizes", String.valueOf(notClaimedPrizes - 1)),
                     new Placeholder<>("reward-number", String.valueOf(prizes.indexOf(prize) + 1)),
                     new Placeholder<>("prize-name", prize.getDisplayName()));
 
-            Button button = new Button(applicator.getItem("unclaimed"));
+            Button button = new Button(applicator.getItem("unclaimed").clone());
             button.setItemPlaceholders(placeholderList);
             button.setLeftClickAction(() -> {
                 if (prize.isClaimed()) {

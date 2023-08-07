@@ -27,13 +27,6 @@ public class PaginableLayer extends Renderable {
     }
 
     @Override
-    public void setItemPlaceholders(Placeholder<Player>... placeholders) {
-        for (PaginableArea area : areas) {
-            area.getElements().forEach(element -> element.setItemPlaceholders(placeholders));
-        }
-    }
-
-    @Override
     public void setItemPlaceholders(Collection<Placeholder<Player>> placeholders) {
         for (PaginableArea area : areas) {
             area.getElements().forEach(element -> element.setItemPlaceholders(placeholders));

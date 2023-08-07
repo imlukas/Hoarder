@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.*;
 
@@ -89,7 +90,11 @@ public class BaseMenu implements InventoryHolder {
             int slot = entry.getKey();
             MenuElement element = entry.getValue();
 
-            ItemStack item = element.getDisplayItem().clone();
+            ItemStack item = element.getDisplayItem();
+
+            if (!(item.getItemMeta() instanceof SkullMeta skullMeta)) {
+                item = element.getDisplayItem().clone();
+            }
 
             ItemUtil.replacePlaceholder(item, player, element.getItemPlaceholders());
             inventory.setItem(slot, item);
