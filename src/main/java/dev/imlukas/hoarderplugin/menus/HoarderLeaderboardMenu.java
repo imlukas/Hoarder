@@ -30,7 +30,7 @@ public class HoarderLeaderboardMenu extends UpdatableMenu {
 
     public HoarderLeaderboardMenu(HoarderPlugin plugin, Player viewer) {
         super(plugin, viewer);
-        SQLHandler sqlHandler = plugin.getSQLHandler();
+        SQLHandler sqlHandler = plugin.getSqlHandler();
         sqlHandler.fetchEventStats().thenAccept(playerStatsMap::putAll).thenRun(() -> {
             this.setup();
             open();
@@ -54,13 +54,13 @@ public class HoarderLeaderboardMenu extends UpdatableMenu {
         Map<Integer, PlayerStats> sortedLeaderboard = MapUtils.getLeaderboardMap(leaderboard);
 
         for (Map.Entry<Integer, PlayerStats> leaderboardEntry : sortedLeaderboard.entrySet()) {
-
+            PlayerStats playerStats = leaderboardEntry.getValue();
             List<Placeholder<Player>> placeholders = new ArrayList<>();
             placeholders.add(new Placeholder<>("position", String.valueOf(leaderboardEntry.getKey())));
-            placeholders.add(new Placeholder<>("player", leaderboardEntry.getValue().getOfflinePlayer().getName()));
-            placeholders.add(new Placeholder<>("wins", String.valueOf(leaderboardEntry.getValue().getWins())));
-            placeholders.add(new Placeholder<>("sold_items", String.valueOf(leaderboardEntry.getValue().getSoldItems())));
-            placeholders.add(new Placeholder<>("top3", String.valueOf(leaderboardEntry.getValue().getTop3())));
+            placeholders.add(new Placeholder<>("player_name", playerStats.getOfflinePlayer().getName()));
+            placeholders.add(new Placeholder<>("totalWins", String.valueOf(playerStats.getWins())));
+            placeholders.add(new Placeholder<>("totalSold", String.valueOf(playerStats.getSoldItems())));
+            placeholders.add(new Placeholder<>("totalTop3", String.valueOf(playerStats.getTop3())));
 
             Button leaderboardEntryButton = new Button(applicator.getItem("entry"));
             leaderboardEntryButton.setItemPlaceholders(placeholders);

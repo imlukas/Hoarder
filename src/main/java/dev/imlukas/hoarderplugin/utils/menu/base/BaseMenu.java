@@ -90,11 +90,7 @@ public class BaseMenu implements InventoryHolder {
             int slot = entry.getKey();
             MenuElement element = entry.getValue();
 
-            ItemStack item = element.getDisplayItem();
-
-            if (!(item.getItemMeta() instanceof SkullMeta skullMeta)) {
-                item = element.getDisplayItem().clone();
-            }
+            ItemStack item = element.getDisplayItem().clone();
 
             ItemUtil.replacePlaceholder(item, player, element.getItemPlaceholders());
             inventory.setItem(slot, item);

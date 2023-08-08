@@ -32,7 +32,6 @@ import dev.imlukas.hoarderplugin.utils.schedulerutil.ScheduledTask;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.builders.ScheduleBuilder;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import lombok.Getter;
-import me.clip.placeholderapi.PlaceholderAPI;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -52,7 +51,7 @@ public final class HoarderPlugin extends JavaPlugin {
     private PlayerStatsRegistry playerStatsRegistry;
 
     private SQLDatabase sqlDatabase;
-    private SQLHandler SQLHandler;
+    private SQLHandler sqlHandler;
 
     private EventRegistry eventRegistry;
     private EventTracker eventTracker;
@@ -89,7 +88,7 @@ public final class HoarderPlugin extends JavaPlugin {
         playerStatsRegistry = new PlayerStatsRegistry();
 
         sqlDatabase = new SQLDatabase(this.getConfig().getConfigurationSection("mysql"));
-        SQLHandler = new SQLHandler(this);
+        sqlHandler = new SQLHandler(this);
         initSQL();
 
         eventRegistry = new EventRegistry(this);
@@ -111,7 +110,7 @@ public final class HoarderPlugin extends JavaPlugin {
         leaderboardCache = new LeaderboardCache(this);
 
         new ScheduleBuilder(this).every(30).seconds().run(() -> {
-            SQLHandler.fetchEventStats().thenAccept(eventStats -> leaderboardCache.update(eventStats));
+            sqlHandler.fetchEventStats().thenAccept(eventStats -> leaderboardCache.update(eventStats));
         }).sync().start();
 
         registerCommand(new HoarderSellCommand(this));

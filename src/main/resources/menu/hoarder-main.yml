@@ -1,11 +1,11 @@
 title: "&7Hoarder &8| &eMain"
 
 layout:
-  - "b b b b b b b b b"
-  - "b . t . t . t . b"
-  - "b . . . h . . . b"
-  - "b p . s . l . r b"
-  - "b b b b c b b b b"
+  - ". . t . t . t . ."
+  - ". . . . . . . . ."
+  - ". . . . h . . . ."
+  - ". . . . . . . . ."
+  - ". p . s c l . r ."
 
 items:
   empty:
@@ -18,6 +18,7 @@ items:
     name: "%player_name% #%position%"
     skull: "%player_name%"
     lore:
+      - "&7Total Wins: &f%totalWins%"
       - "&7Total Wins: &f%totalWins%"
       - "&7Total Sold: &f%totalSold%"
       - "&7Times in Top 3: &f%totalTop3%"
@@ -57,6 +58,8 @@ items:
     skull: "%statsName%"
     name: "&eStats"
     lore:
+      - "&7Current Position: &f%statsPosition%"
+      - "&7Current Sold: &f%statsCurrentSold%"
       - "&7Total Wins: &f%statsWins%"
       - "&7Total Sold: &f%statsSold%"
       - "&7Times in Top 3: &f%statsTop3%"

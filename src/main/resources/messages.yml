@@ -24,6 +24,7 @@ messages:
     success: "ʏᴏᴜ sᴏʟᴅ %amountSold% ɪᴛᴇᴍs ғᴏʀ $%soldTotal%!"
 
   hoarder:
+    no-participation: "You didn't participate in the last Hoarder event!"
     starting: "ᴛʜᴇ ʜᴏᴀʀᴅᴇʀ ɪs sᴛᴀʀᴛɪɴɢ ɪɴ %time%!"
     start: "ᴛʜᴇ ʜᴏᴀʀᴅᴇʀ ʜᴀs sᴛᴀʀᴛᴇᴅ!"
     force-end: "ᴛʜᴇ ʜᴏᴀʀᴅᴇʀ ʜᴀs been force ended!"

@@ -14,7 +14,7 @@ public class LeaderboardCache {
     private final Map<Integer, PlayerStats> top10Cached = new HashMap<>();
 
     public LeaderboardCache(HoarderPlugin plugin) {
-        sqlHandler = plugin.getSQLHandler();
+        sqlHandler = plugin.getSqlHandler();
         sqlHandler.fetchEventStats().thenAccept(this::update);
     }
 

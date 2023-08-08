@@ -16,6 +16,11 @@ public class PlayerStatsRegistry {
     }
 
     public PlayerStats getPlayerStats(UUID playerId) {
+
+        if (!playerStatsMap.containsKey(playerId)) {
+            return null;
+        }
+
         return playerStatsMap.get(playerId);
     }
 

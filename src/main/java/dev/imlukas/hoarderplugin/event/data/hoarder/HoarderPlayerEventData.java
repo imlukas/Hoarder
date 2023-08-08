@@ -22,4 +22,8 @@ public class HoarderPlayerEventData extends PlayerEventData {
         soldItems += amount;
     }
 
+    public void getPosition() {
+
+    }
+
 }

@@ -7,7 +7,6 @@ import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderPlayerEventData;
 import dev.imlukas.hoarderplugin.event.phase.impl.EndPhase;
 import dev.imlukas.hoarderplugin.event.phase.impl.PreStartPhase;
 import dev.imlukas.hoarderplugin.event.phase.impl.hoarder.HoarderEventPhase;
-import dev.imlukas.hoarderplugin.event.settings.EventSettings;
 import dev.imlukas.hoarderplugin.event.settings.impl.hoarder.HoarderEventSettings;
 import dev.imlukas.hoarderplugin.prize.PrizeRewarder;
 import dev.imlukas.hoarderplugin.storage.cache.PlayerStats;
@@ -23,6 +22,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -58,32 +58,41 @@ public class HoarderEvent extends Event {
         addPhase(new HoarderEventPhase(this, eventSettings.getEventTime()));
         addPhase(new EndPhase(this, new Time(1, TimeUnit.SECONDS)).onEnd(() -> {
             this.end();
-            Map<Integer, HoarderPlayerEventData> top = getEventData().getTop();
+            Map<Integer, HoarderPlayerEventData> top = getEventData().getLeaderboard();
 
             for (HoarderPlayerEventData participant : getEventData().getParticipants()) {
 
                 Player player = participant.getPlayer();
+                UUID playerId = participant.getPlayerId();
 
-                PlayerStats playerStats = playerStatsRegistry.getPlayerStats(player.getUniqueId());
-                if (eventData.isTop3(player.getUniqueId())) {
+                PlayerStats playerStats = playerStatsRegistry.getPlayerStats(playerId);
+                if (eventData.isTop3(playerId)) {
                     playerStats.addTop3();
                 }
 
-                if (top.get(1).getPlayerId().equals(player.getUniqueId())) {
+                if (top.get(1).getPlayerId().equals(playerId)) {
                     playerStats.addWin();
                 }
 
                 playerStats.addSoldItems(participant.getSoldItems());
 
-                messages.sendMessage(player, "hoarder.end-header");
+                if (player != null) {
+                    messages.sendMessage(player, "hoarder.end-header");
+                    int iterationAmount = Math.min(top.size(), 4);
+                    for (int i = 1; i <= iterationAmount; i++) {
+                        HoarderPlayerEventData playerEventData = top.get(i);
+                        String playerName = top.get(i).getPlayer() == null ? playerEventData.getOfflinePlayer().getName() : playerEventData.getPlayer().getName();
 
-                int iterationAmount = Math.min(top.size(), 4);
-                for (int i = 1; i <= iterationAmount; i++) {
-                    messages.sendMessage(player, "hoarder.end-entry",
-                            new Placeholder<>("pos", String.valueOf(i)),
-                            new Placeholder<>("items", String.valueOf(top.get(i).getSoldItems())),
-                            new Placeholder<>("player", top.get(i).getPlayer().getName()));
+                        messages.sendMessage(player, "hoarder.end-entry",
+                                new Placeholder<>("pos", String.valueOf(i)),
+                                new Placeholder<>("items", String.valueOf(playerEventData.getSoldItems())),
+                                new Placeholder<>("player", playerName));
+                    }
                 }
+            }
+
+            if (top.isEmpty()) {
+                return;
             }
 
             for (Map.Entry<Integer, HoarderPlayerEventData> topPlayers : top.entrySet()) {
@@ -99,7 +108,11 @@ public class HoarderEvent extends Event {
             if (top.size() >= 4) {
                 randomPlayerData = top.get(ThreadLocalRandom.current().nextInt(4, top.size() + 1));
                 randomPlayerData.addPrizes(prizeRewarder.getReward());
-                messages.sendMessage(randomPlayerData.getPlayer(), "prize.available");
+
+                if (randomPlayerData.getPlayer() != null) {
+                    messages.sendMessage(randomPlayerData.getPlayer(), "prize.available");
+                }
+
             }
 
             Map<String, Object> winnerValues = new HashMap<>();

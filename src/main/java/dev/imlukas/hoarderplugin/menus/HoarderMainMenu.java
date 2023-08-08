@@ -2,6 +2,8 @@ package dev.imlukas.hoarderplugin.menus;
 
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.event.Event;
+import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderEventData;
+import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderPlayerEventData;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.leaderboard.LeaderboardCache;
@@ -24,7 +26,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class HoarderMainMenu extends UpdatableMenu {
 
@@ -35,7 +40,9 @@ public class HoarderMainMenu extends UpdatableMenu {
 
     private final PlayerStats playerStats;
     private ConfigurableMenu menu;
+    private ConfigurationApplicator applicator;
     private BaseLayer layer;
+    private PaginableArea area;
     private Button hoarderButton;
     private String timeLeft = "";
 
@@ -48,25 +55,76 @@ public class HoarderMainMenu extends UpdatableMenu {
         this.playerStats = plugin.getPlayerStatsRegistry().getPlayerStats(viewer.getUniqueId());
         scheduledTask = new ScheduleBuilder(plugin).every(1).seconds().run(() -> {
             timeLeft = DateUtil.formatDuration(plugin.getTimeLeft());
+
+            if (getViewer() == null) {
+                scheduledTask.cancel();
+                return;
+            }
+
             refresh();
         }).sync().start();
-
         setup();
-
     }
 
     @Override
     public void refresh() {
-        List<Placeholder<Player>> placeholderList = List.of(new Placeholder<>("time", timeLeft),
-                new Placeholder<>("status", eventTracker.getActiveEvent() == null ? "inactive" : "active"),
-                new Placeholder<>("statsName", getViewer().getName()),
-                new Placeholder<>("statsWins", String.valueOf(playerStats.getWins())),
-                new Placeholder<>("statsSold", String.valueOf(playerStats.getSoldItems())),
-                new Placeholder<>("statsTop3", String.valueOf(playerStats.getTop3())));
+        if (getViewer() == null) {
+            return;
+        }
+
+        area.clear();
 
         HoarderEvent activeEvent = (HoarderEvent) eventTracker.getActiveEvent();
-        hoarderButton.getDisplayItem().setType(activeEvent == null ? Material.CHEST : activeEvent.getEventData().getActiveItem().getMaterial());
-        layer.setItemPlaceholders(placeholderList);
+        HoarderEventData eventData = activeEvent == null ? null : activeEvent.getEventData();
+
+        List<Placeholder<Player>> generalPlaceholders = new ArrayList<>();
+        generalPlaceholders.add(new Placeholder<>("time", timeLeft));
+        generalPlaceholders.add(new Placeholder<>("status", activeEvent == null ? "inactive" : "active"));
+        generalPlaceholders.add(new Placeholder<>("statsName", getViewer().getName()));
+        generalPlaceholders.add(new Placeholder<>("statsWins", String.valueOf(playerStats.getWins())));
+        generalPlaceholders.add(new Placeholder<>("statsSold", String.valueOf(playerStats.getSoldItems())));
+        generalPlaceholders.add(new Placeholder<>("statsTop3", String.valueOf(playerStats.getTop3())));
+
+        layer.setItemPlaceholders(generalPlaceholders);
+
+        if (activeEvent == null) {
+            menu.forceUpdate();
+            return;
+        }
+
+        Map<Integer, HoarderPlayerEventData> leaderboard = eventData.getLeaderboard();
+        HoarderPlayerEventData viewerData = eventData.getPlayerData(getViewerId());
+
+        if (viewerData == null) {
+            generalPlaceholders.add(new Placeholder<>("statsPosition", "N/A"));
+            generalPlaceholders.add(new Placeholder<>("statsCurrentSold", "N/A"));
+        } else {
+            for (Map.Entry<Integer, HoarderPlayerEventData> leaderboardEntry : leaderboard.entrySet()) {
+                HoarderPlayerEventData playerData = leaderboardEntry.getValue();
+                int position = leaderboardEntry.getKey();
+                UUID playerId = playerData.getPlayerId();
+
+                if (playerId.equals(getViewerId())) {
+                    generalPlaceholders.add(new Placeholder<>("statsPosition", String.valueOf(position)));
+                    generalPlaceholders.add(new Placeholder<>("statsCurrentSold", String.valueOf(playerData.getSoldItems())));
+                    break;
+                }
+            }
+        }
+
+        int iterationAmount = Math.min(leaderboard.size(), 3);
+        for (int i = 1; i <= iterationAmount; i++) {
+
+            HoarderPlayerEventData playerData = leaderboard.get(i);
+            List<Placeholder<Player>> placeholderList = getPlaceholders(playerData, i);
+
+            DecorationItem decorationItem = new DecorationItem(applicator.getItem("t"));
+            decorationItem.setItemPlaceholders(placeholderList);
+            area.addElement(decorationItem);
+        }
+
+        hoarderButton.getDisplayItem().setType(eventData.getActiveItem().getMaterial());
+        layer.setItemPlaceholders(generalPlaceholders);
         menu.forceUpdate();
     }
 
@@ -75,9 +133,11 @@ public class HoarderMainMenu extends UpdatableMenu {
         menu = createMenu();
         menu.onClose(scheduledTask::cancel);
 
+        applicator = menu.getApplicator();
+
         HoarderEvent activeEvent = (HoarderEvent) eventTracker.getActiveEvent();
         ConfigurationApplicator applicator = getApplicator();
-        PaginableArea area = new PaginableArea(applicator.getMask().selection("t"));
+        area = new PaginableArea(applicator.getMask().selection("t"));
         area.setEmptyElement(new DecorationItem(applicator.getItem("empty")));
         PaginableLayer paginableLayer = new PaginableLayer(menu, area);
         layer = new BaseLayer(menu);
@@ -124,30 +184,35 @@ public class HoarderMainMenu extends UpdatableMenu {
         applicator.registerButton(layer, "s");
         applicator.registerButton(layer, "c", this::close);
 
-        int i = 1;
-        for (PlayerStats stats : leaderboardCache.getTop(3).values()) {
-
-            List<Placeholder<Player>> placeholderList = getPlaceholders(stats, i);
-
-            DecorationItem decorationItem = new DecorationItem(applicator.getItem("t"));
-            decorationItem.setItemPlaceholders(placeholderList);
-            area.addElement(decorationItem);
-            i++;
-        }
-
         menu.addRenderable(layer, paginableLayer);
         refresh();
     }
 
     @NotNull
-    private static List<Placeholder<Player>> getPlaceholders(PlayerStats stats, int i) {
-        String offlinePlayerName = stats.getOfflinePlayer().getName();
+    private List<Placeholder<Player>> getPlaceholders(HoarderPlayerEventData playerData, int i) {
+        PlayerStats playerStats = getPlugin().getPlayerStatsRegistry().getPlayerStats(playerData.getPlayerId());
+        List<Placeholder<Player>> placeholders = new ArrayList<>();
+        placeholders.add(new Placeholder<>("player_name", playerData.getPlayerName()));
+        placeholders.add(new Placeholder<>("position", String.valueOf(i)));
+        placeholders.add(new Placeholder<>("totalSold", String.valueOf(playerData.getSoldItems())));
 
-        return List.of(new Placeholder<>("player_name", offlinePlayerName),
-                new Placeholder<>("position", String.valueOf(i)),
-                new Placeholder<>("totalWins", String.valueOf(stats.getWins())),
-                new Placeholder<>("totalSold", String.valueOf(stats.getSoldItems())),
-                new Placeholder<>("totalTop3", String.valueOf(stats.getTop3())));
+        if (playerStats == null) {
+            getPlugin().getSqlHandler().fetchPlayerStats(playerData.getPlayerId()).thenAccept(fetchedStats -> {
+                if (fetchedStats == null) {
+                    return;
+                }
+                placeholders.add(new Placeholder<>("totalWins", String.valueOf(fetchedStats.getWins())));
+                placeholders.add(new Placeholder<>("totalSold", String.valueOf(fetchedStats.getSoldItems())));
+                placeholders.add(new Placeholder<>("totalTop3", String.valueOf(fetchedStats.getTop3())));
+            });
+
+            return placeholders;
+        }
+
+        placeholders.add(new Placeholder<>("totalWins", String.valueOf(playerStats.getWins())));
+        placeholders.add(new Placeholder<>("totalSold", String.valueOf(playerStats.getSoldItems())));
+        placeholders.add(new Placeholder<>("totalTop3", String.valueOf(playerStats.getTop3())));
+        return placeholders;
     }
 
     @Override

@@ -55,4 +55,23 @@ public class SQLHandler {
             return winners;
         }));
     }
+
+    public CompletableFuture<PlayerStats> fetchPlayerStats(UUID playerId) {
+        return sqlDatabase.getOrCreateTable("hoarder_stats")
+                .executeQuery("SELECT * FROM hoarder_stats WHERE player_id = '" + playerId + "'")
+                .thenApply(result -> {
+                    try {
+                        if (result.next()) {
+                           return new PlayerStats(playerId, result.getInt("wins"), result.getInt("sold"), result.getInt("top_3"));
+                        } else {
+                            return new PlayerStats(playerId, 0, 0, 0);
+                        }
+
+                    } catch (Exception e) {
+                        System.err.println("Error while loading player stats from database: " + e.getMessage());
+                    }
+
+                    return new PlayerStats(playerId, 0, 0, 0);
+                });
+    }
 }

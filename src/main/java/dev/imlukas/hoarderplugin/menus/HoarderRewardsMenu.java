@@ -59,6 +59,12 @@ public class HoarderRewardsMenu extends UpdatableMenu {
     public void refresh() {
         area.clear();
         PlayerEventData playerData = lastEvent.getEventData().getPlayerData(getViewerId());
+
+        if (playerData == null) {
+            messages.sendMessage(getViewer(), "hoarder.no-participation");
+            return;
+        }
+
         LinkedList<EventPrize> prizes = playerData.getAvailablePrizes();
 
         menu.onClose(() -> prizes.removeIf(EventPrize::isClaimed));

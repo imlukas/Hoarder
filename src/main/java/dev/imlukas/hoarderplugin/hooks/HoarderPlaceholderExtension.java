@@ -48,6 +48,10 @@ public class HoarderPlaceholderExtension extends PlaceholderExpansion {
 
                 HoarderPlayerEventData playerData = currentEvent.getEventData().getPlayerData(onlinePlayer.getUniqueId());
 
+                if (playerData == null) {
+                    return "0";
+                }
+
                 return String.valueOf(playerData.getSoldItems());
             }
         }
@@ -56,6 +60,15 @@ public class HoarderPlaceholderExtension extends PlaceholderExpansion {
         }
 
         for (int i = 1; i <= 10; i++) {
+            if (params.equals("top" + i + "_sold")) {
+
+                if (leaderboardCache.get(i) == null) {
+                    return "No player found on this position.";
+                }
+
+                return leaderboardCache.get(i).getSoldItems() + "";
+            }
+
             if (params.equals("top" + i)) {
 
                 if (leaderboardCache.get(i) == null) {

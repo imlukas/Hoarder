@@ -10,12 +10,12 @@ layout:
 items:
   entry:
     type: PLAYER_HEAD
-    skull: "%player%"
-    name: "%player% - #%position%"
+    skull: "%player_name%"
+    name: "%player_name% - #%position%"
     lore:
-      - "&7Wins &8» &e%wins%"
-      - "&7Sold items &8» &e%sold_items%"
-      - "&7Times in top 3 &8» &e%top3%"
+      - "&7Wins &8» &e%totalWins%"
+      - "&7Sold items &8» &e%totalSold%"
+      - "&7Times in top 3 &8» &e%totalTop3%"
 
   p:
     type: PLAYER_HEAD

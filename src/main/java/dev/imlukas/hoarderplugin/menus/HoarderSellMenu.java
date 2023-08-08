@@ -59,6 +59,11 @@ public class HoarderSellMenu extends UpdatableMenu {
             }
 
             HoarderPlayerEventData playerData = activeEvent.getEventData().getPlayerData(getViewer().getUniqueId());
+
+            if (playerData == null) {
+                playerData = activeEvent.getEventData().addParticipant(getViewer());
+            }
+
             playerData.addSoldItem(itemsSold);
             double currencyAmount = activeEvent.getEventData().getActiveItem().getValue() * itemsSold;
 
@@ -82,7 +87,7 @@ public class HoarderSellMenu extends UpdatableMenu {
         HoarderEventData eventData = activeEvent.getEventData();
 
         List<Placeholder<Player>> placeholderList = List.of(
-                new Placeholder<>("amountSold", String.valueOf(playerData.getSoldItems())),
+                new Placeholder<>("amountSold", playerData == null ? "0" : String.valueOf(playerData.getSoldItems())),
                 new Placeholder<>("price", String.valueOf(eventData.getActiveItem().getValue())));
 
         Button activeItem = new Button(applicator.getItem("active"));

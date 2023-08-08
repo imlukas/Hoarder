@@ -16,7 +16,7 @@ public class HoarderEventData extends EventData<HoarderPlayerEventData> {
         this.activeItem = activeItem;
     }
 
-    public Map<Integer, HoarderPlayerEventData> getTop() {
+    public Map<Integer, HoarderPlayerEventData> getLeaderboard() {
         Map<HoarderPlayerEventData, Integer> scores = new HashMap<>();
 
         for (HoarderPlayerEventData participant : participants) {
@@ -27,7 +27,7 @@ public class HoarderEventData extends EventData<HoarderPlayerEventData> {
     }
 
     public boolean isTop3(UUID player) {
-        Map<Integer, HoarderPlayerEventData> top = getTop();
+        Map<Integer, HoarderPlayerEventData> top = getLeaderboard();
 
         for (int i = 1; i < 4; i++) {
             if (top.get(i).getPlayerId().equals(player)) {
@@ -39,7 +39,15 @@ public class HoarderEventData extends EventData<HoarderPlayerEventData> {
     }
 
     @Override
-    public void addParticipant(Player player) {
-        participants.add(new HoarderPlayerEventData(player.getUniqueId()));
+    public HoarderPlayerEventData addParticipant(Player player) {
+        for (HoarderPlayerEventData participant : participants) {
+            if (participant.getPlayerId().equals(player.getUniqueId())) {
+                return participant;
+            }
+        }
+        HoarderPlayerEventData participant = new HoarderPlayerEventData(player.getUniqueId());
+
+        participants.add(participant);
+        return participant;
     }
 }

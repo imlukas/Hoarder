@@ -6,6 +6,7 @@ import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
 import dev.imlukas.hoarderplugin.storage.cache.PlayerStats;
 import dev.imlukas.hoarderplugin.storage.cache.PlayerStatsRegistry;
 import dev.imlukas.hoarderplugin.storage.sql.SQLDatabase;
+import dev.imlukas.hoarderplugin.storage.sql.SQLHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,10 +19,12 @@ import java.util.UUID;
 public class ConnectionListener implements Listener {
 
     private final PlayerStatsRegistry playerStatsRegistry;
+    private final SQLHandler sqlHandler;
     private final SQLDatabase sqlDatabase;
     private final EventTracker tracker;
 
     public ConnectionListener(HoarderPlugin plugin) {
+        this.sqlHandler = plugin.getSqlHandler();
         this.sqlDatabase = plugin.getSqlDatabase();
         this.playerStatsRegistry = plugin.getPlayerStatsRegistry();
         this.tracker = plugin.getEventTracker();
@@ -32,28 +35,7 @@ public class ConnectionListener implements Listener {
         Player player = event.getPlayer();
         UUID playerId = player.getUniqueId();
 
-        sqlDatabase.getOrCreateTable("hoarder_stats")
-                .executeQuery("SELECT * FROM hoarder_stats WHERE player_id = '" + playerId + "'")
-                .thenAccept(result -> {
-                    try {
-                        if (result.next()) {
-                            playerStatsRegistry.register(new PlayerStats(playerId, result.getInt("wins"), result.getInt("sold"), result.getInt("top_3")));
-                        } else {
-                            playerStatsRegistry.register(new PlayerStats(playerId, 0, 0, 0));
-                        }
-
-                    } catch (Exception e) {
-                        System.err.println("Error while loading player stats from database: " + e.getMessage());
-                    }
-                });
-
-        Event activeEvent = tracker.getActiveEvent();
-
-        if (activeEvent == null) {
-            return;
-        }
-
-        activeEvent.getEventData().addParticipant(player);
+        sqlHandler.fetchPlayerStats(playerId).thenAccept(playerStatsRegistry::register);
     }
 
     @EventHandler

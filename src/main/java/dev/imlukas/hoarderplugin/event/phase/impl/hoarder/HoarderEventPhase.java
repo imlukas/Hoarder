@@ -32,11 +32,7 @@ public class HoarderEventPhase extends EventPhase {
         );
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            event.getEventData().addParticipant(onlinePlayer);
-        }
-
-        for (PlayerEventData playerEventData : event.getEventData().getParticipants()) {
-            messages.sendMessage(playerEventData.getPlayer(), "hoarder.start", placeholders);
+            messages.sendMessage(onlinePlayer, "hoarder.start", placeholders);
         }
 
         plugin.getEventTracker().setActiveEvent(event);

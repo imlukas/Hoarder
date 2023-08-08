@@ -72,6 +72,10 @@ public class RightClickChestListener implements Listener {
         HoarderEventData eventData = hoarderEvent.getEventData();
         HoarderPlayerEventData playerData = eventData.getPlayerData(player.getUniqueId());
 
+        if (playerData == null) {
+            playerData = eventData.addParticipant(player);
+        }
+
         Material itemMaterial = eventData.getActiveItem().getMaterial();
         double itemValue = eventData.getActiveItem().getValue();
 
