@@ -21,13 +21,11 @@ public class ConnectionListener implements Listener {
     private final PlayerStatsRegistry playerStatsRegistry;
     private final SQLHandler sqlHandler;
     private final SQLDatabase sqlDatabase;
-    private final EventTracker tracker;
 
     public ConnectionListener(HoarderPlugin plugin) {
         this.sqlHandler = plugin.getSqlHandler();
         this.sqlDatabase = plugin.getSqlDatabase();
         this.playerStatsRegistry = plugin.getPlayerStatsRegistry();
-        this.tracker = plugin.getEventTracker();
     }
 
     @EventHandler

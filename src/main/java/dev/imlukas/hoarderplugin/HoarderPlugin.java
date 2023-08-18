@@ -15,7 +15,6 @@ import dev.imlukas.hoarderplugin.leaderboard.LeaderboardCache;
 import dev.imlukas.hoarderplugin.listener.ConnectionListener;
 import dev.imlukas.hoarderplugin.listener.RightClickChestListener;
 import dev.imlukas.hoarderplugin.prize.PrizeRewarder;
-import dev.imlukas.hoarderplugin.prize.actions.registry.ActionRegistry;
 import dev.imlukas.hoarderplugin.prize.registry.PrizeRegistry;
 import dev.imlukas.hoarderplugin.prize.storage.PrizeHandler;
 import dev.imlukas.hoarderplugin.storage.cache.PlayerStatsRegistry;
@@ -32,7 +31,9 @@ import dev.imlukas.hoarderplugin.utils.schedulerutil.ScheduledTask;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.builders.ScheduleBuilder;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import lombok.Getter;
+import mineverse.Aust1n46.chat.listeners.ChatListener;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -58,8 +59,6 @@ public final class HoarderPlugin extends JavaPlugin {
     private EventSettingsRegistry eventSettingsRegistry;
     private EventSettingsHandler eventSettingsHandler;
 
-    private ActionRegistry actionRegistry;
-
     private CustomItemRegistry customItemRegistry;
     private CustomItemHandler customItemHandler;
 
@@ -69,8 +68,10 @@ public final class HoarderPlugin extends JavaPlugin {
 
     private LeaderboardCache leaderboardCache;
 
-    private ScheduledTask scheduledTask;
+    private ScheduledTask hoarderStartTask, leaderboardUpdateTask;
     private LocalDateTime timeLeft;
+
+    private ChatListener ventureChatListener;
 
 
     @Override
@@ -91,25 +92,9 @@ public final class HoarderPlugin extends JavaPlugin {
         sqlHandler = new SQLHandler(this);
         initSQL();
 
-        eventRegistry = new EventRegistry(this);
-        eventRegistry.registerEvent("hoarder", HoarderEvent::new);
+        createClasses();
 
-        eventTracker = new EventTracker();
-        eventSettingsRegistry = new EventSettingsRegistry();
-        eventSettingsHandler = new EventSettingsHandler(this);
-
-        actionRegistry = new ActionRegistry(this);
-
-        customItemRegistry = new CustomItemRegistry();
-        customItemHandler = new CustomItemHandler(this);
-
-        prizeRegistry = new PrizeRegistry();
-        prizeHandler = new PrizeHandler(this);
-        prizeRewarder = new PrizeRewarder(this);
-
-        leaderboardCache = new LeaderboardCache(this);
-
-        new ScheduleBuilder(this).every(30).seconds().run(() -> {
+        leaderboardUpdateTask = new ScheduleBuilder(this).every(30).seconds().run(() -> {
             sqlHandler.fetchEventStats().thenAccept(eventStats -> leaderboardCache.update(eventStats));
         }).sync().start();
 
@@ -121,9 +106,9 @@ public final class HoarderPlugin extends JavaPlugin {
         registerCommand(new HoarderGiveSellingItemCommand(this));
         registerCommand(new HoarderLeaderboardCommand(this));
         commandManager.registerCommand(new ReloadCommand(this));
-
         commandManager.registerCommand(new PrizesCommand(this));
         commandManager.registerCommand(new SettingsCommand(this));
+
         commandManager.registerCommand(new HoarderCommand(this));
 
         registerListener(new RightClickChestListener(this));
@@ -131,16 +116,30 @@ public final class HoarderPlugin extends JavaPlugin {
 
         new HoarderPlaceholderExtension(this).register();
         setupHoarderTimer();
+
+        /* for (HandlerList handlerList : HandlerList.getHandlerLists()) {
+            for (RegisteredListener registeredListener : handlerList.getRegisteredListeners()) {
+                if (registeredListener.getListener() instanceof ChatListener chatListener) {
+                    handlerList.unregister(chatListener);
+                    this.ventureChatListener = chatListener;
+                }
+
+            }
+        }*/
     }
 
     @Override
     public void onDisable() {
-        scheduledTask.cancel();
+        hoarderStartTask.cancel();
     }
 
-    public void reload() {
-        messages = new Messages(this);
-        actionRegistry = new ActionRegistry(this);
+    public void createClasses() {
+        eventRegistry = new EventRegistry(this);
+        eventRegistry.registerEvent("hoarder", HoarderEvent::new);
+
+        eventTracker = new EventTracker();
+        eventSettingsRegistry = new EventSettingsRegistry();
+        eventSettingsHandler = new EventSettingsHandler(this);
 
         customItemRegistry = new CustomItemRegistry();
         customItemHandler = new CustomItemHandler(this);
@@ -149,7 +148,25 @@ public final class HoarderPlugin extends JavaPlugin {
         prizeHandler = new PrizeHandler(this);
         prizeRewarder = new PrizeRewarder(this);
 
+        leaderboardCache = new LeaderboardCache(this);
+    }
+
+    public void reload() {
+        HandlerList.unregisterAll(this);
+        messages = new Messages(this);
         menuRegistry = new MenuRegistry(this);
+
+        createClasses();
+
+        leaderboardUpdateTask.cancel();
+        leaderboardUpdateTask = new ScheduleBuilder(this).every(30).seconds().run(() -> {
+            sqlHandler.fetchEventStats().thenAccept(eventStats -> leaderboardCache.update(eventStats));
+        }).sync().start();
+
+        registerListener(new RightClickChestListener(this));
+        registerListener(new ConnectionListener(this));
+
+        setupHoarderTimer();
     }
 
     public void setupHoarderTimer() {
@@ -175,7 +192,7 @@ public final class HoarderPlugin extends JavaPlugin {
     public void setupScheduler(long timeLeft) {
         updateTimeLeft(timeLeft);
         final long[] finalTimeLeft = {timeLeft};
-        scheduledTask = new ScheduleBuilder(this).every(1).seconds().run(() -> {
+        hoarderStartTask = new ScheduleBuilder(this).every(1).seconds().run(() -> {
             finalTimeLeft[0]--;
             if (finalTimeLeft[0] == 0) {
                 new HoarderEvent(this);

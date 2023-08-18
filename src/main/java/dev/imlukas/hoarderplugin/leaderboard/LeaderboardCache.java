@@ -53,7 +53,7 @@ public class LeaderboardCache {
         });
     }
 
-    public PlayerStats get(int position) {
+    public PlayerStats getStats(int position) {
 
         if (top10Cached.size() < position) {
             return null;

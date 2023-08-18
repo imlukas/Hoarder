@@ -26,8 +26,12 @@ public class ReloadCommand implements SimpleCommand {
 
     @Override
     public void execute(CommandSender sender, String... args) {
-        plugin.reload();
+        if (plugin.getEventTracker().getActiveEvent() != null) {
+            plugin.getMessages().sendMessage(sender, "reload.active");
+            return;
+        }
 
+        plugin.reload();
         plugin.getMessages().sendMessage(sender, "reload");
     }
 }

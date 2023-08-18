@@ -1,5 +1,6 @@
 package dev.imlukas.hoarderplugin.utils.menu.registry;
 
+import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.utils.menu.base.BaseMenu;
 import dev.imlukas.hoarderplugin.utils.menu.base.ConfigurableMenu;
 import dev.imlukas.hoarderplugin.utils.menu.configuration.ConfigurationApplicator;
@@ -25,11 +26,11 @@ import java.util.function.Function;
 public class MenuRegistry {
 
     private final Map<String, Function<Player, BaseMenu>> menuInitializers = new ConcurrentHashMap<>();
-    private final JavaPlugin plugin;
+    private final HoarderPlugin plugin;
     private final HiddenMenuTracker hiddenMenuTracker = new HiddenMenuTracker();
     private final UpdatableMenuRegistry updatableMenuRegistry = new UpdatableMenuRegistry();
 
-    public MenuRegistry(JavaPlugin plugin) {
+    public MenuRegistry(HoarderPlugin plugin) {
         this.plugin = plugin;
 
         MenuListener.register(this);

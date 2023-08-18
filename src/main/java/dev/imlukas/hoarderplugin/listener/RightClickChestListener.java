@@ -106,6 +106,7 @@ public class RightClickChestListener implements Listener {
                 new Placeholder<>("amountSold", String.format("%,d", itemsSold)),
                 new Placeholder<>("soldTotal", String.format("%4.1f", totalValue)));
 
+
         economy.depositPlayer(player, totalValue);
         event.setCancelled(true);
     }

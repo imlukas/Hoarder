@@ -12,7 +12,7 @@ public class SettingsCommand extends AdvancedCommand {
     private final HoarderPlugin plugin;
 
     public SettingsCommand(HoarderPlugin plugin) {
-        super("settings");
+        super("hoarder settings");
         this.plugin = plugin;
     }
 

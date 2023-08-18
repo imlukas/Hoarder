@@ -12,7 +12,7 @@ public class PrizesCommand extends AdvancedCommand {
     private final HoarderPlugin plugin;
 
     public PrizesCommand(HoarderPlugin plugin) {
-        super("prizes");
+        super("hoarder prizes");
         this.plugin = plugin;
     }
 

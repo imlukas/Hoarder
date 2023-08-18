@@ -64,7 +64,7 @@ public class Button implements MenuElement {
         ClickType clickType = event.getClick();
 
         if (!event.getCursor().getType().isAir()) {
-            if (!event.getCurrentItem().getType().isAir()) {
+            if (event.getCurrentItem() != null && !event.getCurrentItem().getType().isAir()) {
                 if (clickWithItemTask != null) {
                     clickWithItemTask.accept(event.getCursor());
                     return;

@@ -22,6 +22,13 @@ public class SQLHandler {
         Map<UUID, PlayerStats> stats = new HashMap<>();
         return sqlDatabase.getOrCreateTable("hoarder_stats").executeQuery("SELECT * FROM hoarder_stats").thenApply(result -> {
             try {
+                for (PlayerStats value : playerStatsRegistry.getPlayerStatsMap().values()) {
+                    if (value.getSoldItems() == 0) {
+                        continue;
+                    }
+
+                    stats.put(value.getPlayerId(), value);
+                }
                 while (result.next()) {
                     UUID playerId = UUID.fromString(result.getString("player_id"));
                     int wins = result.getInt("wins");
@@ -30,7 +37,6 @@ public class SQLHandler {
 
                     stats.put(playerId, new PlayerStats(playerId, wins, sold, top3));
                 }
-                stats.putAll(playerStatsRegistry.getPlayerStatsMap()); // Some data may not be in the database yet, so we need to add it here
             } catch (SQLException e) {
                 System.err.println("Error while fetching event stats from database: " + e.getMessage());
             }

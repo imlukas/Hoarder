@@ -4,7 +4,9 @@ import dev.imlukas.hoarderplugin.utils.menu.base.BaseMenu;
 import dev.imlukas.hoarderplugin.utils.menu.registry.MenuRegistry;
 import dev.imlukas.hoarderplugin.utils.menu.registry.meta.HiddenMenuData;
 import dev.imlukas.hoarderplugin.utils.menu.registry.meta.HiddenMenuTracker;
+import mineverse.Aust1n46.chat.api.events.VentureChatEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,7 +21,6 @@ import java.util.function.Consumer;
 
 public class MenuListener implements Listener {
 
-    public static boolean REGISTERED = false;
 
     private final MenuRegistry registry;
 
@@ -28,13 +29,8 @@ public class MenuListener implements Listener {
     }
 
     public static void register(MenuRegistry registry) {
-        if (REGISTERED) {
-            return;
-        }
-
         JavaPlugin plugin = registry.getPlugin();
         Bukkit.getPluginManager().registerEvents(new MenuListener(registry), plugin);
-        REGISTERED = true;
     }
 
     @EventHandler
@@ -60,7 +56,7 @@ public class MenuListener implements Listener {
     }
 
     @EventHandler
-    private void onChat(AsyncPlayerChatEvent event) {
+    private void onChat(VentureChatEvent event) {
         /*component message = event.getMessage()
 
         if(!(message instanceof TextComponent text))
@@ -68,8 +64,9 @@ public class MenuListener implements Listener {
 
          */
 
-        String content = event.getMessage();
-        Player player = event.getPlayer();
+
+        String content = ChatColor.stripColor(event.getChat()).trim();
+        Player player = event.getMineverseChatPlayer().getPlayer();
         UUID uuid = player.getUniqueId();
 
         HiddenMenuTracker tracker = registry.getHiddenMenuTracker();
@@ -83,7 +80,6 @@ public class MenuListener implements Listener {
         tracker.removeHiddenMenu(uuid);
 
         if (content.equalsIgnoreCase("cancel")) {
-            event.setMessage("");
             data.runDisplayTasks();
             return;
         }
@@ -96,7 +92,6 @@ public class MenuListener implements Listener {
 
         task.accept(content);
         data.runDisplayTasks();
-
-        event.setCancelled(true);
+        event.getRecipients().clear();
     }
 }

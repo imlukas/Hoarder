@@ -193,8 +193,8 @@ public class HoarderMainMenu extends UpdatableMenu {
         PlayerStats playerStats = getPlugin().getPlayerStatsRegistry().getPlayerStats(playerData.getPlayerId());
         List<Placeholder<Player>> placeholders = new ArrayList<>();
         placeholders.add(new Placeholder<>("player_name", playerData.getPlayerName()));
-        placeholders.add(new Placeholder<>("position", String.valueOf(i)));
-        placeholders.add(new Placeholder<>("totalSold", String.valueOf(playerData.getSoldItems())));
+        placeholders.add(new Placeholder<>("statsPosition", String.valueOf(i)));
+        placeholders.add(new Placeholder<>("statsCurrentSold", String.valueOf(playerData.getSoldItems())));
 
         if (playerStats == null) {
             getPlugin().getSqlHandler().fetchPlayerStats(playerData.getPlayerId()).thenAccept(fetchedStats -> {

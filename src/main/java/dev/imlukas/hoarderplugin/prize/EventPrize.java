@@ -1,30 +1,27 @@
 package dev.imlukas.hoarderplugin.prize;
 
-import dev.imlukas.hoarderplugin.prize.actions.PrizeAction;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.LinkedList;
+import java.util.UUID;
 
 @Getter
 public class EventPrize {
+    private final UUID prizeId;
 
-    private String identifier, displayName;
+    private String displayName;
     private ItemStack displayItem;
+    private boolean claimed;
 
-    private LinkedList<PrizeAction> actions; // Use linked list to guarantee that actions are run in order
-    private boolean claimed = false;
-
-    public EventPrize(String identifier, String displayName, ItemStack displayItem, LinkedList<PrizeAction> actions) {
-        this(identifier, displayName, displayItem, actions, false);
+    public EventPrize(String displayName, ItemStack displayItem) {
+        this(UUID.randomUUID(), displayName, displayItem, false);
     }
 
-    public EventPrize(String identifier, String displayName, ItemStack displayItem, LinkedList<PrizeAction> actions, boolean claimed) {
-        this.identifier = identifier;
+    public EventPrize(UUID prizeId, String displayName, ItemStack displayItem, boolean claimed) {
+        this.prizeId = prizeId;
         this.displayName = displayName;
         this.displayItem = displayItem;
-        this.actions = actions;
         this.claimed = claimed;
     }
 
@@ -33,30 +30,23 @@ public class EventPrize {
         return this;
     }
 
-    public EventPrize setActions(LinkedList<PrizeAction> actions) {
-        this.actions = actions;
-        return this;
-    }
-
-    public EventPrize setDisplayItem(ItemStack displayItem) {
+    public void setDisplayItem(ItemStack displayItem) {
         this.displayItem = displayItem;
-        return this;
     }
 
-    public EventPrize setIdentifier(String identifier) {
-        this.identifier = identifier;
-        return this;
+    public UUID getPrizeId() {
+        return prizeId;
     }
 
     public void setClaimed(boolean claimed) {
         this.claimed = claimed;
     }
 
-    public void runAll(Player player) {
-        actions.forEach((action) -> action.handle(player));
+    public EventPrize copy() {
+        return new EventPrize(prizeId, displayName, displayItem, false);
     }
 
-    public EventPrize copy() {
-        return new EventPrize(identifier, displayName, displayItem, actions);
+    public void give(Player player) {
+        player.getInventory().addItem(displayItem.clone());
     }
 }

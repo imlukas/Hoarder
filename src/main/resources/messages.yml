@@ -4,6 +4,7 @@ messages:
   use-actionbar: false
 
   reload: "&7Successfully reloaded the messages, custom items and prizes!"
+  reload-active: "&7Cannot reload while an event is active!"
   command:
     no-event: "&7There's currently no active event!"
     no-prizes: "&7You don't have any rewards to claim!"

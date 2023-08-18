@@ -1,30 +1,24 @@
 package dev.imlukas.hoarderplugin.prize.registry;
 
+import com.google.common.collect.Sets;
 import dev.imlukas.hoarderplugin.prize.EventPrize;
 import dev.imlukas.hoarderplugin.utils.collection.ListUtils;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public class PrizeRegistry {
 
 
-    private final Map<String, EventPrize> prizes = new HashMap<>();
+    private final LinkedList<EventPrize> prizes = new LinkedList<>();
 
     public void registerPrize(EventPrize prize) {
-        prizes.put(prize.getIdentifier(), prize);
+        prizes.add(prize);
     }
 
     public void unregisterPrize(EventPrize prize) {
-        prizes.remove(prize.getIdentifier());
-    }
-
-    public EventPrize getPrize(String identifier) {
-        return prizes.get(identifier);
+        prizes.remove(prize);
     }
 
     public List<EventPrize> getRandomPrizes(int amount) {
@@ -49,11 +43,7 @@ public class PrizeRegistry {
     }
 
     public EventPrize getRandomPrize() {
-        return ListUtils.getRandom(prizes.values());
-    }
-
-    public List<String> getPrizeNames() {
-        return new ArrayList<>(prizes.keySet());
+        return ListUtils.getRandom(prizes);
     }
 
 }

@@ -9,12 +9,10 @@ import org.bukkit.command.CommandSender;
 
 public class HoarderForceEndCommand implements SimpleCommand {
 
-    private final HoarderPlugin plugin;
     private final EventTracker eventTracker;
     private final Messages messages;
 
     public HoarderForceEndCommand(HoarderPlugin plugin) {
-        this.plugin = plugin;
         this.eventTracker = plugin.getEventTracker();
         this.messages = plugin.getMessages();
     }

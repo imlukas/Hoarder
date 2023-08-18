@@ -5,6 +5,7 @@ enchanted-stick:
     - '&7This stick is enchanted with'
     - '&7the power of the gods.'
   material: STICK
+  model-data: 10
   enchantments:
     unbreaking: 10
     sharpness: 2

@@ -89,7 +89,7 @@ public class HoarderRewardsMenu extends UpdatableMenu {
                     return;
                 }
 
-                prize.runAll(getViewer());
+                prize.give(getViewer());
                 prize.setClaimed(true);
                 messages.sendMessage(getViewer(), "prize.claim", placeholderList);
                 refresh();

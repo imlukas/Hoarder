@@ -55,6 +55,7 @@ public class HoarderPlaceholderExtension extends PlaceholderExpansion {
                 return String.valueOf(playerData.getSoldItems());
             }
         }
+
         if (params.equals("time_left")) {
             return DateUtil.formatDuration(plugin.getTimeLeft());
         }
@@ -62,20 +63,20 @@ public class HoarderPlaceholderExtension extends PlaceholderExpansion {
         for (int i = 1; i <= 10; i++) {
             if (params.equals("top" + i + "_sold")) {
 
-                if (leaderboardCache.get(i) == null) {
+                if (leaderboardCache.getStats(i) == null) {
                     return "No player found on this position.";
                 }
 
-                return leaderboardCache.get(i).getSoldItems() + "";
+                return leaderboardCache.getStats(i).getSoldItems() + "";
             }
 
             if (params.equals("top" + i)) {
 
-                if (leaderboardCache.get(i) == null) {
+                if (leaderboardCache.getStats(i) == null) {
                     return "No player found on this position.";
                 }
 
-                return leaderboardCache.get(i).getPlayer() == null ? leaderboardCache.get(i).getOfflinePlayer().getName() : leaderboardCache.get(i).getPlayer().getName();
+                return leaderboardCache.getStats(i).getPlayer() == null ? leaderboardCache.getStats(i).getOfflinePlayer().getName() : leaderboardCache.getStats(i).getPlayer().getName();
             }
         }
 

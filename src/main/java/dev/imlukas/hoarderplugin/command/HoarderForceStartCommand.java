@@ -31,6 +31,6 @@ public class HoarderForceStartCommand implements SimpleCommand {
             activeEvent.forceEnd();
         }
 
-        new HoarderEvent(plugin);
+        plugin.getEventTracker().setActiveEvent(new HoarderEvent(plugin));
     }
 }
