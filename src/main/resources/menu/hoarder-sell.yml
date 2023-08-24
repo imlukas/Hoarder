@@ -23,6 +23,11 @@ items:
     name: "&cClose"
     lore:
       - "&7Close this menu"
+  sa:
+    type: ENDER_CHEST
+    name: "&eSell all"
+    lore:
+      - "&7Click to sell all the items in your inventory"
   s:
     type: EMERALD
     name: "&aSell"

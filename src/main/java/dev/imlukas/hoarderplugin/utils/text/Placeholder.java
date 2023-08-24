@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  */
 public class Placeholder<T> {
 
-    private final Function<T, String> replacement;
+    private Function<T, String> replacement;
     private String placeholder;
     @Setter
     private boolean expensiveLookup = false;
@@ -42,7 +42,7 @@ public class Placeholder<T> {
     }
 
     public Placeholder(String placeholder, String replacement) {
-        this(placeholder, (object) -> replacement);
+        this(placeholder, object -> replacement);
         this.cachedValue = replacement;
     }
 
@@ -124,6 +124,10 @@ public class Placeholder<T> {
     @Override
     public int hashCode() {
         return placeholder.hashCode();
+    }
+
+    public void setReplacement(String replacement) {
+        this.replacement = ignored -> replacement;
     }
 
     public void setOpenChar(char openChar) {

@@ -13,10 +13,13 @@ import dev.imlukas.hoarderplugin.utils.menu.registry.communication.UpdatableMenu
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import dev.imlukas.hoarderplugin.utils.text.Placeholder;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HoarderSellMenu extends UpdatableMenu {
@@ -44,36 +47,11 @@ public class HoarderSellMenu extends UpdatableMenu {
         menu = createMenu();
         applicator = getApplicator();
         layer = new BaseLayer(menu);
+        onClose(this::giveItemsBack);
 
-        applicator.registerButton(layer, "c", () -> {
-            giveItemsBack();
-            this.close();
-        });
-
-        applicator.registerButton(layer, "s", () -> {
-            updateSoldItems();
-
-            if (itemsSold == 0) {
-                messages.sendMessage(getViewer(), "sold.fail");
-                return;
-            }
-
-            HoarderPlayerEventData playerData = activeEvent.getEventData().getPlayerData(getViewer().getUniqueId());
-
-            if (playerData == null) {
-                playerData = activeEvent.getEventData().addParticipant(getViewer());
-            }
-
-            playerData.addSoldItem(itemsSold);
-            double currencyAmount = activeEvent.getEventData().getActiveItem().getValue() * itemsSold;
-
-            messages.sendMessage(getViewer(), "sold.success",
-                    new Placeholder<>("amountSold", String.format("%,d", itemsSold)),
-                    new Placeholder<>("soldTotal", String.format("%4.1f", currencyAmount)));
-
-            economy.depositPlayer(getViewer(), currencyAmount);
-            refresh();
-        });
+        applicator.registerButton(layer, "c", this::close);
+        applicator.registerButton(layer, "s", this::sellItemsInMenu);
+        applicator.registerButton(layer, "sa", this::sellInventory);
 
         menu.addRenderable(layer);
         refresh();
@@ -110,6 +88,29 @@ public class HoarderSellMenu extends UpdatableMenu {
     }
 
 
+    public void handleSell() {
+        if (itemsSold == 0) {
+            messages.sendMessage(getViewer(), "sold.fail");
+            return;
+        }
+
+        HoarderPlayerEventData playerData = activeEvent.getEventData().getPlayerData(getViewer().getUniqueId());
+
+        if (playerData == null) {
+            playerData = activeEvent.getEventData().addParticipant(getViewer());
+        }
+
+        playerData.addSoldItem(itemsSold);
+        double currencyAmount = activeEvent.getEventData().getActiveItem().getValue() * itemsSold;
+
+        messages.sendMessage(getViewer(), "sold.success",
+                new Placeholder<>("amountSold", String.format("%,d", itemsSold)),
+                new Placeholder<>("soldTotal", String.format("%4.1f", currencyAmount)));
+
+        economy.depositPlayer(getViewer(), currencyAmount);
+        refresh();
+    }
+
     public void giveItemsBack() {
         List<Integer> soldItemSlots = applicator.getMask().selection(".").getSlots();
         for (Integer soldItemSlot : soldItemSlots) {
@@ -121,6 +122,25 @@ public class HoarderSellMenu extends UpdatableMenu {
 
             getViewer().getInventory().addItem(item);
         }
+    }
+
+    public List<ItemStack> getValidItems(Inventory inventory) {
+        List<ItemStack> validItems = new ArrayList<>();
+        Material activeItem = activeEvent.getEventData().getActiveItem().getMaterial();
+
+        for (ItemStack storageContent : inventory.getStorageContents()) {
+            if (storageContent == null || storageContent.getType().isAir()) {
+                return validItems;
+            }
+
+            if (storageContent.getType() != activeItem) {
+                continue;
+            }
+
+            validItems.add(storageContent);
+        }
+
+        return validItems;
     }
 
     private void removeSoldItems() {
@@ -135,21 +155,16 @@ public class HoarderSellMenu extends UpdatableMenu {
         }
     }
 
-    private void updateSoldItems() {
-        List<Integer> soldItemSlots = applicator.getMask().selection(".").getSlots();
-        for (Integer soldItemSlot : soldItemSlots) {
-            ItemStack item = menu.getInventory().getItem(soldItemSlot);
+    private void sellItemsInMenu() {
+        getValidItems(getViewer().getInventory()).forEach(item -> itemsSold += item.getAmount());
+        handleSell();
+    }
 
-            if (item == null) {
-                continue;
-            }
-
-            if (item.getType() != activeEvent.getEventData().getActiveItem().getMaterial()) {
-                continue;
-            }
-
-            itemsSold += item.getAmount();
-        }
+    private void sellInventory() {
+        Player player = getViewer();
+        Inventory inventory = player.getInventory();
+        getValidItems(inventory).forEach(item -> itemsSold += item.getAmount());
+        handleSell();
     }
 }
 

@@ -3,6 +3,7 @@ package dev.imlukas.hoarderplugin.storage.sql;
 import dev.imlukas.hoarderplugin.HoarderPlugin;
 import dev.imlukas.hoarderplugin.storage.cache.PlayerStats;
 import dev.imlukas.hoarderplugin.storage.cache.PlayerStatsRegistry;
+import dev.imlukas.hoarderplugin.storage.sql.objects.SQLTable;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -20,7 +21,7 @@ public class SQLHandler {
 
     public CompletableFuture<Map<UUID, PlayerStats>> fetchEventStats() {
         Map<UUID, PlayerStats> stats = new HashMap<>();
-        return sqlDatabase.getOrCreateTable("hoarder_stats").executeQuery("SELECT * FROM hoarder_stats").thenApply(result -> {
+        return sqlDatabase.getOrCreateTable(SQLTableType.HOARDER_STATS.getName()).executeQuery("SELECT * FROM hoarder_stats").thenApply(result -> {
             try {
                 for (PlayerStats value : playerStatsRegistry.getPlayerStatsMap().values()) {
                     if (value.getSoldItems() == 0) {
@@ -47,7 +48,7 @@ public class SQLHandler {
 
     public CompletableFuture<List<UUID>> fetchLastWinners() {
         List<UUID> winners = new ArrayList<>();
-        return sqlDatabase.getOrCreateTable("hoarder_winners").executeQuery("SELECT * FROM hoarder_winners ORDER BY id DESC LIMIT 3").thenApply((resultSet -> {
+        return sqlDatabase.getOrCreateTable(SQLTableType.HOARDER_WINNER.getName()).executeQuery("SELECT * FROM hoarder_winners ORDER BY id DESC LIMIT 3").thenApply((resultSet -> {
             try {
                 while (resultSet.next()) {
                     UUID playerId = UUID.fromString(resultSet.getString("top1"));
@@ -63,7 +64,7 @@ public class SQLHandler {
     }
 
     public CompletableFuture<PlayerStats> fetchPlayerStats(UUID playerId) {
-        return sqlDatabase.getOrCreateTable("hoarder_stats")
+        return sqlDatabase.getOrCreateTable(SQLTableType.HOARDER_STATS.getName())
                 .executeQuery("SELECT * FROM hoarder_stats WHERE player_id = '" + playerId + "'")
                 .thenApply(result -> {
                     try {

@@ -8,6 +8,8 @@ import dev.imlukas.hoarderplugin.event.phase.impl.EndPhase;
 import dev.imlukas.hoarderplugin.event.phase.impl.PreStartPhase;
 import dev.imlukas.hoarderplugin.event.phase.impl.hoarder.HoarderEventPhase;
 import dev.imlukas.hoarderplugin.event.settings.impl.hoarder.HoarderEventSettings;
+import dev.imlukas.hoarderplugin.leaderboard.LeaderboardCache;
+import dev.imlukas.hoarderplugin.prize.EventPrize;
 import dev.imlukas.hoarderplugin.prize.PrizeRewarder;
 import dev.imlukas.hoarderplugin.storage.cache.PlayerStats;
 import dev.imlukas.hoarderplugin.storage.cache.PlayerStatsRegistry;
@@ -21,6 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,8 +32,10 @@ import java.util.concurrent.TimeUnit;
 public class HoarderEvent extends Event {
 
 
+
     private final Messages messages;
     private final SQLDatabase sqlDatabase;
+    private final LeaderboardCache leaderboardCache;
     private final PlayerStatsRegistry playerStatsRegistry;
     private final PrizeRewarder prizeRewarder;
     @Getter
@@ -43,6 +48,7 @@ public class HoarderEvent extends Event {
 
         this.messages = plugin.getMessages();
         this.sqlDatabase = plugin.getSqlDatabase();
+        this.leaderboardCache = plugin.getLeaderboardCache();
         this.playerStatsRegistry = plugin.getPlayerStatsRegistry();
         this.prizeRewarder = plugin.getPrizeRewarder();
         this.eventSettings = (HoarderEventSettings) plugin.getEventSettingsRegistry().get("hoarder");
@@ -52,85 +58,42 @@ public class HoarderEvent extends Event {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 messages.sendMessage(onlinePlayer, "hoarder.starting", new Placeholder<>("time", eventSettings.getStartingTime().toString()));
             }
-
         }, eventSettings.getStartingTime()));
 
         addPhase(new HoarderEventPhase(this, eventSettings.getEventTime()));
         addPhase(new EndPhase(this, new Time(1, TimeUnit.SECONDS)).onEnd(() -> {
             this.end();
-            Map<Integer, HoarderPlayerEventData> top = getEventData().getLeaderboard();
+            List<HoarderPlayerEventData> participants = eventData.getParticipants();
 
-            for (HoarderPlayerEventData participant : getEventData().getParticipants()) {
+            if (participants.isEmpty()) {
+                return;
+            }
+
+            Map<Integer, HoarderPlayerEventData> leaderboard = eventData.getLeaderboard();
+            Map<Integer, HoarderPlayerEventData> top3 = eventData.getTop3();
+
+            for (HoarderPlayerEventData participant : participants) {
 
                 Player player = participant.getPlayer();
                 UUID playerId = participant.getPlayerId();
 
                 PlayerStats playerStats = playerStatsRegistry.getPlayerStats(playerId);
-                if (eventData.isTop3(playerId)) {
-                    playerStats.addTop3();
-                }
-
-                if (top.get(1).getPlayerId().equals(playerId)) {
-                    playerStats.addWin();
-                }
-
-                playerStats.addSoldItems(participant.getSoldItems());
+                updatePlayerStats(playerStats, participant, top3);
 
                 if (player != null) {
-                    messages.sendMessage(player, "hoarder.end-header");
-                    int iterationAmount = Math.min(top.size(), 4);
-                    for (int i = 1; i <= iterationAmount; i++) {
-                        HoarderPlayerEventData playerEventData = top.get(i);
-                        String playerName = top.get(i).getPlayer() == null ? playerEventData.getOfflinePlayer().getName() : playerEventData.getPlayer().getName();
-
-                        messages.sendMessage(player, "hoarder.end-entry",
-                                new Placeholder<>("pos", String.valueOf(i)),
-                                new Placeholder<>("items", String.valueOf(playerEventData.getSoldItems())),
-                                new Placeholder<>("player", playerName));
-                    }
+                    sendEndingMessages(player, leaderboard);
                 }
             }
 
-            if (top.isEmpty()) {
-                return;
+            for (int i = 1; i < 5; i++) {
+                int position = i == 4 ? ThreadLocalRandom.current().nextInt(4, leaderboard.size() + 1) : i;
+
+                HoarderPlayerEventData playerEventData = leaderboard.get(position);
+                rewardPlayer(playerEventData, position);
             }
 
-            for (Map.Entry<Integer, HoarderPlayerEventData> topPlayers : top.entrySet()) {
-                int pos = topPlayers.getKey();
-                HoarderPlayerEventData playerEventData = topPlayers.getValue();
-
-                playerEventData.addPrizes(prizeRewarder.getReward(pos));
-                messages.sendMessage(playerEventData.getPlayer(), "prize.available");
-            }
-
-            HoarderPlayerEventData randomPlayerData;
-
-            if (top.size() >= 4) {
-                randomPlayerData = top.get(ThreadLocalRandom.current().nextInt(4, top.size() + 1));
-                randomPlayerData.addPrizes(prizeRewarder.getReward());
-
-                if (randomPlayerData.getPlayer() != null) {
-                    messages.sendMessage(randomPlayerData.getPlayer(), "prize.available");
-                }
-
-            }
-
-            Map<String, Object> winnerValues = new HashMap<>();
-
-            if (top.size() <= 3) {
-                for (int i = 1; i <= top.size(); i++) {
-                    winnerValues.put("top" + i, top.get(i).getPlayerId().toString());
-                }
-            } else {
-                for (int i = 1; i < 4; i++) {
-                    winnerValues.put("top" + i, top.get(i).getPlayerId().toString());
-                }
-            }
-
-            winnerValues.put("item", getEventData().getActiveItem().getMaterial().toString());
-            winnerValues.put("top1_sold", top.get(1).getSoldItems());
-
-            sqlDatabase.getOrCreateTable(SQLTableType.HOARDER_WINNER.getName()).insert(winnerValues);
+            insertWinnerValues(leaderboard);
+            leaderboardCache.update(playerStatsRegistry.getPlayerStatsMap());
         }));
 
         start();
@@ -138,6 +101,54 @@ public class HoarderEvent extends Event {
                 getEventSettings().getEventTime().as(TimeUnit.SECONDS) +
                 getEventSettings().getStartingTime().as(TimeUnit.SECONDS) +
                 5);
+    }
+
+    public void sendEndingMessages(Player player, Map<Integer, HoarderPlayerEventData> leaderboard) {
+        int iterationAmount = Math.min(leaderboard.size(), 4);
+        messages.sendMessage(player, "hoarder.end-header");
+        for (int i = 1; i <= iterationAmount; i++) {
+            HoarderPlayerEventData playerEventData = leaderboard.get(i);
+            String playerName = playerEventData.getPlayerName();
+
+            messages.sendMessage(player, "hoarder.end-entry",
+                    new Placeholder<>("pos", String.valueOf(i)),
+                    new Placeholder<>("items", String.valueOf(playerEventData.getSoldItems())),
+                    new Placeholder<>("player", playerName));
+        }
+    }
+
+    public void rewardPlayer(HoarderPlayerEventData playerEventData, int position) {
+        List<EventPrize> prizes = prizeRewarder.getReward(position);
+        playerEventData.addPrizes(prizes);
+        messages.sendMessage(playerEventData.getPlayer(), "prize.available");
+    }
+
+    public void updatePlayerStats(PlayerStats playerStats, HoarderPlayerEventData playerEventData, Map<Integer, HoarderPlayerEventData> top3) {
+        UUID playerId = playerEventData.getPlayerId();
+
+        if (top3.containsValue(playerEventData)) {
+            playerStats.addTop3();
+        }
+
+        if (top3.get(1).getPlayerId().equals(playerId)) {
+            playerStats.addWin();
+        }
+
+        playerStats.addSoldItems(playerEventData.getSoldItems());
+    }
+
+    public void insertWinnerValues(Map<Integer, HoarderPlayerEventData> leaderboard) {
+        Map<String, Object> sqlValues = new HashMap<>();
+
+        int iterationAmount = Math.min(leaderboard.size(), 4);
+        for (int i = 1; i <= iterationAmount; i++) {
+            sqlValues.put("top" + i, leaderboard.get(i).getPlayerId().toString());
+        }
+
+        sqlValues.put("item", getEventData().getActiveItem().getMaterial().toString());
+        sqlValues.put("top1_sold", leaderboard.get(1).getSoldItems());
+
+        sqlDatabase.getOrCreateTable(SQLTableType.HOARDER_WINNER.getName()).insert(sqlValues);
     }
 
     @Override

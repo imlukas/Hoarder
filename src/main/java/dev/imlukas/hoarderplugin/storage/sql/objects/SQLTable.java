@@ -137,10 +137,10 @@ public class SQLTable {
                 PreparedStatement statement = connection.prepareStatement(query);
 
                 for (int index = 0; index < args.length; index++) {
-                    Object ar = args[index];
+                    Object queryArgument = args[index];
 
-                    if (ar instanceof String) {
-                        statement.setString(index + 1, (String) ar);
+                    if (queryArgument instanceof String stringArgument) {
+                        statement.setString(index + 1, stringArgument);
                         continue;
                     }
 

@@ -7,6 +7,7 @@ import dev.imlukas.hoarderplugin.storage.cache.PlayerStats;
 import dev.imlukas.hoarderplugin.storage.cache.PlayerStatsRegistry;
 import dev.imlukas.hoarderplugin.storage.sql.SQLDatabase;
 import dev.imlukas.hoarderplugin.storage.sql.SQLHandler;
+import dev.imlukas.hoarderplugin.storage.sql.SQLTableType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -47,7 +48,7 @@ public class ConnectionListener implements Listener {
         }
 
         Map<String, Object> values = Map.of("player_id", playerId.toString(), "wins", playerStats.getWins(), "sold", playerStats.getSoldItems(), "top_3", playerStats.getTop3());
-        sqlDatabase.getOrCreateTable("hoarder_stats")
+        sqlDatabase.getOrCreateTable(SQLTableType.HOARDER_STATS.getName())
                 .insertOnDuplicate(values, "wins = VALUES(wins), sold = VALUES(sold), top_3 = VALUES(top_3)")
                 .thenRun(() -> playerStatsRegistry.unregister(playerId));
     }

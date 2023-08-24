@@ -10,8 +10,8 @@ import java.util.*;
 public class LeaderboardCache {
 
     private final SQLHandler sqlHandler;
-    private final Map<Integer, PlayerStats> lastWinnersCached = new HashMap<>();
-    private final Map<Integer, PlayerStats> top10Cached = new HashMap<>();
+    private Map<Integer, PlayerStats> lastWinnersCached = new HashMap<>();
+    private Map<Integer, PlayerStats> top10Cached = new HashMap<>();
 
     public LeaderboardCache(HoarderPlugin plugin) {
         sqlHandler = plugin.getSqlHandler();
@@ -23,24 +23,15 @@ public class LeaderboardCache {
 
         List<PlayerStats> values = new ArrayList<>(fullLeaderboard.values());
 
-        int iterationAmount = Math.min(10, values.size());
-
-        for (int i = 0; i < iterationAmount; i++) {
-            PlayerStats playerStats = values.get(i);
-
-            if (playerStats == null) {
-                break;
-            }
-
-            scoreMap.put(playerStats, playerStats.getWins());
+        for (PlayerStats value : values) {
+            scoreMap.put(value, value.getWins());
         }
 
-        Map<Integer, PlayerStats> top10 = MapUtils.getLeaderboardMap(scoreMap);
-        top10Cached.clear();
-        top10Cached.putAll(top10);
+        Map<Integer, PlayerStats> top10 = MapUtils.getLeaderboardMap(scoreMap, 10);
+        top10Cached = new HashMap<>(top10);
 
         Map<Integer, PlayerStats> lastWinners = new HashMap<>();
-        sqlHandler.fetchLastWinners().thenAccept((winners) -> {
+        sqlHandler.fetchLastWinners().thenAccept(winners -> {
             int i = 1;
 
             for (UUID winner : winners) {
@@ -48,8 +39,7 @@ public class LeaderboardCache {
                 i++;
             }
 
-            lastWinnersCached.clear();
-            lastWinnersCached.putAll(lastWinners);
+            lastWinnersCached = new HashMap<>(lastWinners);
         });
     }
 

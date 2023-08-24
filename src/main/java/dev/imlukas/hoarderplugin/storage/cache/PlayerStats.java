@@ -27,6 +27,10 @@ public class PlayerStats {
         return Bukkit.getOfflinePlayer(playerId);
     }
 
+    public UUID getPlayerId() {
+        return playerId;
+    }
+
     public Player getPlayer() {
         return Bukkit.getPlayer(playerId);
     }

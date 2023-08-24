@@ -1,23 +1,25 @@
 package dev.imlukas.hoarderplugin.utils.collection;
 
-import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderPlayerEventData;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MapUtils {
 
+    private MapUtils() {}
     public static <T> Map<Integer, T> getLeaderboardMap(Map<T, Integer> mapToSort) {
+        return getLeaderboardMap(mapToSort, 1);
+    }
+    public static <T> Map<Integer, T> getLeaderboardMap(Map<T, Integer> mapToSort, int amount) {
         List<Map.Entry<T, Integer>> values = new ArrayList<>(mapToSort.entrySet());
         values.sort(Map.Entry.comparingByValue());
         Collections.reverse(values);
 
         Map<Integer, T> leaderboardMap = new HashMap<>();
 
-        int i = 1;
-        for (Map.Entry<T, Integer> leaderboardEntry : values) {
+        int i = amount == 1 ? values.size() : amount;
+
+        for (int j = 1; j <= i; j++) {
+            Map.Entry<T, Integer> leaderboardEntry = values.get(j - 1);
             leaderboardMap.put(i, leaderboardEntry.getKey());
-            i++;
         }
 
         return leaderboardMap;

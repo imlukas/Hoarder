@@ -10,6 +10,7 @@ public class EndPhase extends EventPhase {
 
     public EndPhase(Event event, Time duration) {
         this(event, () -> {
+
         }, duration);
     }
 

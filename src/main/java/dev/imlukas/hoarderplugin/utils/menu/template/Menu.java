@@ -50,7 +50,7 @@ public abstract class Menu {
     }
 
     public Menu onClose(Runnable onClose) {
-        this.onClose = onClose;
+        getMenu().onClose(onClose);
         return this;
     }
 
@@ -74,10 +74,6 @@ public abstract class Menu {
                 viewer.closeInventory();
             } else {
                 MainThreadExecutor.INSTANCE.execute(viewer::closeInventory); // fuck you bukkit
-            }
-
-            if (onClose != null) {
-                onClose.run();
             }
         }
     }

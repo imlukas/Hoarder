@@ -26,6 +26,17 @@ public class HoarderEventData extends EventData<HoarderPlayerEventData> {
         return MapUtils.getLeaderboardMap(scores);
     }
 
+    public Map<Integer, HoarderPlayerEventData> getTop3() {
+        Map<Integer, HoarderPlayerEventData> top = getLeaderboard();
+        Map<Integer, HoarderPlayerEventData> top3 = new HashMap<>();
+
+        for (int i = 1; i < 4; i++) {
+            top3.put(i, top.get(i));
+        }
+
+        return top3;
+    }
+
     public boolean isTop3(UUID player) {
         Map<Integer, HoarderPlayerEventData> top = getLeaderboard();
 

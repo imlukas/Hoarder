@@ -6,7 +6,6 @@ import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderEventData;
 import dev.imlukas.hoarderplugin.event.data.hoarder.HoarderPlayerEventData;
 import dev.imlukas.hoarderplugin.event.impl.HoarderEvent;
 import dev.imlukas.hoarderplugin.event.tracker.EventTracker;
-import dev.imlukas.hoarderplugin.leaderboard.LeaderboardCache;
 import dev.imlukas.hoarderplugin.menus.editors.prize.PrizeListMenu;
 import dev.imlukas.hoarderplugin.storage.cache.PlayerStats;
 import dev.imlukas.hoarderplugin.utils.menu.base.ConfigurableMenu;
@@ -30,15 +29,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class HoarderMainMenu extends UpdatableMenu {
 
-    private final LeaderboardCache leaderboardCache;
     private final Messages messages;
     private final EventTracker eventTracker;
-    private ScheduledTask scheduledTask;
+    private ScheduledTask scheduledTask, placeholderTask;
 
     private final PlayerStats playerStats;
+    private final List<Placeholder<Player>> generalPlaceholders = new ArrayList<>();
+
     private ConfigurableMenu menu;
     private ConfigurationApplicator applicator;
     private BaseLayer layer;
@@ -46,10 +47,8 @@ public class HoarderMainMenu extends UpdatableMenu {
     private Button hoarderButton;
     private String timeLeft = "";
 
-
     public HoarderMainMenu(HoarderPlugin plugin, Player viewer) {
         super(plugin, viewer);
-        this.leaderboardCache = plugin.getLeaderboardCache();
         this.messages = plugin.getMessages();
         this.eventTracker = plugin.getEventTracker();
         this.playerStats = plugin.getPlayerStatsRegistry().getPlayerStats(viewer.getUniqueId());
@@ -63,29 +62,27 @@ public class HoarderMainMenu extends UpdatableMenu {
 
             refresh();
         }).sync().start();
+
+        placeholderTask = new ScheduleBuilder(plugin).every(5).seconds().run(this::updatePlaceholders).sync().start();
+        this.generalPlaceholders.add(new Placeholder<>("statsName", getViewer().getName()));
         setup();
     }
 
-    @Override
-    public void refresh() {
-        if (getViewer() == null) {
-            return;
-        }
-
-        area.clear();
-
+    public void updatePlaceholders() {
         HoarderEvent activeEvent = (HoarderEvent) eventTracker.getActiveEvent();
         HoarderEventData eventData = activeEvent == null ? null : activeEvent.getEventData();
+        List<Placeholder<Player>> placeholders = new ArrayList<>();
 
-        List<Placeholder<Player>> generalPlaceholders = new ArrayList<>();
-        generalPlaceholders.add(new Placeholder<>("time", timeLeft));
-        generalPlaceholders.add(new Placeholder<>("status", activeEvent == null ? "inactive" : "active"));
-        generalPlaceholders.add(new Placeholder<>("statsName", getViewer().getName()));
-        generalPlaceholders.add(new Placeholder<>("statsWins", String.valueOf(playerStats.getWins())));
-        generalPlaceholders.add(new Placeholder<>("statsSold", String.valueOf(playerStats.getSoldItems())));
-        generalPlaceholders.add(new Placeholder<>("statsTop3", String.valueOf(playerStats.getTop3())));
+        Placeholder<Player> statsPosition = new Placeholder<>("statsPosition", "N/A");
+        Placeholder<Player> statsCurrentSold = new Placeholder<>("statsCurrentSold", "N/A");
 
-        layer.setItemPlaceholders(generalPlaceholders);
+        placeholders.add(new Placeholder<>("time", timeLeft));
+        placeholders.add(new Placeholder<>("status", activeEvent == null ? "inactive" : "active"));
+        placeholders.add(new Placeholder<>("statsWins", String.valueOf(playerStats.getWins())));
+        placeholders.add(new Placeholder<>("statsSold", String.valueOf(playerStats.getSoldItems())));
+        placeholders.add(new Placeholder<>("statsTop3", String.valueOf(playerStats.getTop3())));
+
+        this.generalPlaceholders.forEach(placeholders::add);
 
         if (activeEvent == null) {
             menu.forceUpdate();
@@ -93,38 +90,49 @@ public class HoarderMainMenu extends UpdatableMenu {
         }
 
         Map<Integer, HoarderPlayerEventData> leaderboard = eventData.getLeaderboard();
-        HoarderPlayerEventData viewerData = eventData.getPlayerData(getViewerId());
 
-        if (viewerData == null) {
-            generalPlaceholders.add(new Placeholder<>("statsPosition", "N/A"));
-            generalPlaceholders.add(new Placeholder<>("statsCurrentSold", "N/A"));
-        } else {
+
+        CompletableFuture.runAsync(() -> {
             for (Map.Entry<Integer, HoarderPlayerEventData> leaderboardEntry : leaderboard.entrySet()) {
                 HoarderPlayerEventData playerData = leaderboardEntry.getValue();
                 int position = leaderboardEntry.getKey();
+
+                if (position <= 3) {
+                    getPlaceholders(playerData, position).thenAccept(placeholderList -> {
+                        DecorationItem decorationItem = new DecorationItem(applicator.getItem("t"));
+                        decorationItem.setItemPlaceholders(placeholderList);
+                        area.addElement(decorationItem);
+                    });
+                }
+
                 UUID playerId = playerData.getPlayerId();
 
                 if (playerId.equals(getViewerId())) {
-                    generalPlaceholders.add(new Placeholder<>("statsPosition", String.valueOf(position)));
-                    generalPlaceholders.add(new Placeholder<>("statsCurrentSold", String.valueOf(playerData.getSoldItems())));
+                    statsPosition.setReplacement(String.valueOf(position));
+                    statsCurrentSold.setReplacement(String.valueOf(playerData.getSoldItems()));
                     break;
                 }
             }
+
+            placeholders.add(statsPosition);
+            placeholders.add(statsCurrentSold);
+
+        });
+
+        layer.setItemPlaceholders(placeholders);
+    }
+
+    @Override
+    public void refresh() {
+        if (getViewer() == null) {
+            return;
         }
+        area.clear();
 
-        int iterationAmount = Math.min(leaderboard.size(), 3);
-        for (int i = 1; i <= iterationAmount; i++) {
-
-            HoarderPlayerEventData playerData = leaderboard.get(i);
-            List<Placeholder<Player>> placeholderList = getPlaceholders(playerData, i);
-
-            DecorationItem decorationItem = new DecorationItem(applicator.getItem("t"));
-            decorationItem.setItemPlaceholders(placeholderList);
-            area.addElement(decorationItem);
-        }
-
+        HoarderEvent activeEvent = (HoarderEvent) eventTracker.getActiveEvent();
+        HoarderEventData eventData = activeEvent == null ? null : activeEvent.getEventData();
         hoarderButton.getDisplayItem().setType(eventData.getActiveItem().getMaterial());
-        layer.setItemPlaceholders(generalPlaceholders);
+
         menu.forceUpdate();
     }
 
@@ -181,38 +189,43 @@ public class HoarderMainMenu extends UpdatableMenu {
             setupScheduler();
             this.open();
         }).open());
+
         applicator.registerButton(layer, "s");
         applicator.registerButton(layer, "c", this::close);
 
         menu.addRenderable(layer, paginableLayer);
+        updatePlaceholders();
         refresh();
     }
 
     @NotNull
-    private List<Placeholder<Player>> getPlaceholders(HoarderPlayerEventData playerData, int i) {
-        PlayerStats playerStats = getPlugin().getPlayerStatsRegistry().getPlayerStats(playerData.getPlayerId());
-        List<Placeholder<Player>> placeholders = new ArrayList<>();
-        placeholders.add(new Placeholder<>("player_name", playerData.getPlayerName()));
-        placeholders.add(new Placeholder<>("statsPosition", String.valueOf(i)));
-        placeholders.add(new Placeholder<>("statsCurrentSold", String.valueOf(playerData.getSoldItems())));
+    private CompletableFuture<List<Placeholder<Player>>> getPlaceholders(HoarderPlayerEventData playerData, int i) {
+        return CompletableFuture.supplyAsync(() -> {
+            PlayerStats playerStats = getPlugin().getPlayerStatsRegistry().getPlayerStats(playerData.getPlayerId());
+            List<Placeholder<Player>> placeholders = new ArrayList<>();
+            placeholders.add(new Placeholder<>("player_name", playerData.getPlayerName()));
+            placeholders.add(new Placeholder<>("statsPosition", String.valueOf(i)));
+            placeholders.add(new Placeholder<>("statsCurrentSold", String.valueOf(playerData.getSoldItems())));
 
-        if (playerStats == null) {
-            getPlugin().getSqlHandler().fetchPlayerStats(playerData.getPlayerId()).thenAccept(fetchedStats -> {
-                if (fetchedStats == null) {
-                    return;
-                }
-                placeholders.add(new Placeholder<>("totalWins", String.valueOf(fetchedStats.getWins())));
-                placeholders.add(new Placeholder<>("totalSold", String.valueOf(fetchedStats.getSoldItems())));
-                placeholders.add(new Placeholder<>("totalTop3", String.valueOf(fetchedStats.getTop3())));
-            });
+            if (playerStats == null) {
+                getPlugin().getSqlHandler().fetchPlayerStats(playerData.getPlayerId()).thenAccept(fetchedStats -> {
+                    if (fetchedStats == null) {
+                        return;
+                    }
+                    placeholders.add(new Placeholder<>("totalWins", String.valueOf(fetchedStats.getWins())));
+                    placeholders.add(new Placeholder<>("totalSold", String.valueOf(fetchedStats.getSoldItems())));
+                    placeholders.add(new Placeholder<>("totalTop3", String.valueOf(fetchedStats.getTop3())));
+                });
 
+                return placeholders;
+            }
+
+            placeholders.add(new Placeholder<>("totalWins", String.valueOf(playerStats.getWins())));
+            placeholders.add(new Placeholder<>("totalSold", String.valueOf(playerStats.getSoldItems())));
+            placeholders.add(new Placeholder<>("totalTop3", String.valueOf(playerStats.getTop3())));
             return placeholders;
-        }
+        });
 
-        placeholders.add(new Placeholder<>("totalWins", String.valueOf(playerStats.getWins())));
-        placeholders.add(new Placeholder<>("totalSold", String.valueOf(playerStats.getSoldItems())));
-        placeholders.add(new Placeholder<>("totalTop3", String.valueOf(playerStats.getTop3())));
-        return placeholders;
     }
 
     @Override
@@ -228,6 +241,7 @@ public class HoarderMainMenu extends UpdatableMenu {
     @Override
     public void close() {
         scheduledTask.cancel();
+        placeholderTask.cancel();
         super.close();
     }
 
@@ -236,5 +250,7 @@ public class HoarderMainMenu extends UpdatableMenu {
             timeLeft = DateUtil.formatDuration(getPlugin().getTimeLeft());
             refresh();
         }).sync().start();
+
+        placeholderTask = new ScheduleBuilder(getPlugin()).every(5).seconds().run(this::updatePlaceholders).sync().start();
     }
 }

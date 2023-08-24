@@ -16,7 +16,7 @@ public class PrizeRewarder {
 
     public List<EventPrize> getReward(int position) {
         return switch (position) {
-            case 1 -> prizeRegistry.getRandomPrizes(3);
+            case 1-> prizeRegistry.getRandomPrizes(3);
             case 2 -> prizeRegistry.getRandomPrizes(2);
             default -> prizeRegistry.getRandomPrizes(1);
         };
