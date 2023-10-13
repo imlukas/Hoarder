@@ -8,12 +8,14 @@ import java.util.Map.Entry;
 
 public class MapUtil {
 
-    public static <K, V extends Comparable<? super V>> LinkedHashMap<K, V> sortByValue(Map<K, V> map) {
-        List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
-        list.sort(Entry.comparingByValue());
+    private MapUtil() {}
+
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+        List<Entry<K, V>> entryList = new ArrayList<>(map.entrySet());
+        entryList.sort(Entry.comparingByValue());
 
         LinkedHashMap<K, V> result = new LinkedHashMap<>();
-        for (Entry<K, V> entry : list) {
+        for (Entry<K, V> entry : entryList) {
             result.put(entry.getKey(), entry.getValue());
         }
 
