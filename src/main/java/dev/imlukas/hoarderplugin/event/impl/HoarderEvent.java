@@ -51,7 +51,7 @@ public class HoarderEvent extends Event {
         this.leaderboardCache = plugin.getLeaderboardCache();
         this.playerStatsRegistry = plugin.getPlayerStatsRegistry();
         this.prizeRewarder = plugin.getPrizeRewarder();
-        this.eventSettings = (HoarderEventSettings) plugin.getEventSettingsRegistry().get("hoarder");
+        this.eventSettings = plugin.getEventSettingsRegistry().get("hoarder");
         this.eventData = new HoarderEventData(eventSettings.isRandomMaterial() ? eventSettings.getRandomItem() : eventSettings.getFixedItem());
 
         addPhase(new PreStartPhase(this, () -> {

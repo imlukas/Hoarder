@@ -51,7 +51,7 @@ public class SettingsEditor extends UpdatableMenu {
 
     @Override
     public void refresh() {
-        HoarderEventSettings eventSettings = (HoarderEventSettings) eventSettingsRegistry.get(eventIdentifier);
+        HoarderEventSettings eventSettings = eventSettingsRegistry.get(eventIdentifier);
 
         List<Placeholder<Player>> placeholderList = List.of(
                 new Placeholder<>("starting-time", eventSettings.getStartingTime().toString()),

@@ -10,7 +10,7 @@ import java.util.UUID;
 public class EventPrize {
     private final UUID prizeId;
 
-    private String displayName;
+    private final String displayName;
     private ItemStack displayItem;
     private boolean claimed;
 
@@ -23,11 +23,6 @@ public class EventPrize {
         this.displayName = displayName;
         this.displayItem = displayItem;
         this.claimed = claimed;
-    }
-
-    public EventPrize setDisplayName(String displayName) {
-        this.displayName = displayName;
-        return this;
     }
 
     public void setDisplayItem(ItemStack displayItem) {

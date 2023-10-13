@@ -17,8 +17,8 @@ public class EventSettingsRegistry {
         eventSettingsMap.remove(eventIdentifier);
     }
 
-    public EventSettings get(String eventIdentifier) {
-        return eventSettingsMap.get(eventIdentifier);
+    public <T extends EventSettings> T get(String eventIdentifier) {
+        return (T) eventSettingsMap.get(eventIdentifier);
     }
 
     public boolean isRegistered(String eventIdentifier) {

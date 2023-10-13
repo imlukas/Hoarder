@@ -22,6 +22,7 @@ import dev.imlukas.hoarderplugin.storage.sql.SQLDatabase;
 import dev.imlukas.hoarderplugin.storage.sql.SQLHandler;
 import dev.imlukas.hoarderplugin.storage.sql.constants.ColumnType;
 import dev.imlukas.hoarderplugin.storage.sql.data.ColumnData;
+import dev.imlukas.hoarderplugin.utils.BetterJavaPlugin;
 import dev.imlukas.hoarderplugin.utils.command.command.CommandManager;
 import dev.imlukas.hoarderplugin.utils.command.legacy.SimpleCommand;
 import dev.imlukas.hoarderplugin.utils.concurrency.MainThreadExecutor;
@@ -31,18 +32,15 @@ import dev.imlukas.hoarderplugin.utils.schedulerutil.ScheduledTask;
 import dev.imlukas.hoarderplugin.utils.schedulerutil.builders.ScheduleBuilder;
 import dev.imlukas.hoarderplugin.utils.storage.Messages;
 import lombok.Getter;
-import mineverse.Aust1n46.chat.listeners.ChatListener;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Getter
-public final class HoarderPlugin extends JavaPlugin {
+public final class HoarderPlugin extends BetterJavaPlugin {
 
     private CommandManager commandManager;
     private MenuRegistry menuRegistry;
@@ -54,7 +52,6 @@ public final class HoarderPlugin extends JavaPlugin {
     private SQLDatabase sqlDatabase;
     private SQLHandler sqlHandler;
 
-    private EventRegistry eventRegistry;
     private EventTracker eventTracker;
     private EventSettingsRegistry eventSettingsRegistry;
     private EventSettingsHandler eventSettingsHandler;
@@ -70,8 +67,6 @@ public final class HoarderPlugin extends JavaPlugin {
 
     private ScheduledTask hoarderStartTask, leaderboardUpdateTask;
     private LocalDateTime timeLeft;
-
-    private ChatListener ventureChatListener;
 
 
     @Override
@@ -105,7 +100,7 @@ public final class HoarderPlugin extends JavaPlugin {
         registerCommand(new HoarderRewardsCommand(this));
         registerCommand(new HoarderGiveSellingItemCommand(this));
         registerCommand(new HoarderLeaderboardCommand(this));
-        commandManager.registerCommand(new ReloadCommand(this));
+        registerCommand(new ReloadCommand(this));
         commandManager.registerCommand(new PrizesCommand(this));
         commandManager.registerCommand(new SettingsCommand(this));
 
@@ -116,16 +111,6 @@ public final class HoarderPlugin extends JavaPlugin {
 
         new HoarderPlaceholderExtension(this).register();
         setupHoarderTimer();
-
-        /* for (HandlerList handlerList : HandlerList.getHandlerLists()) {
-            for (RegisteredListener registeredListener : handlerList.getRegisteredListeners()) {
-                if (registeredListener.getListener() instanceof ChatListener chatListener) {
-                    handlerList.unregister(chatListener);
-                    this.ventureChatListener = chatListener;
-                }
-
-            }
-        }*/
     }
 
     @Override
@@ -133,10 +118,11 @@ public final class HoarderPlugin extends JavaPlugin {
         hoarderStartTask.cancel();
     }
 
-    public void createClasses() {
-        eventRegistry = new EventRegistry(this);
-        eventRegistry.registerEvent("hoarder", HoarderEvent::new);
+    public void registerCommand(SimpleCommand command) {
+        commandManager.registerCommand(command);
+    }
 
+    public void createClasses() {
         eventTracker = new EventTracker();
         eventSettingsRegistry = new EventSettingsRegistry();
         eventSettingsHandler = new EventSettingsHandler(this);
@@ -229,13 +215,6 @@ public final class HoarderPlugin extends JavaPlugin {
                 "CREATE TABLE IF NOT EXISTS hoarder_stats (player_id VARCHAR(36) NOT NULL, PRIMARY KEY(player_id));").addColumn(sold, wins, top3s);
     }
 
-    public void registerCommand(SimpleCommand command) {
-        commandManager.registerCommand(command);
-    }
-
-    public void registerListener(Listener listener) {
-        getServer().getPluginManager().registerEvents(listener, this);
-    }
 
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
