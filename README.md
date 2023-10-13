@@ -9,4 +9,5 @@ Fully integrated with MySQL. All with pre-made GUIs and easy to use commands. Pl
 - MySQL support to store all of the event's stats.
 - Leaderboard support with 3 different stats.
 - Statistic tracking across the event(s).
+- PAPI Support
 
